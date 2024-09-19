@@ -8,6 +8,69 @@
 import SwiftUI
 import RealityKit
 
+struct SignInView: View {
+
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var isSignedIn: Bool = false
+
+    var body: some View {
+        VStack {
+            Spacer()
+            // Sign-in form
+            VStack(spacing: 16) {
+                Text("Sign In")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.leading)
+                    .padding(.bottom, 20)
+
+                TextField("Email", text: $email)
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(10)
+
+                SecureField("Password", text: $password)
+                    .padding()
+                    .background(Color(.secondarySystemBackground))
+                    .cornerRadius(10)
+
+                // Signin Button
+                Button(action: {
+                    signIn()
+                }) {
+                    Text("Sign In")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(width: 200, height: 50)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                
+                NavigationLink(destination: SignUpView()) {
+                    Text("Don't have an account? Sign Up")
+                        .font(.footnote)
+                        .foregroundColor(.blue)
+                }
+                .padding(.top, 10)
+            }
+            .padding()
+            .background(Color.white.opacity(0.9))
+            .cornerRadius(20)
+            .padding(.horizontal, 20)
+            
+            Spacer()
+        }
+        .padding()
+    }
+
+    func signIn() {
+        if !email.isEmpty && !password.isEmpty {
+            isSignedIn = true
+        }
+    }
+}
+
 struct SignUpView: View {
     
     @State private var email: String = ""
@@ -71,61 +134,18 @@ struct SignUpView: View {
 
 struct ContentView : View {
     
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State private var isSignedIn: Bool = false
-    
     var body: some View {
         NavigationView {
             ZStack {
                 ARViewContainer().edgesIgnoringSafeArea(.all)
-                
-                if !isSignedIn {
-                    VStack {
-                        Spacer()
-                        // Sign-in form
-                        VStack(spacing: 16) {
-                            Text("Sign In").font(.largeTitle).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).multilineTextAlignment(.leading).padding(.bottom, 20)
-                            
-                            TextField("Email", text:$email).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
-                            
-                            // Password SecureField
-                            SecureField("Password", text: $password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
-                            
-                            // Signin Button
-                            Button(action: {
-                                //Logic to handle sign-in
-                                signIn()
-                            }) {
-                                Text("Sign In").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
-                            }
-                            
-                            NavigationLink (destination: SignUpView()) {
-                                Text("Don't have as account? Sign Up")
-                                    .font(.footnote)
-                                    .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-                            }
-                            .padding(.top, 10)
 
-                            
-                        }
-                        .padding().background(Color.white.opacity(0.9)).cornerRadius(20).padding(.horizontal, 20)
-                        
-                        Spacer()
-                    }
-                    .padding()
-                }
-                
+                // Use SignInView for the sign-in form
+                SignInView()
             }
         }
-    }
-    
-    func signIn() {
-            // Example sign-in logic
-            if !email.isEmpty && !password.isEmpty {
-                isSignedIn = true // Successful sign-in example
-            }
-    }
+                
+            
+        }
 }
 
 struct ARViewContainer: UIViewRepresentable {
