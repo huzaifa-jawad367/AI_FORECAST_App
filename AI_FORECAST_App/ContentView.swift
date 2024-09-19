@@ -8,8 +8,14 @@
 import SwiftUI
 import RealityKit
 
+enum AuthState {
+    case signIn
+    case signUp
+}
+
 struct SignInView: View {
 
+    @Binding var authState: AuthState
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isSignedIn: Bool = false
@@ -24,17 +30,17 @@ struct SignInView: View {
                     .fontWeight(.bold)
                     .multilineTextAlignment(.leading)
                     .padding(.bottom, 20)
-
+                
                 TextField("Email", text: $email)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(10)
-
+                
                 SecureField("Password", text: $password)
                     .padding()
                     .background(Color(.secondarySystemBackground))
                     .cornerRadius(10)
-
+                
                 // Signin Button
                 Button(action: {
                     signIn()
@@ -47,7 +53,9 @@ struct SignInView: View {
                         .cornerRadius(10)
                 }
                 
-                NavigationLink(destination: SignUpView()) {
+                Button(action: {
+                    authState = .signUp
+                }) {
                     Text("Don't have an account? Sign Up")
                         .font(.footnote)
                         .foregroundColor(.blue)
@@ -73,6 +81,7 @@ struct SignInView: View {
 
 struct SignUpView: View {
     
+    @Binding var authState: AuthState
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirm_password = ""
@@ -107,14 +116,17 @@ struct SignUpView: View {
                     Text("Sign Up").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
                 }
                 
-                NavigationLink (destination: ContentView()) {
-                    Text("Already have an account? Sign in")
+                Button(action: {
+                    authState = .signIn
+                }) {
+                    Text("Already have an account? Sign In")
                         .font(.footnote)
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(.blue)
                 }
                 .padding(.top, 10)
+                
             }
-            .padding().background(Color.white.opacity(0.9)).cornerRadius(20).padding(.horizontal, 20)
+            .padding().background(Color.white.opacity(0.5)).cornerRadius(20).padding(.horizontal, 20)
             
             Spacer()
         }
@@ -134,18 +146,22 @@ struct SignUpView: View {
 
 struct ContentView : View {
     
+    @State private var authState: AuthState = .signIn
+    
     var body: some View {
-        NavigationView {
-            ZStack {
-                ARViewContainer().edgesIgnoringSafeArea(.all)
+        ZStack {
+            ARViewContainer().edgesIgnoringSafeArea(.all)
 
-                // Use SignInView for the sign-in form
-                SignInView()
+            switch authState {
+            case .signIn:
+                SignInView(authState: $authState)
+            case .signUp:
+                SignUpView(authState: $authState)
+
             }
         }
-                
-            
-        }
+        
+    }
 }
 
 struct ARViewContainer: UIViewRepresentable {
