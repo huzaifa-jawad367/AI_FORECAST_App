@@ -8,6 +8,67 @@
 import SwiftUI
 import RealityKit
 
+struct SignUpView: View {
+    
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var confirm_password = ""
+    @State private var username: String = ""
+    @State private var isSignedUp: Bool = false
+    
+    var body: some View {
+        
+        VStack {
+            Spacer()
+            
+            VStack (spacing: 16) {
+                Text("Sign Up")
+                    .font(.largeTitle).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).multilineTextAlignment(.leading).padding(.bottom, 20)
+                
+                
+                TextField("Email", text:$email).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                
+                TextField("Username", text:$username).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                
+                // Password SecureField
+                SecureField("Password", text: $password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                
+                // Confirm Password SecureField
+                SecureField("Confirm Password", text: $confirm_password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                
+                // Signin Button
+                Button(action: {
+                    //Logic to handle sign-in
+                    signUp()
+                }) {
+                    Text("Sign Up").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
+                }
+                
+                NavigationLink (destination: ContentView()) {
+                    Text("Already have an account? Sign in")
+                        .font(.footnote)
+                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                }
+                .padding(.top, 10)
+            }
+            .padding().background(Color.white.opacity(0.9)).cornerRadius(20).padding(.horizontal, 20)
+            
+            Spacer()
+        }
+        .padding()
+        
+        
+    }
+    
+    func signUp() {
+        if !email.isEmpty && !username.isEmpty && !password.isEmpty && !confirm_password.isEmpty {
+            isSignedUp = true
+        }
+    }
+}
+
+
+
 struct ContentView : View {
     
     @State private var email: String = ""
@@ -15,47 +76,47 @@ struct ContentView : View {
     @State private var isSignedIn: Bool = false
     
     var body: some View {
-        ZStack {
-            ARViewContainer().edgesIgnoringSafeArea(.all)
-            
-//            if !isSignedIn {
-//                VStack {
-//                    Spacer()
-//                    
-//                    // Sign-in form
-//                    VStack(spacing: 16) {
-//                        Text("Sign In")
-//                    }
-//                }
-//            }
-            if !isSignedIn {
-                VStack {
-                    Spacer()
-                    // Sign-in form
-                    VStack(spacing: 16) {
-                        Text("Sign In").font(.largeTitle).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).multilineTextAlignment(.leading).padding(.bottom, 20)
-                        
-                        TextField("Email", text:$email).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
-                        
-                        // Password SecureField
-                        SecureField("Password", text: $password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
-                        
-                        // Signin Button
-                        Button(action: {
-                            //Logic to handle sign-in
-                            signIn()
-                        }) {
-                            Text("Sign In").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
+        NavigationView {
+            ZStack {
+                ARViewContainer().edgesIgnoringSafeArea(.all)
+                
+                if !isSignedIn {
+                    VStack {
+                        Spacer()
+                        // Sign-in form
+                        VStack(spacing: 16) {
+                            Text("Sign In").font(.largeTitle).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).multilineTextAlignment(.leading).padding(.bottom, 20)
+                            
+                            TextField("Email", text:$email).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                            
+                            // Password SecureField
+                            SecureField("Password", text: $password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                            
+                            // Signin Button
+                            Button(action: {
+                                //Logic to handle sign-in
+                                signIn()
+                            }) {
+                                Text("Sign In").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
+                            }
+                            
+                            NavigationLink (destination: SignUpView()) {
+                                Text("Don't have as account? Sign Up")
+                                    .font(.footnote)
+                                    .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                            }
+                            .padding(.top, 10)
+
+                            
                         }
+                        .padding().background(Color.white.opacity(0.9)).cornerRadius(20).padding(.horizontal, 20)
                         
+                        Spacer()
                     }
-                    .padding().background(Color.white.opacity(0.9)).cornerRadius(20).padding(.horizontal, 20)
-                    
-                    Spacer()
+                    .padding()
                 }
-                .padding()
+                
             }
-            
         }
     }
     
@@ -66,8 +127,6 @@ struct ContentView : View {
             }
     }
 }
-
-
 
 struct ARViewContainer: UIViewRepresentable {
     
