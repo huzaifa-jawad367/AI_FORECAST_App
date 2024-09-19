@@ -28,19 +28,46 @@ struct ContentView : View {
 //                    }
 //                }
 //            }
-            ZStack {
-                Color.teal
+            if !isSignedIn {
                 VStack {
-                    Text("This is a VStack")
-                    Text("Second item")
-                    Text("Third item")
+                    Spacer()
+                    // Sign-in form
+                    VStack(spacing: 16) {
+                        Text("Sign In").font(.largeTitle).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).multilineTextAlignment(.leading).padding(.bottom, 20)
+                        
+                        TextField("Email", text:$email).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                        
+                        // Password SecureField
+                        SecureField("Password", text: $password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                        
+                        // Signin Button
+                        Button(action: {
+                            //Logic to handle sign-in
+                            signIn()
+                        }) {
+                            Text("Sign In").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
+                        }
+                        
+                    }
+                    .padding().background(Color.white.opacity(0.9)).cornerRadius(20).padding(.horizontal, 20)
+                    
+                    Spacer()
                 }
+                .padding()
             }
-            
             
         }
     }
+    
+    func signIn() {
+            // Example sign-in logic
+            if !email.isEmpty && !password.isEmpty {
+                isSignedIn = true // Successful sign-in example
+            }
+    }
 }
+
+
 
 struct ARViewContainer: UIViewRepresentable {
     
