@@ -35,7 +35,9 @@ struct SignInView: View {
                     TextField("Email", text: $email)
                         .padding()
                         .background(Color(.secondarySystemBackground))
-                        .cornerRadius(10).autocapitalization(.none).keyboardType(.emailAddress)
+                        .cornerRadius(10)
+                        .autocapitalization(.none)
+                        .keyboardType(.emailAddress)
                     
                     SecureField("Password", text: $password)
                         .padding()

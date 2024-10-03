@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		607254A92CAC559100F15EAE /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 607254A82CAC559100F15EAE /* Auth */; };
-		607254AB2CAC559100F15EAE /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 607254AA2CAC559100F15EAE /* Functions */; };
-		607254AD2CAC559100F15EAE /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = 607254AC2CAC559100F15EAE /* PostgREST */; };
-		607254AF2CAC559100F15EAE /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = 607254AE2CAC559100F15EAE /* Realtime */; };
-		607254B12CAC559100F15EAE /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = 607254B02CAC559100F15EAE /* Storage */; };
 		607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254B82CAD3BD800F15EAE /* SignInView.swift */; };
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
+		607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */; };
+		60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */; };
+		60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B8252CAE93A80086930F /* ColorExtension.swift */; };
 		60C56BF42C982FE700810952 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C56BF32C982FE700810952 /* AppDelegate.swift */; };
 		60C56BF62C982FE700810952 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C56BF52C982FE700810952 /* ContentView.swift */; };
 		60C56BF82C982FE800810952 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60C56BF72C982FE800810952 /* Assets.xcassets */; };
@@ -45,6 +43,9 @@
 		607254B82CAD3BD800F15EAE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
+		607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
+		60B6B8252CAE93A80086930F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		60C56BF02C982FE700810952 /* AI_FORECAST_App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AI_FORECAST_App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60C56BF32C982FE700810952 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		60C56BF52C982FE700810952 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,11 +63,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607254AD2CAC559100F15EAE /* PostgREST in Frameworks */,
-				607254AB2CAC559100F15EAE /* Functions in Frameworks */,
-				607254A92CAC559100F15EAE /* Auth in Frameworks */,
-				607254B12CAC559100F15EAE /* Storage in Frameworks */,
-				607254AF2CAC559100F15EAE /* Realtime in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,6 +113,9 @@
 				607254B82CAD3BD800F15EAE /* SignInView.swift */,
 				607254BA2CAD3DCF00F15EAE /* SignUpView.swift */,
 				607254BC2CAD3DEA00F15EAE /* AuthState.swift */,
+				607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */,
+				60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */,
+				60B6B8252CAE93A80086930F /* ColorExtension.swift */,
 			);
 			path = AI_FORECAST_App;
 			sourceTree = "<group>";
@@ -163,11 +162,6 @@
 			);
 			name = AI_FORECAST_App;
 			packageProductDependencies = (
-				607254A82CAC559100F15EAE /* Auth */,
-				607254AA2CAC559100F15EAE /* Functions */,
-				607254AC2CAC559100F15EAE /* PostgREST */,
-				607254AE2CAC559100F15EAE /* Realtime */,
-				607254B02CAC559100F15EAE /* Storage */,
 			);
 			productName = AI_FORECAST_App;
 			productReference = 60C56BF02C982FE700810952 /* AI_FORECAST_App.app */;
@@ -242,7 +236,6 @@
 			);
 			mainGroup = 60C56BE72C982FE700810952;
 			packageReferences = (
-				607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			productRefGroup = 60C56BF12C982FE700810952 /* Products */;
 			projectDirPath = "";
@@ -288,6 +281,9 @@
 			files = (
 				607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */,
 				607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */,
+				607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */,
+				60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */,
+				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,
 				607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */,
 				60C56BF62C982FE700810952 /* ContentView.swift in Sources */,
 				60C56BF42C982FE700810952 /* AppDelegate.swift in Sources */,
@@ -618,45 +614,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		607254A82CAC559100F15EAE /* Auth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
-		};
-		607254AA2CAC559100F15EAE /* Functions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Functions;
-		};
-		607254AC2CAC559100F15EAE /* PostgREST */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = PostgREST;
-		};
-		607254AE2CAC559100F15EAE /* Realtime */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Realtime;
-		};
-		607254B02CAC559100F15EAE /* Storage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 607254A72CAC559100F15EAE /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Storage;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 60C56BE82C982FE700810952 /* Project object */;
 }

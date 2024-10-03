@@ -30,25 +30,44 @@ struct SignUpView: View {
                 
                 VStack (spacing: 16) {
                     Text("Sign Up")
-                        .font(.largeTitle).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).multilineTextAlignment(.leading).padding(.bottom, 20)
+                        .font(.largeTitle)
+                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        .multilineTextAlignment(.leading)
+                        .padding(.bottom, 20)
                     
                     
-                    TextField("Email", text:$email).padding().background(Color(.secondarySystemBackground)).cornerRadius(10).autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/).keyboardType(.emailAddress)
+                    TextField("Email", text:$email).padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
+                        .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                        .keyboardType(.emailAddress)
+                        .autocorrectionDisabled()
                     
-                    TextField("Username", text:$username).padding().background(Color(.secondarySystemBackground)).cornerRadius(10).autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                    TextField("Username", text:$username).padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
+                        .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
                     
                     // Password SecureField
-                    SecureField("Password", text: $password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                    SecureField("Password", text: $password).padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
                     
                     // Confirm Password SecureField
-                    SecureField("Confirm Password", text: $confirm_password).padding().background(Color(.secondarySystemBackground)).cornerRadius(10)
+                    SecureField("Confirm Password", text: $confirm_password).padding()
+                        .background(Color(.secondarySystemBackground))
+                        .cornerRadius(10)
                     
                     // Signin Button
                     Button(action: {
                         //Logic to handle sign-in
                         signUp()
                     }) {
-                        Text("Sign Up").font(.headline).foregroundColor(.white).frame(width: 200, height: 50).background(Color.blue).cornerRadius(10)
+                        Text("Sign Up").font(.headline)
+                            .foregroundColor(.white)
+                            .frame(width: 200, height: 50)
+                            .background(Color.blue)
+                            .cornerRadius(10)
                     }
                     
                     Button(action: {
@@ -61,7 +80,10 @@ struct SignUpView: View {
                     .padding(.top, 10)
                     
                 }
-                .padding().background(Color.white.opacity(0.5)).cornerRadius(20).padding(.horizontal, 20)
+                .padding()
+                .background(Color.white.opacity(0.5))
+                .cornerRadius(20)
+                .padding(.horizontal, 20)
                 
                 Spacer()
             }
