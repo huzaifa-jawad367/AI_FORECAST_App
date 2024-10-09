@@ -10,6 +10,7 @@ import RealityKit
 import ARKit
 import UIKit
 
+
 struct ScanPageView: View {
     
     @Binding var authState: AuthState
@@ -18,7 +19,6 @@ struct ScanPageView: View {
         Text("Hello").font(.largeTitle)
     }
 }
-
 
 
 struct ContentView : View {
@@ -35,14 +35,13 @@ struct ContentView : View {
             case .signUp:
                 SignUpView(authState: $authState)
             case .scanPage:
-                ScanPageView(authState: $authState)
+                DashBoardView(authState: $authState)
             }
             
         }
         
     }
 }
-
 
 
 struct ARViewContainer: UIViewRepresentable {

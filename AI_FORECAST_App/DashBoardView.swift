@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DashBoardView: View {
     
+    @Binding var authState: AuthState
     let Num_Scanned: Int = 0;
     let LastScanDate: Date = Calendar.current.date(from: DateComponents(year: 2024, month: 10, day: 3, hour: 14, minute: 30))!
     let SizeData: Int = 0;
@@ -81,6 +82,9 @@ struct DashBoardView: View {
             
         }
         
+    }
+    
+    func Scan_Tree() {
         
     }
 }

@@ -17,7 +17,7 @@ struct SignInView: View {
     var body: some View {
         
         ZStack {
-            Image("forest_wallpaper")
+            Image("forest_wallpaper") 
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
