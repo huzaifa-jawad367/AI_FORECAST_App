@@ -47,7 +47,7 @@ struct SignInView: View {
                     // Signin Button
                     Button(action: {
                         signIn()
-                        authState = .scanPage
+                        authState = .Dashboard
                     }) {
                         Text("Sign In")
                             .font(.headline)

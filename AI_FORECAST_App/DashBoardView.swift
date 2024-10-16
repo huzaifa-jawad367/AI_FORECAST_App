@@ -17,7 +17,7 @@ struct DashBoardView: View {
     var body: some View {
         
         VStack {
-            Text("I am Groot")
+            Text("Tree Scanning App")
                 .font(.title.bold())
                 .foregroundColor(.brown)
                 .padding()
@@ -90,5 +90,5 @@ struct DashBoardView: View {
 }
 
 #Preview {
-    DashBoardView()
+    DashBoardView(authState: .constant(.Dashboard))
 }

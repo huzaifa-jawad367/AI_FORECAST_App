@@ -10,7 +10,7 @@ import Foundation
 enum AuthState {
     case signIn
     case signUp
-    case scanPage
+//    case scanPage
     case Dashboard
 }
 
