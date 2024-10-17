@@ -25,7 +25,7 @@ struct DashBoardView: View {
             
             HStack {
                 Button {
-                    print("Scan tree")
+                    authState = .scanPage
                 } label: {
                     Text("Scan Tree").font(.headline.bold())
                         .frame(width: 200, height: 255)

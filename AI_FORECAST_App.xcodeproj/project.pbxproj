@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6052D54E2CC0D93A0091B2F4 /* ARAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D54D2CC0D92C0091B2F4 /* ARAction.swift */; };
+		6052D5502CC0DA620091B2F4 /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */; };
 		607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254B82CAD3BD800F15EAE /* SignInView.swift */; };
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
@@ -48,6 +50,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6052D54D2CC0D92C0091B2F4 /* ARAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAction.swift; sourceTree = "<group>"; };
+		6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
 		607254B82CAD3BD800F15EAE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
@@ -109,6 +113,8 @@
 		60C2C5182CB6B4F900C0BA3F /* ARFunctionality */ = {
 			isa = PBXGroup;
 			children = (
+				6052D54D2CC0D92C0091B2F4 /* ARAction.swift */,
+				6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */,
 				60C2C5162CB6B2ED00C0BA3F /* CustomARView.swift */,
 				60C2C5192CB6B52E00C0BA3F /* CustomARViewRepresentable.swift */,
 			);
@@ -324,6 +330,8 @@
 				607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */,
 				607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */,
 				60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */,
+				6052D5502CC0DA620091B2F4 /* ARManager.swift in Sources */,
+				6052D54E2CC0D93A0091B2F4 /* ARAction.swift in Sources */,
 				60C2C5172CB6B2ED00C0BA3F /* CustomARView.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
 				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,

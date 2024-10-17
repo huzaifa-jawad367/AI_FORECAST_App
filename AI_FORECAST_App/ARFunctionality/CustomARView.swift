@@ -27,6 +27,8 @@ class CustomARView: ARView {
     
     convenience init() {
         self.init(frame: UIScreen.main.bounds )
+        
+        placeBlueBlock() 
     }
     
     func configurationExamples() {
@@ -48,7 +50,7 @@ class CustomARView: ARView {
         let coordinateAnchor = AnchorEntity(world: .zero)
         
         // attach anchors to detect planes (this works best on devices with a LiDAR sensor
-        let _ = AnchorEntity(.plane(.horizontal,
+        let horizontalAnchor = AnchorEntity(.plane(.horizontal,
                                     classification: .any,
                                     minimumBounds: SIMD2<Float>(0.2, 0.2)
                 ))
@@ -62,8 +64,38 @@ class CustomARView: ARView {
         let _ = AnchorEntity(.image(group: "group", name: "name"))
         
         scene.addAnchor(coordinateAnchor)
+        scene.addAnchor(horizontalAnchor)
     }
     
+    func entityExamples() {
+        // Load an entity from a usdz file
+        let _ = try? Entity.load(named: "usdzFileName")
+        
+        // Load an entity from a reality file
+        let _ = try? Entity.load(named: "realityFileName")
+        
+        // Generate an entiity with code
+        let box = MeshResource.generateBox(size: 1)
+        let entity = ModelEntity(mesh: box)
+        
+        // Add entity to an anchor, so it's placed in the scene
+        let horizontalAnchor = AnchorEntity(.plane(.horizontal,
+                                    classification: .any,
+                                    minimumBounds: SIMD2<Float>(0.2, 0.2)
+                ))
+        horizontalAnchor.addChild(entity)
+    }
+    
+    func placeBlueBlock() {
+        let block = MeshResource.generateBox(size: 1)
+        let material = SimpleMaterial(color: .blue, isMetallic: false)
+        let entity = ModelEntity(mesh: block, materials: [material])
+        
+        let anchor = AnchorEntity(plane: .horizontal)
+        anchor.addChild(entity)
+        
+        scene.addAnchor(anchor)
+    }
     
 }
 
