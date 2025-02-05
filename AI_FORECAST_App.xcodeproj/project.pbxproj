@@ -14,6 +14,7 @@
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
 		607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */; };
 		609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C12D5360E7006910B8 /* Supabase.swift */; };
+		609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */; };
 		609C13352CB16639002F39EF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 609C13342CB16639002F39EF /* Supabase */; };
 		60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */; };
 		60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B8252CAE93A80086930F /* ColorExtension.swift */; };
@@ -58,6 +59,7 @@
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		609BA6C12D5360E7006910B8 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
+		609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeMeasurementView.swift; sourceTree = "<group>"; };
 		60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
 		60B6B8252CAE93A80086930F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		60C2C5162CB6B2ED00C0BA3F /* CustomARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARView.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 		60C2C5182CB6B4F900C0BA3F /* ARFunctionality */ = {
 			isa = PBXGroup;
 			children = (
+				609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */,
 				6052D54D2CC0D92C0091B2F4 /* ARAction.swift */,
 				6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */,
 				60C2C5162CB6B2ED00C0BA3F /* CustomARView.swift */,
@@ -342,6 +345,7 @@
 				607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */,
 				60C56BF62C982FE700810952 /* ContentView.swift in Sources */,
 				60C56BF42C982FE700810952 /* AppDelegate.swift in Sources */,
+				609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

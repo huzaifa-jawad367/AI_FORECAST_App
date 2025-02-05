@@ -40,8 +40,10 @@ import RealityKit
 
 struct CustomARViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> CustomARView {
-        return CustomARView()
+        return CustomARView(frame: UIScreen.main.bounds)
     }
-    
+
     func updateUIView(_ uiView: CustomARView, context: Context) {}
 }
+
+
