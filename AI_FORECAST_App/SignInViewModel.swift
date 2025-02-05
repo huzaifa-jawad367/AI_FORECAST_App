@@ -6,9 +6,11 @@
 //
 
 import Foundation
+import Supabase
 
 @MainActor
 class SignInViewModel: ObservableObject {
+    private let supabaseClient = client
     
     func isSignInFormValid(email: String, password: String) -> Bool {
         guard !email.isEmpty else {
@@ -67,9 +69,32 @@ class SignInViewModel: ObservableObject {
         return true
     }
 
-    
+    /// Registers a new user using the Supabase `signUp` method.
+    ///
+    /// - Parameters:
+    ///   - email: User's email
+    ///   - password: User's password
+    ///   - username: Additional user metadata field
     func RegisterWithEmail(email: String, password: String, username: String) async throws {
         
+        do {
+            // Sign up user.
+            // Depending on your supabase-swift version, you can pass
+            // user metadata as shown below. For example:
+            let result = try await client.auth.signUp(
+                email: email,
+                password: password,
+                data: ["username": .string(username)]
+              )
+            
+            let user = result.user
+            print("Sign up successful. User ID: \(user.id)")
+            
+        } catch {
+            // Bubble up the error so callers can handle it
+            print("Sign up error:", error.localizedDescription)
+            throw error
+        }
     }
     
     func SignInWithEmail(email: String, password: String) async throws {

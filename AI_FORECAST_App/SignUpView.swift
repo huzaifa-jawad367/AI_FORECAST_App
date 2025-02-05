@@ -16,6 +16,8 @@ struct SignUpView: View {
     @State private var username: String = ""
     @State private var isSignedUp: Bool = false
     
+    @StateObject private var signInViewModel = SignInViewModel()
+    
     var body: some View {
         
         ZStack {
@@ -94,10 +96,42 @@ struct SignUpView: View {
     }
     
     func signUp() {
-        if !email.isEmpty && !username.isEmpty && !password.isEmpty && !confirm_password.isEmpty {
-            isSignedUp = true
+        // 1. Basic checks (e.g., ensure passwords match)
+        // Check if form fields are filled
+        guard !email.isEmpty, !username.isEmpty, !password.isEmpty, !confirm_password.isEmpty else {
+            print("Please fill in all fields.")
+            return
+        }
+        
+        // Confirm passwords match
+        guard password == confirm_password else {
+            print("Passwords do not match.")
+            return
+        }
+        
+        // Optionally, do extra validation using the isSignUpFormValid
+        guard signInViewModel.isSignUpFormValid(email: email, password: password, username: username) else {
+            print("Sign up form is invalid. Check logs.")
+            return
+        }
+        
+    // 3. Perform the sign up using a Task to allow async/await calls
+        Task {
+            do {
+                try await signInViewModel.RegisterWithEmail(
+                    email: email,
+                    password: password,
+                    username: username
+                )
+                // If successful, set `isSignedUp = true` or navigate to another screen, etc.
+                isSignedUp = true
+            } catch {
+                // Handle error (show alert, etc.)
+                print("Sign up failed: \(error.localizedDescription)")
+            }
         }
     }
+
 }
 
 

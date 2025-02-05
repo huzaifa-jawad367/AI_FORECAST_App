@@ -32,8 +32,7 @@ struct DashBoardView: View {
                         .background(Color(hex: "#228B22"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                        .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-                }
+                        .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)                }
                 
                 VStack {
                     Button {

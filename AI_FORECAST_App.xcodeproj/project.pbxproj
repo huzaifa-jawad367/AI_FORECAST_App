@@ -13,6 +13,7 @@
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
 		607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */; };
+		609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C12D5360E7006910B8 /* Supabase.swift */; };
 		609C13352CB16639002F39EF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 609C13342CB16639002F39EF /* Supabase */; };
 		60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */; };
 		60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B8252CAE93A80086930F /* ColorExtension.swift */; };
@@ -56,6 +57,7 @@
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		609BA6C12D5360E7006910B8 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
 		60B6B8252CAE93A80086930F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		60C2C5162CB6B2ED00C0BA3F /* CustomARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARView.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				609BA6C12D5360E7006910B8 /* Supabase.swift */,
 				60C56BF32C982FE700810952 /* AppDelegate.swift */,
 				60C56BF52C982FE700810952 /* ContentView.swift */,
 				60C56BF72C982FE800810952 /* Assets.xcassets */,
@@ -335,6 +338,7 @@
 				60C2C5172CB6B2ED00C0BA3F /* CustomARView.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
 				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,
+				609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */,
 				607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */,
 				60C56BF62C982FE700810952 /* ContentView.swift in Sources */,
 				60C56BF42C982FE700810952 /* AppDelegate.swift in Sources */,
