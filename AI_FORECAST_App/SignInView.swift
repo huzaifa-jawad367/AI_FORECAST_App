@@ -13,6 +13,8 @@ struct SignInView: View {
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isSignedIn: Bool = false
+    
+    @StateObject private var signInViewModel = SignInViewModel()
 
     var body: some View {
         
@@ -80,8 +82,32 @@ struct SignInView: View {
     }
 
     func signIn() {
-        if !email.isEmpty && !password.isEmpty {
-            isSignedIn = true
+        // 1. Basic checks (e.g., ensure passwords match)
+        // Check if form fields are filled
+        guard !email.isEmpty, !password.isEmpty else {
+            print("Please fill in all fields.")
+            return
+        }
+        
+        // Optionally, do extra validation using the isSignUpFormValid
+        guard signInViewModel.isSignInFormValid(email: email, password: password) else {
+            print("Sign up form is invalid. Check logs.")
+            return
+        }
+        
+    // 3. Perform the sign up using a Task to allow async/await calls
+        Task {
+            do {
+                try await signInViewModel.SignInWithEmail(
+                    email: email,
+                    password: password
+                )
+                // If successful, set `isSignedUp = true` or navigate to another screen, etc.
+                isSignedIn = true
+            } catch {
+                // Handle error (show alert, etc.)
+                print("Sign in failed: \(error.localizedDescription)")
+            }
         }
     }
 }

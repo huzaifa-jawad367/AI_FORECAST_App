@@ -98,8 +98,28 @@ class SignInViewModel: ObservableObject {
     }
     
     func SignInWithEmail(email: String, password: String) async throws {
-        
+        do {
+            // If you are on a recent version of supabase-swift, you can do:
+            // `signInWithPassword(email:password:)`
+            let result = try await client.auth.signIn(
+                email: email,
+                password: password
+            )
+            
+            // `result.user` is a non-optional User object
+            let user = result.user
+            print("Sign in successful. User ID: \(user.id)")
+            
+            // If needed, you can also look at `result.session` for tokens, etc.
+            // let session = result.session
+            // print("Access Token: \(session?.accessToken ?? "")")
+            
+        } catch {
+            print("Sign in error:", error.localizedDescription)
+            throw error
+        }
     }
+
 
 }
 
