@@ -52,7 +52,7 @@ struct ScanResultView: View {
                 .padding(.horizontal)
 
                 HStack {
-                    Text("Species:")
+                    Text("Species   :")
                         .fontWeight(.semibold)
                     Spacer()
                     Text(timestamp.formatted(date: .abbreviated, time: .shortened))

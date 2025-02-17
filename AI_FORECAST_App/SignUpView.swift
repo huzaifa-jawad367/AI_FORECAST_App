@@ -81,6 +81,56 @@ struct SignUpView: View {
                     }
                     .padding(.top, 10)
                     
+                    // -- OR Sign Up with Apple --
+                    Button(action: {
+                        
+                    }) {
+                        HStack {
+                            Image(systemName: "applelogo")
+                            
+                            Text("Sign Up with Apple")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(width: 300, height: 50)
+                        .background(Color.black)
+                        .cornerRadius(30)
+                    }
+                    
+                    // -- OR Sign Up with Google --
+                    Button(action: {
+                            
+                    }) {
+                        HStack {
+                            Image("google-icon") // your custom google icon
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                            Text("Sign Up with Google")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(width: 300, height: 50)
+                        .background(Color.red)
+                        .cornerRadius(30)
+                    }
+                    
+                    // -- OR Sign Up with Facebook --
+                    Button(action: {
+                        
+                    }) {
+                        HStack {
+                            Image("facebook-icon") // your custom facebook icon
+                                .resizable()
+                                .frame(width: 30, height: 20)
+                            Text("Sign Up with Facebook")
+                        }
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(width: 300, height: 50)
+                        .background(Color.blue)
+                        .cornerRadius(30)
+                    }
+                    
                 }
                 .padding()
                 .background(Color.white.opacity(0.5))
