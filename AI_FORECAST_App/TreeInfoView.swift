@@ -12,24 +12,29 @@ struct ScanResultView: View {
     let height: Double
     let diameter: Double
     let timestamp: Date
-    
+
     @State private var selectedSpecies: String = ""
     let speciesOptions = ["Oak", "Pine", "Maple", "Birch", "Spruce", "Other"]
-    
+
+    // Toggle for alert
+    @State private var showAlert = false
+
     var body: some View {
         VStack {
+            // Tree image preview
             Image(uiImage: image)
                 .resizable()
                 .scaledToFit()
                 .frame(height: 250)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding()
-            
+
+            // Measurements and info
             VStack(alignment: .leading, spacing: 15) {
                 Text("Tree Measurements")
                     .font(.title2)
                     .fontWeight(.bold)
-                
+
                 HStack {
                     Text("Height:")
                         .fontWeight(.semibold)
@@ -37,7 +42,7 @@ struct ScanResultView: View {
                     Text(String(format: "%.2f meters", height))
                 }
                 .padding(.horizontal)
-                
+
                 HStack {
                     Text("Diameter:")
                         .fontWeight(.semibold)
@@ -45,9 +50,9 @@ struct ScanResultView: View {
                     Text(String(format: "%.2f cm", diameter))
                 }
                 .padding(.horizontal)
-                
+
                 HStack {
-                    Text("Scan Time:")
+                    Text("Species:")
                         .fontWeight(.semibold)
                     Spacer()
                     Text(timestamp.formatted(date: .abbreviated, time: .shortened))
@@ -55,9 +60,12 @@ struct ScanResultView: View {
                 .padding(.horizontal)
                 
                 HStack {
-                    Text("Species:")
+                    Text("Scan Time:")
                         .fontWeight(.semibold)
+                    
                     Spacer()
+                    
+                    // Species dropdown
                     Picker("Species", selection: $selectedSpecies) {
                         ForEach(speciesOptions, id: \.self) { species in
                             Text(species)
@@ -73,6 +81,49 @@ struct ScanResultView: View {
             .padding()
             
             Spacer()
+            
+            // Navigation buttons at the bottom
+            HStack(spacing: 30) {
+                Button(action: {
+                    // Navigation back to dashboard
+                    // If using a NavigationLink in the parent, you could pop or pass a dismiss action.
+                    // For demonstration, we do nothing or you could handle your own logic here.
+                }) {
+                    Text("Dashboard")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(10)
+                }
+                
+                Spacer()
+
+                Button(action: {
+                    // If species is not selected, show alert
+                    if selectedSpecies.isEmpty {
+                        showAlert = true
+                    } else {
+                        // Navigate to ARView to measure next tree
+                        // Insert your navigation logic here
+                    }
+                }) {
+                    Text("Continue Scan")
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.green)
+                        .cornerRadius(10)
+                }
+            }
+            .padding([.horizontal, .bottom])
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Species Not Selected"),
+                    message: Text("Please select the tree species before proceeding."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         .navigationTitle("Scan Details")
     }
