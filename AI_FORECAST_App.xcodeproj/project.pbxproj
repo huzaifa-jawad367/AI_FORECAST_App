@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		6052D54E2CC0D93A0091B2F4 /* ARAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D54D2CC0D92C0091B2F4 /* ARAction.swift */; };
 		6052D5502CC0DA620091B2F4 /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */; };
+		606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606EB43E2D639C010048EF5C /* TreeInfoView.swift */; };
 		607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254B82CAD3BD800F15EAE /* SignInView.swift */; };
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
@@ -54,6 +55,7 @@
 /* Begin PBXFileReference section */
 		6052D54D2CC0D92C0091B2F4 /* ARAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAction.swift; sourceTree = "<group>"; };
 		6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
+		606EB43E2D639C010048EF5C /* TreeInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeInfoView.swift; sourceTree = "<group>"; };
 		607254B82CAD3BD800F15EAE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				606EB43E2D639C010048EF5C /* TreeInfoView.swift */,
 				609BA6C12D5360E7006910B8 /* Supabase.swift */,
 				60C56BF32C982FE700810952 /* AppDelegate.swift */,
 				60C56BF52C982FE700810952 /* ContentView.swift */,
@@ -340,6 +343,7 @@
 				6052D54E2CC0D93A0091B2F4 /* ARAction.swift in Sources */,
 				60C2C5172CB6B2ED00C0BA3F /* CustomARView.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
+				606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */,
 				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,
 				609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */,
 				607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */,
