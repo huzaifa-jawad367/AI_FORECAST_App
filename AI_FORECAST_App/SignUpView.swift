@@ -78,6 +78,7 @@ struct SignUpView: View {
                         Text("Already have an account? Sign In")
                             .font(.footnote)
                             .foregroundColor(.blue)
+                            .bold()
                     }
                     .padding(.top, 10)
                     

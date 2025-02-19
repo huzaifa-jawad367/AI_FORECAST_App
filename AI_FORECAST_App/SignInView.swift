@@ -65,6 +65,7 @@ struct SignInView: View {
                         Text("Don't have an account? Sign Up")
                             .font(.footnote)
                             .foregroundColor(.blue)
+                            .bold()
                     }
                     .padding(.top, 10)
                     
