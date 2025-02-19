@@ -5,18 +5,21 @@
 //  Created by Huzaifa Jawad on 10/2/24.
 //
 
+import AuthenticationServices
 import SwiftUI
 
 struct SignUpView: View {
     
     @Binding var authState: AuthState
-    @State private var email: String = ""
+//    @State private var email: String = ""
     @State private var password: String = ""
     @State private var confirm_password = ""
     @State private var username: String = ""
     @State private var isSignedUp: Bool = false
     
     @StateObject private var signInViewModel = SignInViewModel()
+    
+    @AppStorage("email") var email: String = ""
     
     var body: some View {
         
@@ -25,6 +28,7 @@ struct SignUpView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+                .overlay(Color.black.opacity(0.15))
             
             
             VStack {
@@ -83,20 +87,54 @@ struct SignUpView: View {
                     .padding(.top, 10)
                     
                     // -- OR Sign Up with Apple --
-                    Button(action: {
+//                    Button(action: {
+//                        
+//                    }) {
+//                        HStack {
+//                            Image(systemName: "applelogo")
+//                            
+//                            Text("Sign Up with Apple")
+//                        }
+//                        .font(.headline)
+//                        .foregroundColor(.white)
+//                        .frame(width: 300, height: 50)
+//                        .background(Color.black)
+//                        .cornerRadius(30)
+//                    }
+                    
+                    SignInWithAppleButton(.continue) { request in
                         
-                    }) {
-                        HStack {
-                            Image(systemName: "applelogo")
+                        request.requestedScopes = [.email, .fullName]
+                        
+                    } onCompletion: { result in
+                        
+                        switch result {
+                        case .success(let auth):
                             
-                            Text("Sign Up with Apple")
+                            switch auth.credential {
+                            case let credential as ASAuthorizationAppleIDCredential:
+                                
+                                // User id
+                                let userId = credential.user
+                                
+                                // User Info
+                                let email = credential.email
+                                let firstName = credential.fullName?.givenName
+                                let lastName = credential.fullName?.familyName
+                                
+                            default:
+                                break
+                            }
+                            
+                        case .failure(let error):
+                            print(error)
                         }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(width: 300, height: 50)
-                        .background(Color.black)
-                        .cornerRadius(30)
                     }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(width: 300, height: 50)
+                    .background(Color.black)
+                    .cornerRadius(30)
                     
                     // -- OR Sign Up with Google --
                     Button(action: {

@@ -23,50 +23,173 @@ struct DashBoardView: View {
                 .padding()
                 
             
+            Button {
+                authState = .scanPage
+            } label: {
+                ZStack {
+                    Color(hex: "#6b96db")
+                        .cornerRadius(20)
+                    
+                    HStack {
+                        Image("AIForCaST")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 180, height: 180)
+                            .padding(.leading, 20)
+                        
+                        Spacer()
+                        
+                        Text("AI-ForCaST")
+                            .font(.title2.bold())
+                            .foregroundColor(.white)
+                            .padding(.trailing, 20)
+                    }
+                }
+                .frame(width: 350, height: 200)
+                .opacity(0.8)
+            }
+
+            
+            Text("Quick Access")
+                .font(.title2.bold())
+
+            
             HStack {
-                Button {
-                    authState = .scanPage
-                } label: {
-                    Text("Scan Tree").font(.headline.bold())
-                        .frame(width: 200, height: 255)
-                        .background(Color(hex: "#228B22"))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)                }
                 
                 VStack {
                     Button {
-                        print("View Inventory")
+                        print("Album button tapped")
                     } label: {
-                        Text("View Inventory").font(.headline.bold())
-                            .frame(width: 150, height: 125)
-                            .background(Color(hex: "#4682B4"))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+                        VStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 50, height: 50)
+                                
+                                Image(systemName: "photo.on.rectangle.angled") // Replace with your custom icon if needed
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.blue)
+                            }
+                            
+                            Text("Album")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        .frame(width: 150, height: 150)
+                        .background(Color.blue.opacity(0.2))
+                        .cornerRadius(20)
+                    }
+
+                    Button {
+                        print("Album button tapped")
+                    } label: {
+                        VStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 50, height: 50)
+                                
+                                Image(systemName: "gearshape.fill") // Replace with your custom icon if needed
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.green)
+                            }
+                            
+                            Text("Settings")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        .frame(width: 150, height: 150)
+                        .background(Color.green.opacity(0.2))
+                        .cornerRadius(20)
+                    }
+                    
+                }
+                
+                VStack {
+                    Button {
+                        print("Album button tapped")
+                    } label: {
+                        VStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 50, height: 50)
+                                
+                                Image(systemName: "camera.fill") // Replace with your custom icon if needed
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.red)
+                            }
+                            
+                            Text("Camera")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        .frame(width: 150, height: 150)
+                        .background(Color.red.opacity(0.2))
+                        .cornerRadius(20)
                     }
                     
                     Button {
-                        print("Quick Tips and Instructions")
+                        print("Album button tapped")
                     } label: {
-                        Text("Quick Tips and Instructions").font(.headline.bold())
-                            .frame(width: 150, height: 125)
-                            .background(Color(hex: "#32CD32"))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-                        
+                        VStack(spacing: 8) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 50, height: 50)
+                                
+                                Image(systemName: "questionmark.circle") // Replace with your custom icon if needed
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.purple)
+                            }
+                            
+                            Text("Guide / Help")
+                                .font(.headline)
+                                .foregroundColor(.black)
+                        }
+                        .frame(width: 150, height: 150)
+                        .background(Color.purple.opacity(0.2))
+                        .cornerRadius(20)
                     }
+                    
                 }
                 
             }.padding()
             
-            Spacer()
+//            Spacer()
+//            
+//            Text("Number of Trees Scanned: \(Num_Scanned)").bold()
+//            Text("Date of Last Scan: \(LastScanDate)")
+//            
+//            Spacer()
             
-            Text("Number of Trees Scanned: \(Num_Scanned)").bold()
-            Text("Date of Last Scan: \(LastScanDate)")
-            
-            Spacer()
+            VStack(spacing: 4) {
+                Text("Trees Scanned")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                Text("\(Num_Scanned)")
+                    .font(.title.bold())
+                    .foregroundColor(.green)
+                
+                Text("Last Scan")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                Text(LastScanDate, style: .date)
+                    .font(.headline)
+            }
+            .padding()
+            .frame(width: 350, height: 100)
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(20)
+
             
             Button {
                 print("Log out")

@@ -55,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AI_FORECAST_App.entitlements; sourceTree = "<group>"; };
 		6052D54D2CC0D92C0091B2F4 /* ARAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAction.swift; sourceTree = "<group>"; };
 		6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
 		606EB43E2D639C010048EF5C /* TreeInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeInfoView.swift; sourceTree = "<group>"; };
@@ -156,6 +157,7 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */,
 				606EB43E2D639C010048EF5C /* TreeInfoView.swift */,
 				609BA6C12D5360E7006910B8 /* Supabase.swift */,
 				60C56BF32C982FE700810952 /* AppDelegate.swift */,
@@ -517,9 +519,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AI_FORECAST_App/AI_FORECAST_App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AI_FORECAST_App/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Needed to show AR View";
@@ -547,9 +551,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AI_FORECAST_App/AI_FORECAST_App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AI_FORECAST_App/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Needed to show AR View";
