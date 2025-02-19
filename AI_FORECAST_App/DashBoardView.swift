@@ -17,9 +17,9 @@ struct DashBoardView: View {
     var body: some View {
         
         VStack {
-            Text("Tree Scanning App")
+            Text("AI-ForCaST")
                 .font(.title.bold())
-                .foregroundColor(.brown)
+                .foregroundColor(.blue.opacity(0.6))
                 .padding()
                 
             
@@ -45,7 +45,7 @@ struct DashBoardView: View {
                             .padding(.trailing, 20)
                     }
                 }
-                .frame(width: 350, height: 200)
+                .frame(width: 350, height: 170)
                 .opacity(0.8)
             }
 
@@ -164,12 +164,6 @@ struct DashBoardView: View {
                 
             }.padding()
             
-//            Spacer()
-//            
-//            Text("Number of Trees Scanned: \(Num_Scanned)").bold()
-//            Text("Date of Last Scan: \(LastScanDate)")
-//            
-//            Spacer()
             
             VStack(spacing: 4) {
                 Text("Trees Scanned")
