@@ -12,6 +12,7 @@ enum AuthState {
     case signUp
     case scanPage
     case Dashboard
+    case Inventory
 }
 
 

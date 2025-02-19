@@ -35,6 +35,8 @@ struct ContentView : View {
                 SignUpView(authState: $authState)
             case .Dashboard: 
                 DashBoardView(authState: $authState)
+            case .Inventory:
+                InventoryView(authState: $authState)
             case .scanPage:
                 CustomARViewRepresentable()
             }

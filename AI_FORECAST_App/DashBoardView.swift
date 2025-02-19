@@ -59,6 +59,9 @@ struct DashBoardView: View {
                 VStack {
                     Button {
                         print("Album button tapped")
+                        
+                        authState = .Inventory
+                        
                     } label: {
                         VStack(spacing: 8) {
                             ZStack {
@@ -77,13 +80,14 @@ struct DashBoardView: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
                         }
-                        .frame(width: 150, height: 150)
+                        .frame(width: 175, height: 150)
                         .background(Color.blue.opacity(0.2))
                         .cornerRadius(20)
                     }
 
                     Button {
-                        print("Album button tapped")
+                        print("Settings Button Tapped")
+                        
                     } label: {
                         VStack(spacing: 8) {
                             ZStack {
@@ -102,7 +106,7 @@ struct DashBoardView: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
                         }
-                        .frame(width: 150, height: 150)
+                        .frame(width: 175, height: 150)
                         .background(Color.green.opacity(0.2))
                         .cornerRadius(20)
                     }
@@ -111,7 +115,9 @@ struct DashBoardView: View {
                 
                 VStack {
                     Button {
-                        print("Album button tapped")
+                        print("Capture Scan")
+                        
+                        authState = .scanPage
                     } label: {
                         VStack(spacing: 8) {
                             ZStack {
@@ -130,7 +136,7 @@ struct DashBoardView: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
                         }
-                        .frame(width: 150, height: 150)
+                        .frame(width: 175, height: 150)
                         .background(Color.red.opacity(0.2))
                         .cornerRadius(20)
                     }
@@ -155,7 +161,7 @@ struct DashBoardView: View {
                                 .font(.headline)
                                 .foregroundColor(.black)
                         }
-                        .frame(width: 150, height: 150)
+                        .frame(width: 175, height: 150)
                         .background(Color.purple.opacity(0.2))
                         .cornerRadius(20)
                     }
