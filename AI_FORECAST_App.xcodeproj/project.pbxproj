@@ -10,6 +10,7 @@
 		603A8BDB2D661F7F00CF595A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 603A8BDA2D661F7F00CF595A /* GoogleSignIn */; };
 		603A8BDD2D661F7F00CF595A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 603A8BDC2D661F7F00CF595A /* GoogleSignInSwift */; };
 		603A8BE42D669D8000CF595A /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A8BE32D669D8000CF595A /* InventoryView.swift */; };
+		603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A8BE52D67631600CF595A /* ScanRecord.swift */; };
 		6052D54E2CC0D93A0091B2F4 /* ARAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D54D2CC0D92C0091B2F4 /* ARAction.swift */; };
 		6052D5502CC0DA620091B2F4 /* ARManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */; };
 		606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606EB43E2D639C010048EF5C /* TreeInfoView.swift */; };
@@ -58,6 +59,7 @@
 /* Begin PBXFileReference section */
 		603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AI_FORECAST_App.entitlements; sourceTree = "<group>"; };
 		603A8BE32D669D8000CF595A /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
+		603A8BE52D67631600CF595A /* ScanRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRecord.swift; sourceTree = "<group>"; };
 		6052D54D2CC0D92C0091B2F4 /* ARAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARAction.swift; sourceTree = "<group>"; };
 		6052D54F2CC0DA5A0091B2F4 /* ARManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARManager.swift; sourceTree = "<group>"; };
 		606EB43E2D639C010048EF5C /* TreeInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeInfoView.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				603A8BE52D67631600CF595A /* ScanRecord.swift */,
 				603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */,
 				606EB43E2D639C010048EF5C /* TreeInfoView.swift */,
 				609BA6C12D5360E7006910B8 /* Supabase.swift */,
@@ -357,6 +360,7 @@
 				603A8BE42D669D8000CF595A /* InventoryView.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
 				606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */,
+				603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */,
 				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,
 				609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */,
 				607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */,

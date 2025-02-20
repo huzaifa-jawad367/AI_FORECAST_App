@@ -52,7 +52,7 @@ struct ScanResultView: View {
                 .padding(.horizontal)
 
                 HStack {
-                    Text("Species   :")
+                    Text("Scan Time:")
                         .fontWeight(.semibold)
                     Spacer()
                     Text(timestamp.formatted(date: .abbreviated, time: .shortened))
@@ -60,7 +60,7 @@ struct ScanResultView: View {
                 .padding(.horizontal)
                 
                 HStack {
-                    Text("Scan Time:")
+                    Text("Species:")
                         .fontWeight(.semibold)
                     
                     Spacer()
@@ -80,6 +80,22 @@ struct ScanResultView: View {
             }
             .padding()
             
+            Button(action: {
+                // If species is not selected, show alert
+                if selectedSpecies.isEmpty {
+                    showAlert = true
+                } else {
+                    
+                }
+            }) {
+                Text("Save")
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(width: 200)
+                    .background(Color.blue)
+                    .cornerRadius(20)
+            }
+            
             Spacer()
             
             // Navigation buttons at the bottom
@@ -92,13 +108,11 @@ struct ScanResultView: View {
                     Text("Dashboard")
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity)
+//                        .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
                 
-                Spacer()
-
                 Button(action: {
                     // If species is not selected, show alert
                     if selectedSpecies.isEmpty {
@@ -111,7 +125,7 @@ struct ScanResultView: View {
                     Text("Continue Scan")
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity)
+//                        .frame(maxWidth: .infinity)
                         .background(Color.green)
                         .cornerRadius(10)
                 }
