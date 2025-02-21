@@ -5,12 +5,13 @@
 //  Created by Huzaifa Jawad on 20/02/2025.
 //
 
-import Foundation
+import SwiftUI
 
-struct ScanRecord: Codable {
-    let scan_id: String       // Will store UUID
+struct ScanRecord: Identifiable, Codable {
+    var id: String { scan_id }
+    let scan_id: String
     let height: Double
     let diameter: Double
     let species: String
-    let scan_time: Date
+    let scan_time: String
 }
