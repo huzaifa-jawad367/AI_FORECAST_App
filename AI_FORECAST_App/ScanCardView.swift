@@ -10,22 +10,21 @@ struct ScanCardView: View {
     let scan: ScanRecord
 
     var body: some View {
-        ZStack {
+        
             
-            VStack(alignment: .leading, spacing: 8) {
-                Text(scan.species)
-                    .font(.headline)
-                    .foregroundColor(.white)
-                Text("Height: \(String(format: "%.2f", scan.height)) m")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.8))
-                Text("Diameter: \(String(format: "%.2f", scan.diameter)) cm")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.8))
-                Text(scan.scan_time)
-                    .font(.footnote)
-                    .foregroundColor(.white.opacity(0.6))
-            }
+        VStack(alignment: .leading, spacing: 8) {
+            Text(scan.species)
+                .font(.headline)
+                .foregroundColor(.white)
+            Text("Height: \(String(format: "%.2f", scan.height)) m")
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.8))
+            Text("Diameter: \(String(format: "%.2f", scan.diameter)) cm")
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.8))
+            Text(scan.scan_time)
+                .font(.footnote)
+                .foregroundColor(.white.opacity(0.6))
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
