@@ -39,7 +39,7 @@ struct ScanCardView: View {
 struct ScanCardView_Previews: PreviewProvider {
     static var previews: some View {
         ScanCardView(
-            scan: ScanRecord(scan_id: "0034dce6-a317-479b-912f-37f91c92719e", height: 13.21, diameter: 30.20, species: "Maple", scan_time: "2024-05-19 00:00:00")
+            scan: ScanRecord(scan_id: "0034dce6-a317-479b-912f-37f91c92719e", height: 13.21, diameter: 30.20, species: "Maple", scan_time: "2024-05-19 00:00:00", project_name: "Project1", user_name: "Huzaifa Jawad", biomass_estimation: 21.23, latitude: 71.23, longitude: 71.26)
         )
     }
 }

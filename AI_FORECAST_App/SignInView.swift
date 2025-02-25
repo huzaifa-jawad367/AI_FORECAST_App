@@ -49,7 +49,7 @@ struct SignInView: View {
                     // Signin Button
                     Button(action: {
                         signIn()
-                        authState = .Dashboard
+//                        authState = .Dashboard
                     }) {
                         Text("Sign In")
                             .font(.headline)
@@ -156,6 +156,7 @@ struct SignInView: View {
                 )
                 // If successful, set `isSignedUp = true` or navigate to another screen, etc.
                 isSignedIn = true
+                authState = .Dashboard
             } catch {
                 // Handle error (show alert, etc.)
                 print("Sign in failed: \(error.localizedDescription)")

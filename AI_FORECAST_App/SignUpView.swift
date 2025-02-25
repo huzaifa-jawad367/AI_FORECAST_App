@@ -16,6 +16,7 @@ struct SignUpView: View {
     @State private var confirm_password = ""
     @State private var username: String = ""
     @State private var isSignedUp: Bool = false
+    @State private var alertItem: AlertItem?
     
     @StateObject private var signInViewModel = SignInViewModel()
     

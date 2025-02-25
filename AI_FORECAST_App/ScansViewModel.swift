@@ -16,9 +16,11 @@ class ScansViewModel: ObservableObject {
     func fetchScans() async {
         do {
             let response = try await client.database
-                .from("Scans")
+                .from("scans")
                 .select("*")
                 .execute()
+            
+            
             
             // Decode the raw Data into an array of ScanRecord
             let records = try JSONDecoder().decode([ScanRecord].self, from: response.data)

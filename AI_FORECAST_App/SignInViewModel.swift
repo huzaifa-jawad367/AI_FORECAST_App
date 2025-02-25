@@ -84,7 +84,7 @@ class SignInViewModel: ObservableObject {
             let result = try await client.auth.signUp(
                 email: email,
                 password: password,
-                data: ["username": .string(username)]
+                data: ["Display name": .string(username)]
               )
             
             let user = result.user
