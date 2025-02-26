@@ -19,16 +19,7 @@ struct DashBoardView: View {
     var body: some View {
         
         VStack {
-            HStack{
-                Button{
-                    showMenu.toggle()
-                } label: {
-                    Image("menu")
-                        .resizable()
-                        .frame(width: 32, height: 32)
-                }
-                Spacer()
-            }
+            
             Text("AI-ForCaST")
                 .font(.title.bold())
                 .foregroundColor(.blue.opacity(0.6))

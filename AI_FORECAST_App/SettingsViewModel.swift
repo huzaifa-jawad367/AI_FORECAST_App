@@ -27,8 +27,6 @@ class SettingsViewModel: ObservableObject {
     }
     
     func fetchUserSession() {
-        // Example: if user is signed in, create a UserProfile object.
-        // Replace with your own Supabase user fetch logic.
         
         // If user is signed in:
         isSignedIn = true
@@ -39,9 +37,9 @@ class SettingsViewModel: ObservableObject {
             profilePictureUrl: "https://example.com/profiles/alice.jpg"
         )
         
-        // If user is not signed in:
-        // isSignedIn = false
-        // currentUser = nil
+//         If user is not signed in:
+//         isSignedIn = false
+//         currentUser = nil
     }
     
     func logOut() {

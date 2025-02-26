@@ -184,24 +184,19 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				60DF8B412D6F1A5B003D5562 /* Views */,
 				609B5E852D6EF48800B7864D /* SettingsViewModel.swift */,
-				609B5E832D6EDE6100B7864D /* SettingsView.swift */,
 				609B5E7E2D6DEFD600B7864D /* DataStructs */,
-				603A8BF12D6B46ED00CF595A /* ScansListView.swift */,
 				603A8BEF2D6B469C00CF595A /* ScansViewModel.swift */,
 				603A8BE72D692F1B00CF595A /* ScanCardView.swift */,
 				603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */,
-				606EB43E2D639C010048EF5C /* TreeInfoView.swift */,
 				609BA6C12D5360E7006910B8 /* Supabase.swift */,
 				60C56BF32C982FE700810952 /* AppDelegate.swift */,
 				60C56BF52C982FE700810952 /* ContentView.swift */,
 				60C56BF72C982FE800810952 /* Assets.xcassets */,
 				60C56BF92C982FE800810952 /* Preview Content */,
-				607254B82CAD3BD800F15EAE /* SignInView.swift */,
 				60C2C5182CB6B4F900C0BA3F /* ARFunctionality */,
-				607254BA2CAD3DCF00F15EAE /* SignUpView.swift */,
 				607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */,
-				60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */,
 				60B6B8252CAE93A80086930F /* ColorExtension.swift */,
 			);
 			path = AI_FORECAST_App;
@@ -230,6 +225,19 @@
 				60C56C102C982FE800810952 /* AI_FORECAST_AppUITestsLaunchTests.swift */,
 			);
 			path = AI_FORECAST_AppUITests;
+			sourceTree = "<group>";
+		};
+		60DF8B412D6F1A5B003D5562 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				609B5E832D6EDE6100B7864D /* SettingsView.swift */,
+				603A8BF12D6B46ED00CF595A /* ScansListView.swift */,
+				606EB43E2D639C010048EF5C /* TreeInfoView.swift */,
+				607254B82CAD3BD800F15EAE /* SignInView.swift */,
+				607254BA2CAD3DCF00F15EAE /* SignUpView.swift */,
+				60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

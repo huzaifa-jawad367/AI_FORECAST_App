@@ -14,6 +14,7 @@ enum AuthState {
     case Dashboard
     case Settings
     case ScansList
+    case ScanResultView
 }
 
 

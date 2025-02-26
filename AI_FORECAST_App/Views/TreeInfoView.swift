@@ -12,6 +12,8 @@ struct ScanResultView: View {
     let height: Double
     let diameter: Double
     let timestamp: Date
+    
+    @Binding var authState: AuthState
 
     @State private var selectedSpecies: String = ""
     let speciesOptions = ["Oak", "Pine", "Maple", "Birch", "Spruce", "Other"]
@@ -102,8 +104,7 @@ struct ScanResultView: View {
             HStack(spacing: 30) {
                 Button(action: {
                     // Navigation back to dashboard
-                    // If using a NavigationLink in the parent, you could pop or pass a dismiss action.
-                    // For demonstration, we do nothing or you could handle your own logic here.
+                    authState = .Dashboard
                 }) {
                     Text("Dashboard")
                         .foregroundColor(.white)
@@ -119,7 +120,7 @@ struct ScanResultView: View {
                         showAlert = true
                     } else {
                         // Navigate to ARView to measure next tree
-                        // Insert your navigation logic here
+                        
                     }
                 }) {
                     Text("Continue Scan")
@@ -150,7 +151,8 @@ struct ScanResultView_Previews: PreviewProvider {
             image: UIImage(systemName: "leaf")!, // Placeholder image
             height: 12.5,
             diameter: 30.2,
-            timestamp: Date()
+            timestamp: Date(),
+            authState: .constant(.ScanResultView)
         )
     }
 }

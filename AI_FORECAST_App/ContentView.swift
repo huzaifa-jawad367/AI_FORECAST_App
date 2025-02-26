@@ -39,6 +39,14 @@ struct ContentView : View {
                 ScansListView(authState: $authState)
             case .Settings:
                 SettingsView(authState: $authState)
+            case .ScanResultView:
+                ScanResultView(
+                    image: UIImage(systemName: "leaf")!, // Placeholder image
+                    height: 12.5,
+                    diameter: 30.2,
+                    timestamp: Date(),
+                    authState: $authState
+                )
             case .scanPage:
                 CustomARViewRepresentable()
             }
