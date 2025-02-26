@@ -17,7 +17,18 @@ class ScansViewModel: ObservableObject {
         do {
             let response = try await client.database
                 .from("scans")
-                .select("*")
+                .select("""
+                    id,
+                    tree_height,
+                    tree_diameter,
+                    tree_species,
+                    created_at,
+                    projects(name),
+                    users(full_name),
+                    biomass_estimation,
+                    latitude,
+                    longitude
+                """)
                 .execute()
             
             

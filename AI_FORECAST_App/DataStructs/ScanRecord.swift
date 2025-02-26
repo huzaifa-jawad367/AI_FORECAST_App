@@ -18,8 +18,23 @@ struct ScanRecord: Identifiable, Codable {
     let project_name: String?
     
     // Nullable fields
-    let user_name: String?          // Nullable
-    let biomass_estimation: Float?  // Nullable
-    let latitude: Float?            // Nullable
-    let longitude: Float?           // Nullable
+    var user_name: String?          // Nullable
+    var biomass_estimation: Float?  // Nullable
+    var latitude: Float?            // Nullable
+    var longitude: Float?           // Nullable
+    
+    // Map JSON keys from Supabase to your property names
+    enum CodingKeys: String, CodingKey {
+        case scan_id = "id"
+        case species = "tree_species"
+        case height = "tree_height"
+        case diameter = "tree_diameter"
+        case scan_time = "created_at"
+        case project_name = "projects.name"
+        case user_name = "users.full_name"
+        case biomass_estimation
+        case latitude
+        case longitude
+        // You might also want case created_by = "created_by"
+    }
 }
