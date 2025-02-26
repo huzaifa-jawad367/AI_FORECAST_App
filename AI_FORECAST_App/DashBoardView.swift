@@ -10,6 +10,8 @@ import SwiftUI
 struct DashBoardView: View {
     
     @Binding var authState: AuthState
+    @State private var showMenu = false
+    
     let Num_Scanned: Int = 0;
     let LastScanDate: Date = Calendar.current.date(from: DateComponents(year: 2024, month: 10, day: 3, hour: 14, minute: 30))!
     let SizeData: Int = 0;
@@ -17,6 +19,16 @@ struct DashBoardView: View {
     var body: some View {
         
         VStack {
+            HStack{
+                Button{
+                    showMenu.toggle()
+                } label: {
+                    Image("menu")
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                }
+                Spacer()
+            }
             Text("AI-ForCaST")
                 .font(.title.bold())
                 .foregroundColor(.blue.opacity(0.6))
@@ -60,7 +72,7 @@ struct DashBoardView: View {
                     Button {
                         print("Album button tapped")
                         
-                        authState = .Inventory
+                        authState = .ScansList
                         
                     } label: {
                         VStack(spacing: 8) {
@@ -191,16 +203,16 @@ struct DashBoardView: View {
             .cornerRadius(20)
 
             
-            Button {
-                print("Log out")
-            } label: {
-                Text("Logout").font(.headline.bold())
-                    .frame(width: 100, height: 25)
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-            }
+//            Button {
+//                print("Log out")
+//            } label: {
+//                Text("Logout").font(.headline.bold())
+//                    .frame(width: 100, height: 25)
+//                    .background(Color.blue)
+//                    .foregroundColor(.white)
+//                    .cornerRadius(10)
+//                    .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
+//            }
             
         }
         

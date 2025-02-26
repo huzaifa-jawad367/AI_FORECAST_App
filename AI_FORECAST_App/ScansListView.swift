@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ScansListView: View {
+    @Binding var authState: AuthState
     @StateObject private var viewModel = ScansViewModel()
     
     var body: some View {
@@ -30,6 +31,6 @@ struct ScansListView: View {
 
 struct ScansListView_Previews: PreviewProvider {
     static var previews: some View {
-        ScansListView()
+        ScansListView(authState: .constant(.ScansList))
     }
 }

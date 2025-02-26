@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		603A8BDB2D661F7F00CF595A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 603A8BDA2D661F7F00CF595A /* GoogleSignIn */; };
 		603A8BDD2D661F7F00CF595A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 603A8BDC2D661F7F00CF595A /* GoogleSignInSwift */; };
-		603A8BE42D669D8000CF595A /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A8BE32D669D8000CF595A /* InventoryView.swift */; };
 		603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A8BE52D67631600CF595A /* ScanRecord.swift */; };
 		603A8BE82D692F2200CF595A /* ScanCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A8BE72D692F1B00CF595A /* ScanCardView.swift */; };
 		603A8BF02D6B46A400CF595A /* ScansViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A8BEF2D6B469C00CF595A /* ScansViewModel.swift */; };
@@ -23,6 +22,8 @@
 		607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */; };
 		609B5E802D6DF00A00B7864D /* UserRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */; };
 		609B5E822D6E060000B7864D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E812D6E05F200B7864D /* AlertItem.swift */; };
+		609B5E842D6EDE7200B7864D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E832D6EDE6100B7864D /* SettingsView.swift */; };
+		609B5E862D6EF49800B7864D /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E852D6EF48800B7864D /* SettingsViewModel.swift */; };
 		609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C12D5360E7006910B8 /* Supabase.swift */; };
 		609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */; };
 		609C13352CB16639002F39EF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 609C13342CB16639002F39EF /* Supabase */; };
@@ -63,7 +64,6 @@
 
 /* Begin PBXFileReference section */
 		603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AI_FORECAST_App.entitlements; sourceTree = "<group>"; };
-		603A8BE32D669D8000CF595A /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		603A8BE52D67631600CF595A /* ScanRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRecord.swift; sourceTree = "<group>"; };
 		603A8BE72D692F1B00CF595A /* ScanCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanCardView.swift; sourceTree = "<group>"; };
 		603A8BEF2D6B469C00CF595A /* ScansViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScansViewModel.swift; sourceTree = "<group>"; };
@@ -77,6 +77,8 @@
 		607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecord.swift; sourceTree = "<group>"; };
 		609B5E812D6E05F200B7864D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
+		609B5E832D6EDE6100B7864D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		609B5E852D6EF48800B7864D /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		609BA6C12D5360E7006910B8 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeMeasurementView.swift; sourceTree = "<group>"; };
 		60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				609B5E812D6E05F200B7864D /* AlertItem.swift */,
 				609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */,
 				603A8BE52D67631600CF595A /* ScanRecord.swift */,
+				607254BC2CAD3DEA00F15EAE /* AuthState.swift */,
 			);
 			path = DataStructs;
 			sourceTree = "<group>";
@@ -181,6 +184,8 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				609B5E852D6EF48800B7864D /* SettingsViewModel.swift */,
+				609B5E832D6EDE6100B7864D /* SettingsView.swift */,
 				609B5E7E2D6DEFD600B7864D /* DataStructs */,
 				603A8BF12D6B46ED00CF595A /* ScansListView.swift */,
 				603A8BEF2D6B469C00CF595A /* ScansViewModel.swift */,
@@ -195,11 +200,9 @@
 				607254B82CAD3BD800F15EAE /* SignInView.swift */,
 				60C2C5182CB6B4F900C0BA3F /* ARFunctionality */,
 				607254BA2CAD3DCF00F15EAE /* SignUpView.swift */,
-				607254BC2CAD3DEA00F15EAE /* AuthState.swift */,
 				607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */,
 				60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */,
 				60B6B8252CAE93A80086930F /* ColorExtension.swift */,
-				603A8BE32D669D8000CF595A /* InventoryView.swift */,
 			);
 			path = AI_FORECAST_App;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */,
+				609B5E862D6EF49800B7864D /* SettingsViewModel.swift in Sources */,
 				603A8BF22D6B46F400CF595A /* ScansListView.swift in Sources */,
 				607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */,
 				607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */,
@@ -385,7 +389,6 @@
 				60C2C5172CB6B2ED00C0BA3F /* CustomARView.swift in Sources */,
 				603A8BE82D692F2200CF595A /* ScanCardView.swift in Sources */,
 				609B5E822D6E060000B7864D /* AlertItem.swift in Sources */,
-				603A8BE42D669D8000CF595A /* InventoryView.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
 				606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */,
 				603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */,
@@ -395,6 +398,7 @@
 				60C56BF62C982FE700810952 /* ContentView.swift in Sources */,
 				60C56BF42C982FE700810952 /* AppDelegate.swift in Sources */,
 				609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */,
+				609B5E842D6EDE7200B7864D /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
