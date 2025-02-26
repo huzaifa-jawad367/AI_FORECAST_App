@@ -11,6 +11,8 @@ struct ProjectListView: View {
 
     @StateObject private var viewModel = ProjectViewModel()
     
+    @Binding var authState: AuthState
+    
     var body: some View {
         NavigationView {
             // Using a List so pull-to-refresh works by default on iOS 16+
@@ -36,6 +38,6 @@ struct ProjectListView: View {
 }
 
 #Preview {
-    ProjectListView()
+    ProjectListView(authState: .constant(.ProjectsList))
 }
 

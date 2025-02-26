@@ -12,9 +12,34 @@ struct DashBoardView: View {
     @Binding var authState: AuthState
     @State private var showMenu = false
     
-    let Num_Scanned: Int = 0;
-    let LastScanDate: Date = Calendar.current.date(from: DateComponents(year: 2024, month: 10, day: 3, hour: 14, minute: 30))!
+    @State private var Num_Scanned: Int = 0
+    @State private var Num_Projects: Int = 0
+
     let SizeData: Int = 0;
+    
+    
+    func loadCounts(tables: String) async {
+        
+        do {
+
+            let response = try await client.database
+                .from(tables)
+                .select("*", head: true, count: .exact)
+                .execute()
+            
+            // response.count is an Int? containing the number of rows
+            let treeCount = response.count ?? 0
+            if (tables == "projects") {
+                Num_Projects = treeCount
+            } else if (tables == "scans") {
+                Num_Scanned = treeCount
+            }
+                
+        } catch {
+            print("Error fetching tree count: \(error.localizedDescription)")
+        }
+    }
+
     
     var body: some View {
         
@@ -27,7 +52,7 @@ struct DashBoardView: View {
                 
             
             Button {
-                authState = .scanPage
+                authState = .ProjectsList
             } label: {
                 ZStack {
                     Color(hex: "#6b96db")
@@ -174,37 +199,36 @@ struct DashBoardView: View {
             }.padding()
             
             
-            VStack(spacing: 4) {
-                Text("Trees Scanned")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                Text("\(Num_Scanned)")
-                    .font(.title.bold())
-                    .foregroundColor(.green)
+            HStack(spacing: 4) {
+                VStack {
+                    Text("Trees Scanned")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Text("\(Num_Scanned)")
+                        .font(.title.bold())
+                        .foregroundColor(.green)
+                }
                 
-                Text("Last Scan")
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                Text(LastScanDate, style: .date)
-                    .font(.headline)
+                Spacer()
+                
+                VStack {
+                    Text("Number of Projects")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Text("\(Num_Projects)")
+                        .font(.title.bold())
+                        .foregroundColor(.green)
+                }
+                
             }
             .padding()
             .frame(width: 350, height: 100)
             .background(Color.gray.opacity(0.1))
             .cornerRadius(20)
-
-            
-//            Button {
-//                print("Log out")
-//            } label: {
-//                Text("Logout").font(.headline.bold())
-//                    .frame(width: 100, height: 25)
-//                    .background(Color.blue)
-//                    .foregroundColor(.white)
-//                    .cornerRadius(10)
-//                    .opacity(/*@START_MENU_TOKEN@*/0.8/*@END_MENU_TOKEN@*/)
-//            }
-            
+        }
+        .task {
+            await loadCounts(tables: "scans")
+            await loadCounts(tables: "projects")
         }
         
     }

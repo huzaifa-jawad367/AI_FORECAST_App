@@ -37,6 +37,8 @@ struct ContentView : View {
                 DashBoardView(authState: $authState)
             case .ScansList:
                 ScansListView(authState: $authState)
+            case .ProjectsList:
+                ProjectListView(authState: $authState)
             case .Settings:
                 SettingsView(authState: $authState)
             case .ScanResultView:
