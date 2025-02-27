@@ -18,6 +18,7 @@
 		606E9C182D6F2A3B00998468 /* ProjectCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C172D6F2A3300998468 /* ProjectCardView.swift */; };
 		606E9C1E2D6F55A600998468 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C1D2D6F55A600998468 /* ProjectListView.swift */; };
 		606E9C202D6F561500998468 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C1F2D6F55F800998468 /* ProjectViewModel.swift */; };
+		606E9C222D702F1400998468 /* TreeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C212D702F0A00998468 /* TreeDetailView.swift */; };
 		606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606EB43E2D639C010048EF5C /* TreeInfoView.swift */; };
 		607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254B82CAD3BD800F15EAE /* SignInView.swift */; };
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
@@ -77,6 +78,7 @@
 		606E9C172D6F2A3300998468 /* ProjectCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectCardView.swift; sourceTree = "<group>"; };
 		606E9C1D2D6F55A600998468 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
 		606E9C1F2D6F55F800998468 /* ProjectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
+		606E9C212D702F0A00998468 /* TreeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeDetailView.swift; sourceTree = "<group>"; };
 		606EB43E2D639C010048EF5C /* TreeInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeInfoView.swift; sourceTree = "<group>"; };
 		607254B82CAD3BD800F15EAE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 		60DF8B412D6F1A5B003D5562 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				606E9C212D702F0A00998468 /* TreeDetailView.swift */,
 				609B5E832D6EDE6100B7864D /* SettingsView.swift */,
 				603A8BF12D6B46ED00CF595A /* ScansListView.swift */,
 				606EB43E2D639C010048EF5C /* TreeInfoView.swift */,
@@ -413,6 +416,7 @@
 				609B5E822D6E060000B7864D /* AlertItem.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
 				606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */,
+				606E9C222D702F1400998468 /* TreeDetailView.swift in Sources */,
 				603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */,
 				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,
 				606E9C202D6F561500998468 /* ProjectViewModel.swift in Sources */,

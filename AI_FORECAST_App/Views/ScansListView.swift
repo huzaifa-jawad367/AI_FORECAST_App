@@ -13,19 +13,56 @@ struct ScansListView: View {
     
     var body: some View {
         NavigationView {
-            List(viewModel.scans) { scan in
-                ScanCardView(scan: scan)
-                    .listRowSeparator(.hidden)  // optional: hides row separators
-            }
-            .listStyle(PlainListStyle())
-            .navigationTitle("Scans")
-            .onAppear {
-                // Load scans when the view appears.
-                Task {
-                    await viewModel.fetchScans()
+            ZStack(alignment: .bottomTrailing) {
+                NavigationLink {
+                    TreeDetailView(
+                        image: UIImage(systemName: "leaf")!, // Placeholder image
+                        height: 12.5,
+                        diameter: 30.2,
+                        timestamp: Date(),
+                        species: "Pine",
+                        authState: .constant(.ScanResultView)
+                    )
+                } label: {
+                    List(viewModel.scans) { scan in
+                        ScanCardView(scan: scan)
+//                            .listRowSeparator(.hidden)  // optional: hides row separators
+                    }
+                    .listStyle(PlainListStyle())
+                    .navigationTitle("Scans")
+                    .onAppear {
+                        // Load scans when the view appears.
+                        Task {
+                            await viewModel.fetchScans()
+                        }
+                    }
                 }
+                
+                
+                // Floating circular button at the bottom right
+                NavigationLink(destination: CameraView()) {
+                    Image(systemName: "plus")
+                        .font(.system(size: 36))
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.blue)
+                        .clipShape(Circle())
+                        .shadow(radius: 4)
+                }
+                .padding(50)
             }
+            
+            
         }
+    }
+}
+
+
+struct CameraView: View {
+    var body: some View {
+        Text("Camera Page")
+            .font(.largeTitle)
+            .padding()
     }
 }
 
