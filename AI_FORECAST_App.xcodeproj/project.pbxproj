@@ -19,6 +19,7 @@
 		606E9C1E2D6F55A600998468 /* ProjectListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C1D2D6F55A600998468 /* ProjectListView.swift */; };
 		606E9C202D6F561500998468 /* ProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C1F2D6F55F800998468 /* ProjectViewModel.swift */; };
 		606E9C222D702F1400998468 /* TreeDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C212D702F0A00998468 /* TreeDetailView.swift */; };
+		606E9C242D70463F00998468 /* CreateProjectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606E9C232D70463F00998468 /* CreateProjectView.swift */; };
 		606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 606EB43E2D639C010048EF5C /* TreeInfoView.swift */; };
 		607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254B82CAD3BD800F15EAE /* SignInView.swift */; };
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
@@ -79,6 +80,7 @@
 		606E9C1D2D6F55A600998468 /* ProjectListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectListView.swift; sourceTree = "<group>"; };
 		606E9C1F2D6F55F800998468 /* ProjectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectViewModel.swift; sourceTree = "<group>"; };
 		606E9C212D702F0A00998468 /* TreeDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeDetailView.swift; sourceTree = "<group>"; };
+		606E9C232D70463F00998468 /* CreateProjectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateProjectView.swift; sourceTree = "<group>"; };
 		606EB43E2D639C010048EF5C /* TreeInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeInfoView.swift; sourceTree = "<group>"; };
 		607254B82CAD3BD800F15EAE /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				607254BA2CAD3DCF00F15EAE /* SignUpView.swift */,
 				60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */,
 				606E9C1D2D6F55A600998468 /* ProjectListView.swift */,
+				606E9C232D70463F00998468 /* CreateProjectView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				609B5E802D6DF00A00B7864D /* UserRecord.swift in Sources */,
 				60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */,
 				603A8BF02D6B46A400CF595A /* ScansViewModel.swift in Sources */,
+				606E9C242D70463F00998468 /* CreateProjectView.swift in Sources */,
 				606E9C1E2D6F55A600998468 /* ProjectListView.swift in Sources */,
 				6052D5502CC0DA620091B2F4 /* ARManager.swift in Sources */,
 				60DF8B452D6F1E50003D5562 /* ProjectRecord.swift in Sources */,

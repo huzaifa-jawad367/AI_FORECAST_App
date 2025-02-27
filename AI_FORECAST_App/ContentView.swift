@@ -41,6 +41,8 @@ struct ContentView : View {
                 ProjectListView(authState: $authState)
             case .Settings:
                 SettingsView(authState: $authState)
+            case .CreateProject:
+                SettingsView(authState: $authState)
             case .ScanResultView:
                 ScanResultView(
                     image: UIImage(systemName: "leaf")!, // Placeholder image
