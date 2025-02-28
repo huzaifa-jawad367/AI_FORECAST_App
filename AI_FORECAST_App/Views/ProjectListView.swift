@@ -36,7 +36,7 @@ struct ProjectListView: View {
                 }
                 
                 // Floating circular button at the bottom right
-                NavigationLink(destination: CameraView()) {
+                NavigationLink(destination: CreateProjectView()) {
                     Image(systemName: "plus")
                         .font(.system(size: 36))
                         .foregroundColor(.white)

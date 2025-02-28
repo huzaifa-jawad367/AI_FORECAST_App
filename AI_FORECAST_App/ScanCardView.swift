@@ -35,7 +35,7 @@ struct ScanCardView: View {
     }
 }
 
-// Example preview
+// preview
 struct ScanCardView_Previews: PreviewProvider {
     static var previews: some View {
         ScanCardView(

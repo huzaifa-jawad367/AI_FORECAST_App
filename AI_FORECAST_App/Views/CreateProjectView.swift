@@ -9,8 +9,6 @@ import SwiftUI
 
 struct CreateProjectView: View {
     
-    @Binding var authState: AuthState
-
     @Environment(\.dismiss) var dismiss
     @State private var projectName: String = ""
     @State private var projectDescription: String = ""
@@ -38,17 +36,13 @@ struct CreateProjectView: View {
                 
                 // Buttons
                 HStack {
-                    Button("Cancel") {
-                        authState = .ProjectsList
-                    }
-                    .foregroundColor(.red)
-                    
                     Spacer()
                     
                     Button("Save") {
                         saveProject()
                     }
                     .disabled(projectName.isEmpty)
+                    .padding(.horizontal)
                 }
                 .padding(.top)
             }
@@ -65,6 +59,6 @@ struct CreateProjectView: View {
 
 struct CreateProjectView_Previews: PreviewProvider {
     static var previews: some View {
-        CreateProjectView(authState: .constant(.CreateProject))
+        CreateProjectView()
     }
 }

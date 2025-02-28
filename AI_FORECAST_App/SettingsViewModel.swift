@@ -37,7 +37,7 @@ class SettingsViewModel: ObservableObject {
             profilePictureUrl: "https://example.com/profiles/alice.jpg"
         )
         
-//         If user is not signed in:
+//         If user not signed in
 //         isSignedIn = false
 //         currentUser = nil
     }

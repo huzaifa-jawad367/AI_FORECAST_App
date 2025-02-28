@@ -12,48 +12,47 @@ struct ScansListView: View {
     @StateObject private var viewModel = ScansViewModel()
     
     var body: some View {
-        NavigationView {
-            ZStack(alignment: .bottomTrailing) {
-                NavigationLink {
-                    TreeDetailView(
-                        image: UIImage(systemName: "leaf")!, // Placeholder image
-                        height: 12.5,
-                        diameter: 30.2,
-                        timestamp: Date(),
-                        species: "Pine",
-                        authState: .constant(.ScanResultView)
-                    )
-                } label: {
-                    List(viewModel.scans) { scan in
-                        ScanCardView(scan: scan)
+        ZStack(alignment: .bottomTrailing) {
+            NavigationLink {
+                TreeDetailView(
+                    // TODO: Save the image in database and retrieve it
+                    image: UIImage(systemName: "leaf")!, // Placeholder image to be changed after AR implementation
+                    height: 12.5,
+                    diameter: 30.2,
+                    timestamp: Date(),
+                    species: "Pine",
+                    authState: .constant(.ScanResultView)
+                )
+            } label: {
+                List(viewModel.scans) { scan in
+                    ScanCardView(scan: scan)
 //                            .listRowSeparator(.hidden)  // optional: hides row separators
-                    }
-                    .listStyle(PlainListStyle())
-                    .navigationTitle("Scans")
-                    .onAppear {
-                        // Load scans when the view appears.
-                        Task {
-                            await viewModel.fetchScans()
-                        }
+                }
+                .listStyle(PlainListStyle())
+                .navigationTitle("Scans")
+                .onAppear {
+                    // Load scans when the view appears.
+                    Task {
+                        await viewModel.fetchScans()
                     }
                 }
-                
-                
-                // Floating circular button at the bottom right
-                NavigationLink(destination: CameraView()) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 36))
-                        .foregroundColor(.white)
-                        .padding()
-                        .background(Color.blue)
-                        .clipShape(Circle())
-                        .shadow(radius: 4)
-                }
-                .padding(50)
             }
             
             
+            // Floating circular button at the bottom right
+            NavigationLink(destination: CameraView()) {
+                Image(systemName: "plus")
+                    .font(.system(size: 36))
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.blue)
+                    .clipShape(Circle())
+                    .shadow(radius: 4)
+            }
+            .padding(50)
         }
+            
+            
     }
 }
 

@@ -24,6 +24,7 @@ struct ScanPageView: View {
 struct ContentView : View {
     
     @State private var authState: AuthState = .signIn
+    @StateObject private var sessionManager = SessionManager()
     
     var body: some View {
         ZStack {
@@ -56,6 +57,7 @@ struct ContentView : View {
             }
             
         }
+        .environmentObject(sessionManager)
         
     }
 }
