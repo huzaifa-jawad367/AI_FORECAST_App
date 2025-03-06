@@ -17,6 +17,7 @@ enum AuthState {
     case ScanResultView
     case ProjectsList
     case CreateProject
+    case Guide
 }
 
 

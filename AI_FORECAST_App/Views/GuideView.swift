@@ -8,9 +8,31 @@
 import SwiftUI
 
 struct BiomassGuideView: View {
+    
+    @Binding var authState: AuthState
+    
     var body: some View {
+        
         ScrollView {
+            
             VStack(alignment: .leading, spacing: 20) {
+                
+                HStack {
+                    Button(action: {
+                        authState = .Dashboard
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                                .font(.headline)
+                            Text("Back")
+                                .font(.body)
+                        }
+                        .foregroundColor(.blue)
+                    }
+                    Spacer()
+                }
+                .padding(.top)
+                
                 Text("Biomass Calculation Guide")
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -111,7 +133,7 @@ struct GuideStepView: View {
 
 struct BiomassGuideView_Previews: PreviewProvider {
     static var previews: some View {
-        BiomassGuideView()
+        BiomassGuideView(authState: .constant(.Guide))
     }
 }
 

@@ -42,6 +42,8 @@ struct ContentView : View {
                 ProjectListView(authState: $authState)
             case .Settings:
                 SettingsView(authState: $authState)
+            case .Guide:
+                BiomassGuideView(authState: $authState)
             case .CreateProject:
                 SettingsView(authState: $authState)
             case .ScanResultView:

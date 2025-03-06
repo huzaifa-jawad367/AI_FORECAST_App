@@ -171,7 +171,9 @@ struct DashBoardView: View {
                     }
                     
                     Button {
-                        print("Album button tapped")
+                        print("Guide Button Tapped")
+                        
+                        authState = .Guide
                     } label: {
                         VStack(spacing: 8) {
                             ZStack {
