@@ -8,7 +8,9 @@
 struct UserRecord: Identifiable, Codable {
     var id: String { user_id }
     
-    let user_id: String
-    let username: String
-    let created_at: String?
+    var user_id: String
+    var username: String
+    var email: String
+    var created_at: String? = "-"
+    var profile_picture_url: String?
 }

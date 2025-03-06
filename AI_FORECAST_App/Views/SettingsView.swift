@@ -19,7 +19,7 @@ struct SettingsView: View {
                         // --- User Info Section ---
                         Section {
                             HStack(spacing: 16) {
-                                AsyncImage(url: URL(string: user.profilePictureUrl ?? "")) { image in
+                                AsyncImage(url: URL(string: user.profile_picture_url ?? "")) { image in
                                     image
                                         .resizable()
                                         .aspectRatio(contentMode: .fill)
@@ -33,7 +33,7 @@ struct SettingsView: View {
                                 .clipShape(Circle())
                                 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(user.fullName)
+                                    Text(user.username)
                                         .font(.headline)
                                     Text(user.email)
                                         .font(.subheadline)
@@ -69,6 +69,7 @@ struct SettingsView: View {
                         
                         Button("Sign In") {
                             // Trigger your sign-in flow
+                            authState = .signIn
                             print("Sign in tapped")
                         }
                         .buttonStyle(.borderedProminent)

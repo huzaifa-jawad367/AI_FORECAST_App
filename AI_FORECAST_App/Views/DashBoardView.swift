@@ -115,6 +115,7 @@ struct DashBoardView: View {
 
                     Button {
                         print("Settings Button Tapped")
+                        authState = .Settings
                         
                     } label: {
                         VStack(spacing: 8) {

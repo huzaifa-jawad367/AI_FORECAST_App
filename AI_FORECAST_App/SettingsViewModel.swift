@@ -5,52 +5,53 @@
 //  Created by Huzaifa Jawad on 26/02/2025.
 //
 
-import Combine
 import SwiftUI
+import Supabase
 
+@MainActor
 class SettingsViewModel: ObservableObject {
+    @Published var currentUser: UserRecord? = nil
     @Published var isSignedIn: Bool = false
-    @Published var currentUser: UserProfile?
-
-    // Example user model to mirror the Supabase data you have:
-    struct UserProfile {
-        let id: String
-        let fullName: String
-        let email: String
-        let profilePictureUrl: String?
-    }
     
-    init() {
-        // For demo purposes, simulate fetching user session
-        // In production, you'd fetch from Supabase Auth + your "users" table.
-        fetchUserSession()
-    }
+    // We'll rely on the session manager's supabaseClient or create our own
+    private let supabaseClient = client
     
-    func fetchUserSession() {
-        
-        // If user is signed in:
-        isSignedIn = true
-        currentUser = UserProfile(
-            id: "a8401b31-9c23-4b31-b969-92dfcdb86608",
-            fullName: "Alice Johnson",
-            email: "[email protected]",
-            profilePictureUrl: "https://example.com/profiles/alice.jpg"
-        )
-        
-//         If user not signed in
-//         isSignedIn = false
-//         currentUser = nil
+    // Fetch user profile from "users" table using the user's ID
+    func fetchUserProfile(userID: String) async {
+        do {
+            // Query the "users" table for a single matching ID
+            let response = try await client.database
+                        .from("users")
+                        .select("id, full_name, profile_picture_url")
+                        .eq("id", value: userID) // ✅ Corrected .eq() syntax
+                        .single()
+                        .execute()
+            
+            // Decode JSON into our UserProfile struct
+            let profile = try JSONDecoder().decode(UserRecord.self, from: response.data)
+            currentUser = profile
+            isSignedIn = true
+            print("Fetched user profile: \(profile)")
+            
+        } catch {
+            print("Error fetching user profile: \(error.localizedDescription)")
+        }
     }
     
     func logOut() {
-        // Clear session, log out from Supabase or your custom auth
-        isSignedIn = false
-        currentUser = nil
+        Task {
+            do {
+                try await supabaseClient.auth.signOut()
+                currentUser = nil
+                isSignedIn = false
+            } catch {
+                print("Error signing out: \(error.localizedDescription)")
+            }
+        }
     }
     
     func deleteAccount() {
-        // Call your Supabase "delete user" endpoint
-        // Then log out or handle UI feedback
-        logOut()
+        // You might call a Supabase RPC or API to delete the user record.
+        // Or rely on the auth admin API if you have it set up.
     }
 }
