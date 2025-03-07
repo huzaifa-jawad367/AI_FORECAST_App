@@ -10,6 +10,7 @@ import SwiftUI
 struct SignInView: View {
 
     @Binding var authState: AuthState
+        
     @State private var email: String = ""
     @State private var password: String = ""
     @State private var isSignedIn: Bool = false

@@ -10,6 +10,8 @@ import SwiftUI
 struct SettingsView: View {
     @Binding var authState: AuthState
     @StateObject private var viewModel = SettingsViewModel()
+    
+    @EnvironmentObject var sessionManager: SessionManager
 
     var body: some View {
         NavigationView {
@@ -79,6 +81,27 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
         }
+        .task {
+            await loadUserProfileIfSignedIn()
+        }
+    }
+    
+    /// Loads the user profile from the supabase Database if sessionManager.user exists
+    func loadUserProfileIfSignedIn() async {
+        guard let supabaseUser = sessionManager.user else {
+            viewModel.isSignedIn = false
+            return
+        }
+        
+        do {
+            // fetch the user instance
+            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+            viewModel.currentUser = profile
+            viewModel.isSignedIn = true
+        } catch {
+            print("Error fetch profile: \(error.localizedDescription)")
+            viewModel.isSignedIn = false
+        }
     }
 }
 
@@ -95,5 +118,7 @@ struct EditProfileView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView(authState: .constant(.Settings))
+            .environmentObject(SessionManager()) // ✅ Provide the session manager
     }
 }
+

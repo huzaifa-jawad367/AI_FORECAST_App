@@ -12,6 +12,11 @@ struct DashBoardView: View {
     @Binding var authState: AuthState
     @State private var showMenu = false
     
+    @StateObject private var viewModel = SettingsViewModel()
+    @EnvironmentObject var sessionManager: SessionManager
+    
+    @State private var userProfileId: String = ""
+    
     @State private var Num_Scanned: Int = 0
     @State private var Num_Projects: Int = 0
 
@@ -215,11 +220,15 @@ struct DashBoardView: View {
                 Spacer()
                 
                 VStack {
-                    Text("Number of Projects")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    Text("\(Num_Projects)")
-                        .font(.title.bold())
+//                    Text("Number of Projects")
+//                        .font(.subheadline)
+//                        .foregroundColor(.gray)
+//                    Text("\(Num_Projects)")
+//                        .font(.title.bold())
+//                        .foregroundColor(.green)
+                    
+                    Text(userProfileId)
+                        .font(.caption.bold())
                         .foregroundColor(.green)
                 }
                 
@@ -232,15 +241,40 @@ struct DashBoardView: View {
         .task {
             await loadCounts(tables: "scans")
             await loadCounts(tables: "projects")
+            
+            do {
+                userProfileId = try await loadUserProfileId()
+            } catch {
+                print("Error loading profile: \(error.localizedDescription)")
+                userProfileId = ""
+            }
+            
         }
         
     }
     
-    func Scan_Tree() {
+    func loadUserProfileId() async throws -> String {
+        guard let supabaseUser = sessionManager.user else {
+            viewModel.isSignedIn = false
+            return "guard session"
+        }
         
+        do {
+            // fetch the user instance
+            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+            viewModel.currentUser = profile
+            viewModel.isSignedIn = true
+            
+            return "\(supabaseUser.id.uuidString)"
+        } catch {
+            print("Error fetch profile: \(error)")
+            viewModel.isSignedIn = false
+            return "Error: \(error.localizedDescription)"
+        }
     }
 }
 
 #Preview {
     DashBoardView(authState: .constant(.Dashboard))
+        .environmentObject(SessionManager())
 }

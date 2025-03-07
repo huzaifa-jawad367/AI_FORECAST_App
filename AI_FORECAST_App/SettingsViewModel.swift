@@ -17,25 +17,23 @@ class SettingsViewModel: ObservableObject {
     private let supabaseClient = client
     
     // Fetch user profile from "users" table using the user's ID
-    func fetchUserProfile(userID: String) async {
-        do {
-            // Query the "users" table for a single matching ID
-            let response = try await client.database
-                        .from("users")
-                        .select("id, full_name, profile_picture_url")
-                        .eq("id", value: userID) // ✅ Corrected .eq() syntax
-                        .single()
-                        .execute()
-            
-            // Decode JSON into our UserProfile struct
-            let profile = try JSONDecoder().decode(UserRecord.self, from: response.data)
-            currentUser = profile
-            isSignedIn = true
-            print("Fetched user profile: \(profile)")
-            
-        } catch {
-            print("Error fetching user profile: \(error.localizedDescription)")
-        }
+    func fetchUserProfile(userID: String) async throws -> UserRecord {
+
+        // Query the "users" table for a single matching ID
+        let response = try await client.database
+                    .from("users")
+                    .select("id, full_name, profile_picture_url")
+                    .eq("id", value: userID) // ✅ Corrected .eq() syntax
+                    .single()
+                    .execute()
+        
+        // Decode JSON into our UserProfile struct
+        let profile = try JSONDecoder().decode(UserRecord.self, from: response.data)
+        currentUser = profile
+        isSignedIn = true
+        print("Fetched user profile: \(profile)")
+        return profile
+        
     }
     
     func logOut() {

@@ -7,20 +7,32 @@
 
 import SwiftUI
 
+let speciesCoefficients: [String: (a: Double, b: Double, c: Double)] = [
+    "Oak":    (a: 0.12, b: 2.45, c: 1.10),
+    "Pine":   (a: 0.08, b: 2.30, c: 1.15),
+    "Maple":  (a: 0.10, b: 2.40, c: 1.05),
+    "Birch":  (a: 0.09, b: 2.35, c: 1.10),
+    "Spruce": (a: 0.07, b: 2.50, c: 1.20),
+    "Other":  (a: 0.10, b: 2.40, c: 1.10)  // Default for unspecified species
+]
+
+
 struct ScanResultView: View {
     let image: UIImage
     let height: Double
     let diameter: Double
     let timestamp: Date
     
+    @State private var Bestimation: Double = 0.0
+    
     @Binding var authState: AuthState
-
-    @State private var selectedSpecies: String = ""
+    
+    @State private var selectedSpecies: String = "Other"
     let speciesOptions = ["Oak", "Pine", "Maple", "Birch", "Spruce", "Other"]
-
+    
     // Toggle for alert
     @State private var showAlert = false
-
+    
     var body: some View {
         VStack {
             // Tree image preview
@@ -30,13 +42,13 @@ struct ScanResultView: View {
                 .frame(height: 250)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding()
-
+            
             // Measurements and info
             VStack(alignment: .leading, spacing: 15) {
                 Text("Tree Measurements")
                     .font(.title2)
                     .fontWeight(.bold)
-
+                
                 HStack {
                     Text("Height:")
                         .fontWeight(.semibold)
@@ -44,7 +56,7 @@ struct ScanResultView: View {
                     Text(String(format: "%.2f meters", height))
                 }
                 .padding(.horizontal)
-
+                
                 HStack {
                     Text("Diameter:")
                         .fontWeight(.semibold)
@@ -52,7 +64,7 @@ struct ScanResultView: View {
                     Text(String(format: "%.2f cm", diameter))
                 }
                 .padding(.horizontal)
-
+                
                 HStack {
                     Text("Scan Time:")
                         .fontWeight(.semibold)
@@ -76,7 +88,28 @@ struct ScanResultView: View {
                     .pickerStyle(MenuPickerStyle())
                     .padding(.horizontal)
                     .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
-                    .padding()
+                    //                    .padding()
+                }
+                .padding(.horizontal)
+                
+                if selectedSpecies.isEmpty {
+                    HStack {
+                        Text("Biomass Estimation:")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Text("NA")
+                    }
+                    .padding(.horizontal)
+                    
+                } else {
+                    // Show the biomass estimation number/ entry
+                    HStack {
+                        Text("Biomass Estimation:")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Text("\(Bestimation)")
+                    }
+                    .padding(.horizontal)
                 }
                 
             }
@@ -109,7 +142,7 @@ struct ScanResultView: View {
                     Text("Dashboard")
                         .foregroundColor(.white)
                         .padding()
-//                        .frame(maxWidth: .infinity)
+                    //                        .frame(maxWidth: .infinity)
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
@@ -119,14 +152,14 @@ struct ScanResultView: View {
                     if selectedSpecies.isEmpty {
                         showAlert = true
                     } else {
-                        // Navigate to ARView to measure next tree
+                        // Show the biomass estimation number/ entry
                         
                     }
                 }) {
                     Text("Continue Scan")
                         .foregroundColor(.white)
                         .padding()
-//                        .frame(maxWidth: .infinity)
+                    //                        .frame(maxWidth: .infinity)
                         .background(Color.green)
                         .cornerRadius(10)
                 }
@@ -141,7 +174,40 @@ struct ScanResultView: View {
             }
         }
         .navigationTitle("Scan Details")
+        .onChange(of: selectedSpecies) { newSpecies, _ in
+            Task {
+                do {
+                    Bestimation = try await calculateBiomass(for: newSpecies, diameter: diameter, height: height)
+                } catch {
+                    Bestimation = -2
+                }
+            }
+            
+        }
+        .task {
+            do {
+                // calculate Biomass for the current instance
+                Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: diameter, height: height)
+            } catch {
+                Bestimation = -2.5
+            }
+        }
     }
+    
+    func calculateBiomass(for species: String, diameter: Double, height: Double) async throws -> Double {
+        // Unwrap the coefficients, throwing an error if not found
+        guard let coefficients = speciesCoefficients[species] else {
+            print("Coefficients not found for species: \(species)")
+            throw NSError(domain: "CalculateBiomassError", code: 1, userInfo: nil)
+        }
+        
+        // Biomass calculation using Allometric Equation
+        let biomass = coefficients.a * pow(diameter, coefficients.b) * pow(height, coefficients.c)
+        print("Biomass: \(biomass)")
+        
+        return biomass
+    }
+
 }
 
 // Example preview

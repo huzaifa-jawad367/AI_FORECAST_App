@@ -201,12 +201,12 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
-				6021C78B2D71889C00E8BF27 /* SessionManager.swift */,
 				60DF8B412D6F1A5B003D5562 /* Views */,
 				609B5E7E2D6DEFD600B7864D /* DataStructs */,
 				603A8BEF2D6B469C00CF595A /* ScansViewModel.swift */,
 				609B5E852D6EF48800B7864D /* SettingsViewModel.swift */,
 				606E9C1F2D6F55F800998468 /* ProjectViewModel.swift */,
+				6021C78B2D71889C00E8BF27 /* SessionManager.swift */,
 				607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */,
 				606E9C172D6F2A3300998468 /* ProjectCardView.swift */,
 				603A8BE72D692F1B00CF595A /* ScanCardView.swift */,
