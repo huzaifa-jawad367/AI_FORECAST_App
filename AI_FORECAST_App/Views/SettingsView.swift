@@ -37,7 +37,7 @@ struct SettingsView: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(user.username)
                                         .font(.headline)
-                                    Text(user.email)
+                                    Text(sessionManager.user?.email ?? "No email provided")
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }

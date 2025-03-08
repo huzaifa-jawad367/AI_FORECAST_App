@@ -179,7 +179,7 @@ struct ScanResultView: View {
                 do {
                     Bestimation = try await calculateBiomass(for: newSpecies, diameter: diameter, height: height)
                 } catch {
-                    Bestimation = -2
+                    Bestimation = -1
                 }
             }
             
@@ -189,7 +189,7 @@ struct ScanResultView: View {
                 // calculate Biomass for the current instance
                 Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: diameter, height: height)
             } catch {
-                Bestimation = -2.5
+                print("Error calculating the biomass")
             }
         }
     }
@@ -206,6 +206,10 @@ struct ScanResultView: View {
         print("Biomass: \(biomass)")
         
         return biomass
+    }
+    
+    func SaveScanedRecordToDatabase() {
+        
     }
 
 }

@@ -220,16 +220,16 @@ struct DashBoardView: View {
                 Spacer()
                 
                 VStack {
-//                    Text("Number of Projects")
-//                        .font(.subheadline)
-//                        .foregroundColor(.gray)
-//                    Text("\(Num_Projects)")
-//                        .font(.title.bold())
-//                        .foregroundColor(.green)
-                    
-                    Text(userProfileId)
-                        .font(.caption.bold())
+                    Text("Number of Projects")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                    Text("\(Num_Projects)")
+                        .font(.title.bold())
                         .foregroundColor(.green)
+                    
+//                    Text(userProfileId)
+//                        .font(.caption.bold())
+//                        .foregroundColor(.green)
                 }
                 
             }
@@ -241,14 +241,6 @@ struct DashBoardView: View {
         .task {
             await loadCounts(tables: "scans")
             await loadCounts(tables: "projects")
-            
-            do {
-                userProfileId = try await loadUserProfileId()
-            } catch {
-                print("Error loading profile: \(error.localizedDescription)")
-                userProfileId = ""
-            }
-            
         }
         
     }

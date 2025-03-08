@@ -12,7 +12,7 @@ import Supabase
 class SettingsViewModel: ObservableObject {
     @Published var currentUser: UserRecord? = nil
     @Published var isSignedIn: Bool = false
-    
+        
     // We'll rely on the session manager's supabaseClient or create our own
     private let supabaseClient = client
     
@@ -26,6 +26,7 @@ class SettingsViewModel: ObservableObject {
                     .eq("id", value: userID) // ✅ Corrected .eq() syntax
                     .single()
                     .execute()
+        
         
         // Decode JSON into our UserProfile struct
         let profile = try JSONDecoder().decode(UserRecord.self, from: response.data)
