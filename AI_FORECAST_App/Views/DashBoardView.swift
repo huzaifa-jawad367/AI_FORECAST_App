@@ -93,7 +93,7 @@ struct DashBoardView: View {
                     Button {
                         print("Album button tapped")
                         
-                        authState = .ScansList
+                        authState = .ProjectsList
                         
                     } label: {
                         VStack(spacing: 8) {
