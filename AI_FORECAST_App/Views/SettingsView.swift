@@ -57,7 +57,13 @@ struct SettingsView: View {
                             }
                             
                             Button("Delete Account", role: .destructive) {
-                                viewModel.deleteAccount()
+                                
+                                Task {
+                                    await viewModel.deleteAccount()
+                                }
+                                
+                                authState = .signIn
+                                
                             }
                         }
                     }
@@ -121,4 +127,3 @@ struct SettingsView_Previews: PreviewProvider {
             .environmentObject(SessionManager()) // ✅ Provide the session manager
     }
 }
-
