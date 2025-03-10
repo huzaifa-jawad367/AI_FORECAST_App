@@ -48,199 +48,204 @@ struct DashBoardView: View {
     
     var body: some View {
         
-        VStack {
+        NavigationView {
             
-            Text("AI-ForCaST")
-                .font(.title.bold())
-                .foregroundColor(.blue.opacity(0.6))
+            VStack {
+                
+                Text("AI-ForCaST")
+                    .font(.title.bold())
+                    .foregroundColor(.blue.opacity(0.6))
+                    .padding()
+                
+                
+                Button {
+                    authState = .ProjectsList
+                } label: {
+                    ZStack {
+                        Color(hex: "#6b96db")
+                            .cornerRadius(20)
+                        
+                        HStack {
+                            Image("AIForCaST")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 180, height: 180)
+                                .padding(.leading, 20)
+                            
+                            Spacer()
+                            
+                            Text("AI-ForCaST")
+                                .font(.title2.bold())
+                                .foregroundColor(.white)
+                                .padding(.trailing, 20)
+                        }
+                    }
+                    .frame(width: 350, height: 170)
+                    .opacity(0.8)
+                }
+                
+                
+                Text("Quick Access")
+                    .font(.title2.bold())
+                
+                
+                HStack {
+                    
+                    VStack {
+                        
+                        NavigationLink {
+                            //                        print("Album button tapped")
+                            //
+                            //                        authState = .ProjectsList
+                            ProjectListView(authState: .constant(.ProjectsList))
+                            
+                        } label: {
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 50, height: 50)
+                                    
+                                    Image(systemName: "photo.on.rectangle.angled") // Replace with your custom icon if needed
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.blue)
+                                }
+                                
+                                Text("Album")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                            }
+                            .frame(width: 175, height: 150)
+                            .background(Color.blue.opacity(0.2))
+                            .cornerRadius(20)
+                        }
+                        
+                        Button {
+                            print("Settings Button Tapped")
+                            authState = .Settings
+                            
+                        } label: {
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 50, height: 50)
+                                    
+                                    Image(systemName: "gearshape.fill") // Replace with your custom icon if needed
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.green)
+                                }
+                                
+                                Text("Settings")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                            }
+                            .frame(width: 175, height: 150)
+                            .background(Color.green.opacity(0.2))
+                            .cornerRadius(20)
+                        }
+                        
+                    }
+                    
+                    VStack {
+                        Button {
+                            print("Capture Scan")
+                            
+                            authState = .scanPage
+                        } label: {
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 50, height: 50)
+                                    
+                                    Image(systemName: "camera.fill") // Replace with your custom icon if needed
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.red)
+                                }
+                                
+                                Text("Camera")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                            }
+                            .frame(width: 175, height: 150)
+                            .background(Color.red.opacity(0.2))
+                            .cornerRadius(20)
+                        }
+                        
+                        Button {
+                            print("Guide Button Tapped")
+                            
+                            authState = .Guide
+                        } label: {
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 50, height: 50)
+                                    
+                                    Image(systemName: "questionmark.circle") // Replace with your custom icon if needed
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundColor(.purple)
+                                }
+                                
+                                Text("Guide / Help")
+                                    .font(.headline)
+                                    .foregroundColor(.black)
+                            }
+                            .frame(width: 175, height: 150)
+                            .background(Color.purple.opacity(0.2))
+                            .cornerRadius(20)
+                        }
+                        
+                    }
+                    
+                }.padding()
+                
+                
+                HStack(spacing: 4) {
+                    VStack {
+                        Text("Trees Scanned")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text("\(Num_Scanned)")
+                            .font(.title.bold())
+                            .foregroundColor(.green)
+                    }
+                    
+                    Spacer()
+                    
+                    VStack {
+                        Text("Number of Projects")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Text("\(Num_Projects)")
+                            .font(.title.bold())
+                            .foregroundColor(.green)
+                        
+                        //                    Text(userProfileId)
+                        //                        .font(.caption.bold())
+                        //                        .foregroundColor(.green)
+                    }
+                    
+                }
                 .padding()
-                
-            
-            Button {
-                authState = .ProjectsList
-            } label: {
-                ZStack {
-                    Color(hex: "#6b96db")
-                        .cornerRadius(20)
-                    
-                    HStack {
-                        Image("AIForCaST")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 180, height: 180)
-                            .padding(.leading, 20)
-                        
-                        Spacer()
-                        
-                        Text("AI-ForCaST")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-                            .padding(.trailing, 20)
-                    }
-                }
-                .frame(width: 350, height: 170)
-                .opacity(0.8)
+                .frame(width: 350, height: 100)
+                .background(Color.gray.opacity(0.1))
+                .cornerRadius(20)
             }
-
-            
-            Text("Quick Access")
-                .font(.title2.bold())
-
-            
-            HStack {
-                
-                VStack {
-                    Button {
-                        print("Album button tapped")
-                        
-                        authState = .ProjectsList
-                        
-                    } label: {
-                        VStack(spacing: 8) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 50, height: 50)
-                                
-                                Image(systemName: "photo.on.rectangle.angled") // Replace with your custom icon if needed
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.blue)
-                            }
-                            
-                            Text("Album")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                        }
-                        .frame(width: 175, height: 150)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(20)
-                    }
-
-                    Button {
-                        print("Settings Button Tapped")
-                        authState = .Settings
-                        
-                    } label: {
-                        VStack(spacing: 8) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 50, height: 50)
-                                
-                                Image(systemName: "gearshape.fill") // Replace with your custom icon if needed
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.green)
-                            }
-                            
-                            Text("Settings")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                        }
-                        .frame(width: 175, height: 150)
-                        .background(Color.green.opacity(0.2))
-                        .cornerRadius(20)
-                    }
-                    
-                }
-                
-                VStack {
-                    Button {
-                        print("Capture Scan")
-                        
-                        authState = .scanPage
-                    } label: {
-                        VStack(spacing: 8) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 50, height: 50)
-                                
-                                Image(systemName: "camera.fill") // Replace with your custom icon if needed
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.red)
-                            }
-                            
-                            Text("Camera")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                        }
-                        .frame(width: 175, height: 150)
-                        .background(Color.red.opacity(0.2))
-                        .cornerRadius(20)
-                    }
-                    
-                    Button {
-                        print("Guide Button Tapped")
-                        
-                        authState = .Guide
-                    } label: {
-                        VStack(spacing: 8) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 50, height: 50)
-                                
-                                Image(systemName: "questionmark.circle") // Replace with your custom icon if needed
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(.purple)
-                            }
-                            
-                            Text("Guide / Help")
-                                .font(.headline)
-                                .foregroundColor(.black)
-                        }
-                        .frame(width: 175, height: 150)
-                        .background(Color.purple.opacity(0.2))
-                        .cornerRadius(20)
-                    }
-                    
-                }
-                
-            }.padding()
-            
-            
-            HStack(spacing: 4) {
-                VStack {
-                    Text("Trees Scanned")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    Text("\(Num_Scanned)")
-                        .font(.title.bold())
-                        .foregroundColor(.green)
-                }
-                
-                Spacer()
-                
-                VStack {
-                    Text("Number of Projects")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                    Text("\(Num_Projects)")
-                        .font(.title.bold())
-                        .foregroundColor(.green)
-                    
-//                    Text(userProfileId)
-//                        .font(.caption.bold())
-//                        .foregroundColor(.green)
-                }
-                
+            .task {
+                await loadCounts(tables: "scans")
+                await loadCounts(tables: "projects")
             }
-            .padding()
-            .frame(width: 350, height: 100)
-            .background(Color.gray.opacity(0.1))
-            .cornerRadius(20)
-        }
-        .task {
-            await loadCounts(tables: "scans")
-            await loadCounts(tables: "projects")
         }
         
     }
