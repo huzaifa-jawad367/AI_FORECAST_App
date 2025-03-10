@@ -25,22 +25,22 @@
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="AI-ForCaST" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="GJd-Yh-RWb">
                                 <rect key="frame" x="42" y="263" width="306" height="97"/>
-                                <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="40"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="40"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Revolutionizing Forest Surveys" textAlignment="center" lineBreakMode="wordWrap" minimumFontSize="21" sizingRule="oversize" translatesAutoresizingMaskIntoConstraints="NO" id="nI8-F3-GqT" colorLabel="IBBuiltInLabel-Red">
-                                <rect key="frame" x="45" y="382" width="303" height="43"/>
+                                <rect key="frame" x="45" y="377" width="303" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="22"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="highlightedColor" name="AccentColor"/>
                                 <lineBreakStrategy key="lineBreakStrategy" hangulWordPriority="YES"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="with AR Precision" textAlignment="center" lineBreakMode="wordWrap" minimumFontSize="21" sizingRule="oversize" translatesAutoresizingMaskIntoConstraints="NO" id="a3G-2C-G40" colorLabel="IBBuiltInLabel-Red">
-                                <rect key="frame" x="109" y="419" width="174" height="32"/>
+                                <rect key="frame" x="92" y="419" width="209" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="22"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="highlightedColor" name="AccentColor"/>
                                 <lineBreakStrategy key="lineBreakStrategy" hangulWordPriority="YES"/>
