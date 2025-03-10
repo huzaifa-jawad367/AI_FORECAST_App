@@ -14,82 +14,106 @@ struct SettingsView: View {
     @EnvironmentObject var sessionManager: SessionManager
 
     var body: some View {
-        NavigationView {
-            VStack {
-                if viewModel.isSignedIn, let user = viewModel.currentUser {
-                    List {
-                        // --- User Info Section ---
-                        Section {
-                            HStack(spacing: 16) {
-                                AsyncImage(url: URL(string: user.profile_picture_url ?? "")) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                } placeholder: {
-                                    // Placeholder if no profile pic is available
-                                    Circle()
-                                        .fill(Color.gray.opacity(0.3))
-                                        .overlay(Text("No Image"))
+        
+        
+        VStack {
+            HStack {
+                Button(action: {
+                    authState = .Dashboard
+                }) {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .font(.headline)
+                        Text("Dashboard")
+                            .font(.body)
+                    }
+                    .foregroundColor(.blue)
+                }
+                Spacer()
+            }
+            .padding(.top)
+            
+            
+            NavigationView {
+                VStack {
+                    
+                    if viewModel.isSignedIn, let user = viewModel.currentUser {
+                        List {
+                            // --- User Info Section ---
+                            Section {
+                                HStack(spacing: 16) {
+                                    AsyncImage(url: URL(string: user.profile_picture_url ?? "")) { image in
+                                        image
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                    } placeholder: {
+                                        // Placeholder if no profile pic is available
+                                        Circle()
+                                            .fill(Color.gray.opacity(0.3))
+                                            .overlay(Text("No Image"))
+                                    }
+                                    .frame(width: 60, height: 60)
+                                    .clipShape(Circle())
+                                    
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(user.username)
+                                            .font(.headline)
+                                        Text(sessionManager.user?.email ?? "No email provided")
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
+                                    }
                                 }
-                                .frame(width: 60, height: 60)
-                                .clipShape(Circle())
-                                
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(user.username)
-                                        .font(.headline)
-                                    Text(sessionManager.user?.email ?? "No email provided")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.vertical, 4)
-                        }
-                        
-                        // --- Edit Profile Section ---
-                        Section {
-                            NavigationLink("Edit Profile", destination: EditProfileView())
-                        }
-                        
-                        // --- Account Actions Section ---
-                        Section {
-                            Button("Log Out") {
-                                viewModel.logOut()
+                                .padding(.vertical, 4)
                             }
                             
-                            Button("Delete Account", role: .destructive) {
-                                
-                                Task {
-                                    await viewModel.deleteAccount()
+                            // --- Edit Profile Section ---
+                            Section {
+                                NavigationLink("Edit Profile", destination: EditProfileView())
+                            }
+                            
+                            // --- Account Actions Section ---
+                            Section {
+                                Button("Log Out") {
+                                    viewModel.logOut()
                                 }
                                 
-                                authState = .signIn
-                                
+                                Button("Delete Account", role: .destructive) {
+                                    
+                                    Task {
+                                        await viewModel.deleteAccount()
+                                    }
+                                    
+                                    authState = .signIn
+                                    
+                                }
                             }
                         }
-                    }
-                    .listStyle(InsetGroupedListStyle())
-                } else {
-                    // If not signed in, show a fallback view
-                    VStack(spacing: 20) {
-                        Text("You are not signed in.")
-                            .font(.title3)
-                            .foregroundColor(.gray)
-                        
-                        Button("Sign In") {
-                            // Trigger your sign-in flow
-                            authState = .signIn
-                            print("Sign in tapped")
+                        .listStyle(InsetGroupedListStyle())
+                    } else {
+                        // If not signed in, show a fallback view
+                        VStack(spacing: 20) {
+                            Text("You are not signed in.")
+                                .font(.title3)
+                                .foregroundColor(.gray)
+                            
+                            Button("Sign In") {
+                                // Trigger your sign-in flow
+                                authState = .signIn
+                                print("Sign in tapped")
+                            }
+                            .buttonStyle(.borderedProminent)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .padding()
                     }
-                    .padding()
                 }
+                .navigationTitle("Settings")
             }
-            .navigationTitle("Settings")
+            .task {
+                await loadUserProfileIfSignedIn()
+            }
+
         }
-        .task {
-            await loadUserProfileIfSignedIn()
-        }
+        
     }
     
     /// Loads the user profile from the supabase Database if sessionManager.user exists
