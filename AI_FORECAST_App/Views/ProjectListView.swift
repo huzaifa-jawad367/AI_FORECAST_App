@@ -26,10 +26,15 @@ struct ProjectListView: View {
                         ProjectCardView(project: project)
                             .listRowSeparator(.hidden) // Remove default row style
                             .listRowInsets(EdgeInsets())
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Project: \(project)")
+                        
                     }
                 }
                 .listStyle(.plain)
                 .navigationTitle("Projects")
+                .accessibilityLabel("Projects List")
+                .accessibilityHint("Swipe left or right to browse your projects")
                 .refreshable {
                     await viewModel.fetchScans()
                 }
@@ -49,6 +54,8 @@ struct ProjectListView: View {
                     .shadow(radius: 4)
             }
             .padding(50)
+            .accessibilityLabel("Create Project")
+            .accessibilityHint("Tap to create a new project")
         }
 //        }
     

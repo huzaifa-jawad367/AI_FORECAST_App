@@ -30,12 +30,15 @@ struct TreeDetailView: View {
                 .frame(height: 250)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding()
+                .accessibilityLabel("Tree Image")
+                .accessibilityHint("Preview of the scanned tree")
 
             // Measurements and info
             VStack(alignment: .leading, spacing: 15) {
                 Text("Tree Measurements")
                     .font(.title2)
                     .fontWeight(.bold)
+                    .accessibilityAddTraits(.isHeader)
 
                 HStack {
                     Text("Height:")
@@ -44,6 +47,8 @@ struct TreeDetailView: View {
                     Text(String(format: "%.2f meters", height))
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Height: \(String(format: "%.2f", height)) meters")
 
                 HStack {
                     Text("Diameter:")
@@ -52,6 +57,8 @@ struct TreeDetailView: View {
                     Text(String(format: "%.2f cm", diameter))
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameter)) centimeters")
 
                 HStack {
                     Text("Scan Time:")
@@ -60,6 +67,8 @@ struct TreeDetailView: View {
                     Text(timestamp.formatted(date: .abbreviated, time: .shortened))
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Scan Time: \(timestamp.formatted(date: .abbreviated, time: .shortened))")
                 
                 HStack {
                     Text("Species:")
@@ -71,6 +80,8 @@ struct TreeDetailView: View {
                     Text(species)
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Species: \(species)")
                 
             }
             .padding()
@@ -106,6 +117,8 @@ struct TreeDetailView: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
+                .accessibilityLabel("Dashboard")
+                .accessibilityHint("Tap to return to the dashboard")
                 
                 Spacer()
                 
@@ -119,11 +132,15 @@ struct TreeDetailView: View {
                         .background(Color.green)
                         .cornerRadius(10)
                 }
+                .accessibilityLabel("Continue Scan")
+                .accessibilityHint("Tap to continue scanning another tree")
+                
             }
             .padding(.horizontal, 35)
             .padding(.bottom)
         }
         .navigationTitle("Scan Details")
+        .accessibilityIdentifier("treeDetailView")
     }
 }
 

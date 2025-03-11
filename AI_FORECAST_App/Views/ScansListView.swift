@@ -30,6 +30,9 @@ struct ScansListView: View {
                 }
                 .listStyle(PlainListStyle())
                 .navigationTitle("Scans")
+                // Accessibility for the scans list
+                .accessibilityLabel("List of Scans")
+                .accessibilityHint("Swipe through the scans to view details")
                 .onAppear {
                     // Load scans when the view appears.
                     Task {
@@ -37,6 +40,7 @@ struct ScansListView: View {
                     }
                 }
             }
+            .accessibilityElement(children: .contain)
             
             
             // Floating circular button at the bottom right
@@ -50,8 +54,10 @@ struct ScansListView: View {
                     .shadow(radius: 4)
             }
             .padding(50)
+            .accessibilityLabel("Add New Scan")
+            .accessibilityHint("Tap to open the camera and capture a new scan")
         }
-            
+        .accessibilityIdentifier("scansListView")
             
     }
 }
@@ -62,6 +68,8 @@ struct CameraView: View {
         Text("Camera Page")
             .font(.largeTitle)
             .padding()
+            .accessibilityLabel("Camera Page")
+            .accessibilityHint("This is the page where you capture a new scan")
     }
 }
 

@@ -42,12 +42,15 @@ struct ScanResultView: View {
                 .frame(height: 250)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding()
+                .accessibilityLabel("Tree Image")
+                .accessibilityHint("Preview of the scanned tree")
             
             // Measurements and info
             VStack(alignment: .leading, spacing: 15) {
                 Text("Tree Measurements")
                     .font(.title2)
                     .fontWeight(.bold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 HStack {
                     Text("Height:")
@@ -56,6 +59,8 @@ struct ScanResultView: View {
                     Text(String(format: "%.2f meters", height))
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Height: \(String(format: "%.2f", height)) meters")
                 
                 HStack {
                     Text("Diameter:")
@@ -64,6 +69,8 @@ struct ScanResultView: View {
                     Text(String(format: "%.2f cm", diameter))
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameter)) centimeters")
                 
                 HStack {
                     Text("Scan Time:")
@@ -72,6 +79,8 @@ struct ScanResultView: View {
                     Text(timestamp.formatted(date: .abbreviated, time: .shortened))
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Scan Time: \(timestamp.formatted(date: .abbreviated, time: .shortened))")
                 
                 HStack {
                     Text("Species:")
@@ -91,6 +100,9 @@ struct ScanResultView: View {
                     //                    .padding()
                 }
                 .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Species: \(selectedSpecies)")
+                .accessibilityHint("Double tap to choose a tree species")
                 
                 if selectedSpecies.isEmpty {
                     HStack {
@@ -100,6 +112,8 @@ struct ScanResultView: View {
                         Text("NA")
                     }
                     .padding(.horizontal)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Biomass Estimation: Not available")
                     
                 } else {
                     // Show the biomass estimation number/ entry
@@ -110,6 +124,8 @@ struct ScanResultView: View {
                         Text("\(Bestimation)")
                     }
                     .padding(.horizontal)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Biomass Estimation: \(Bestimation)")
                 }
                 
             }
@@ -130,6 +146,8 @@ struct ScanResultView: View {
                     .background(Color.blue)
                     .cornerRadius(20)
             }
+            .accessibilityLabel("Save")
+            .accessibilityHint("Tap to save this scan record after selecting a species")
             
             Spacer()
             
@@ -146,6 +164,8 @@ struct ScanResultView: View {
                         .background(Color.blue)
                         .cornerRadius(10)
                 }
+                .accessibilityLabel("Dashboard")
+                .accessibilityHint("Tap to return to the dashboard")
                 
                 Button(action: {
                     // If species is not selected, show alert
@@ -163,8 +183,12 @@ struct ScanResultView: View {
                         .background(Color.green)
                         .cornerRadius(10)
                 }
+                .accessibilityLabel("Continue Scan")
+                .accessibilityHint("Tap to continue scanning")
             }
             .padding([.horizontal, .bottom])
+            .accessibilityElement(children: .contain)
+            .accessibilityLabel("Navigation options: Dashboard and Continue Scan")
             .alert(isPresented: $showAlert) {
                 Alert(
                     title: Text("Species Not Selected"),

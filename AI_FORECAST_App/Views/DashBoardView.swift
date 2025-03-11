@@ -83,10 +83,17 @@ struct DashBoardView: View {
                     .frame(width: 350, height: 170)
                     .opacity(0.8)
                 }
+                // Accessibility
+                .accessibilityLabel("AI-ForCaST button")
+                .accessibilityHint("Tap to open the AI-ForCaST Projects list")
+                .accessibilityAddTraits(.isButton)
                 
                 
                 Text("Quick Access")
                     .font(.title2.bold())
+                    // Accessibility
+                    .accessibilityLabel("Quick Access")
+                    .accessibilityHint("A section providing quick shortcuts")
                 
                 
                 HStack {
@@ -121,6 +128,9 @@ struct DashBoardView: View {
                             .background(Color.blue.opacity(0.2))
                             .cornerRadius(20)
                         }
+                        // Accessibility
+                        .accessibilityLabel("Album")
+                        .accessibilityHint("Opens the list of scanned projects")
                         
                         Button {
                             print("Settings Button Tapped")
@@ -148,6 +158,10 @@ struct DashBoardView: View {
                             .background(Color.green.opacity(0.2))
                             .cornerRadius(20)
                         }
+                        // Accessibility
+                        .accessibilityLabel("Settings")
+                        .accessibilityHint("Tap to view or change settings")
+                        .accessibilityAddTraits(.isButton)
                         
                     }
                     
@@ -178,6 +192,10 @@ struct DashBoardView: View {
                             .background(Color.red.opacity(0.2))
                             .cornerRadius(20)
                         }
+                        // Accessibility
+                        .accessibilityLabel("Camera")
+                        .accessibilityHint("Tap to capture a new tree scan")
+                        .accessibilityAddTraits(.isButton)
                         
                         Button {
                             print("Guide Button Tapped")
@@ -205,6 +223,10 @@ struct DashBoardView: View {
                             .background(Color.purple.opacity(0.2))
                             .cornerRadius(20)
                         }
+                        // Accessibility
+                        .accessibilityLabel("Guide or Help")
+                        .accessibilityHint("Tap to read instructions or get help")
+                        .accessibilityAddTraits(.isButton)
                         
                     }
                     
@@ -241,6 +263,13 @@ struct DashBoardView: View {
                 .frame(width: 350, height: 100)
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(20)
+                // Accessibility: group these two for VoiceOver
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(
+                    "Trees Scanned: \(Num_Scanned). " +
+                    "Number of Projects: \(Num_Projects)."
+                )
+                .accessibilityHint("Statistics about your scans and projects")
             }
             .task {
                 await loadCounts(tables: "scans")

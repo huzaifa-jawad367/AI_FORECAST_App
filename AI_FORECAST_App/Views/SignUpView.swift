@@ -30,6 +30,7 @@ struct SignUpView: View {
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
                 .overlay(Color.black.opacity(0.15))
+                .accessibilityHidden(true)
             
             
             VStack {
@@ -41,6 +42,7 @@ struct SignUpView: View {
                         .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 20)
+                        .accessibilityAddTraits(.isHeader)
                     
                     
                     TextField("Email", text:$email).padding()
@@ -49,21 +51,29 @@ struct SignUpView: View {
                         .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
                         .keyboardType(.emailAddress)
                         .autocorrectionDisabled()
+                        .accessibilityLabel("Email")
+                        .accessibilityHint("Enter your email address")
                     
                     TextField("Username", text:$username).padding()
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
                         .autocapitalization(/*@START_MENU_TOKEN@*/.none/*@END_MENU_TOKEN@*/)
+                        .accessibilityLabel("Username")
+                        .accessibilityHint("Enter your username")
                     
                     // Password SecureField
                     SecureField("Password", text: $password).padding()
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
+                        .accessibilityLabel("Password")
+                        .accessibilityHint("Enter your Password")
                     
                     // Confirm Password SecureField
                     SecureField("Confirm Password", text: $confirm_password).padding()
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
+                        .accessibilityLabel("Confirm Password")
+                        .accessibilityHint("Enter your password again to confirm")
                     
                     // Signin Button
                     Button(action: {
@@ -76,6 +86,8 @@ struct SignUpView: View {
                             .background(Color.blue)
                             .cornerRadius(10)
                     }
+                    .accessibilityLabel("Sign Up")
+                    .accessibilityHint("Tap to create your account")
                     
                     Button(action: {
                         authState = .signIn
@@ -86,6 +98,8 @@ struct SignUpView: View {
                             .bold()
                     }
                     .padding(.top, 10)
+                    .accessibilityLabel("Sign In")
+                    .accessibilityHint("Tap to navigate to the sign in screen")
                     
                     // -- OR Sign Up with Apple --
 //                    Button(action: {
@@ -136,6 +150,8 @@ struct SignUpView: View {
                     .frame(width: 300, height: 50)
                     .background(Color.black)
                     .cornerRadius(30)
+                    .accessibilityLabel("Sign Up with Apple")
+                    .accessibilityHint("Tap to sign up using your Apple account")
                     
                     // -- OR Sign Up with Google --
                     Button(action: {
@@ -153,6 +169,8 @@ struct SignUpView: View {
                         .background(Color.red)
                         .cornerRadius(30)
                     }
+                    .accessibilityLabel("Sign Up with Google")
+                    .accessibilityHint("Tap to sign up using your Google account")
                     
                     // -- OR Sign Up with Facebook --
                     Button(action: {
@@ -170,6 +188,8 @@ struct SignUpView: View {
                         .background(Color.blue)
                         .cornerRadius(30)
                     }
+                    .accessibilityLabel("Sign Up with Facebook")
+                    .accessibilityHint("Tap to sign up using your Facebook account")
                     
                 }
                 .padding()

@@ -25,6 +25,7 @@ struct SignInView: View {
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
+                .accessibilityHidden(true)
             
             VStack {
                 Spacer()
@@ -35,6 +36,7 @@ struct SignInView: View {
                         .fontWeight(.bold)
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 20)
+                        .accessibilityAddTraits(.isHeader)
                     
                     TextField("Email", text: $email)
                         .padding()
@@ -42,11 +44,15 @@ struct SignInView: View {
                         .cornerRadius(10)
                         .autocapitalization(.none)
                         .keyboardType(.emailAddress)
+                        .accessibilityLabel("Email")
+                        .accessibilityHint("Enter your email address")
                     
                     SecureField("Password", text: $password)
                         .padding()
                         .background(Color(.secondarySystemBackground))
                         .cornerRadius(10)
+                        .accessibilityLabel("Password")
+                        .accessibilityHint("Enter your password")
                     
                     // Signin Button
                     Button(action: {
@@ -60,6 +66,8 @@ struct SignInView: View {
                             .background(Color.blue)
                             .cornerRadius(10)
                     }
+                    .accessibilityLabel("Sign In")
+                    .accessibilityHint("Tap to sign in using your email and password")
                     
                     Button(action: {
                         authState = .signUp
@@ -70,6 +78,8 @@ struct SignInView: View {
                             .bold()
                     }
                     .padding(.top, 10)
+                    .accessibilityLabel("Sign Up")
+                    .accessibilityHint("Tap to navigate to the sign up screen")
                     
                     // -- OR Sign In with Google --
                     Button(action: {
@@ -86,6 +96,8 @@ struct SignInView: View {
                         .background(Color.black)
                         .cornerRadius(30)
                     }
+                    .accessibilityLabel("Sign In with Apple")
+                    .accessibilityHint("Tap to sign in using your Apple account")
                     
                     // -- OR Sign In with Google --
                     Button(action: {
@@ -103,6 +115,8 @@ struct SignInView: View {
                         .background(Color.red)
                         .cornerRadius(30)
                     }
+                    .accessibilityLabel("Sign In with Google")
+                    .accessibilityHint("Tap to sign in using your Google account")
                     
                     // -- OR Sign In with Facebook --
                     Button(action: {
@@ -120,6 +134,8 @@ struct SignInView: View {
                         .background(Color.blue)
                         .cornerRadius(30)
                     }
+                    .accessibilityLabel("Sign In with Facebook")
+                    .accessibilityHint("Tap to sign in using your Facebook account")
 
                 }
                 .padding()
