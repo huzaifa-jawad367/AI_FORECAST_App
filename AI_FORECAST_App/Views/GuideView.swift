@@ -12,11 +12,10 @@ struct BiomassGuideView: View {
     @Binding var authState: AuthState
     
     var body: some View {
-        
         ScrollView {
-            
             VStack(alignment: .leading, spacing: 20) {
                 
+                // Back Button
                 HStack {
                     Button(action: {
                         authState = .Dashboard
@@ -29,47 +28,61 @@ struct BiomassGuideView: View {
                         }
                         .foregroundColor(.blue)
                     }
+                    .accessibilityLabel("Back")
+                    .accessibilityHint("Tap to return to the Dashboard")
+                    
                     Spacer()
                 }
                 .padding(.top)
                 
+                // Main Header
                 Text("Biomass Calculation Guide")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.top)
+                    .accessibilityAddTraits(.isHeader)
                 
+                // Subheader
                 Text("How Biomass is Calculated")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 Text("The app calculates the biomass of trees using a scientific method known as allometric equations. These equations are developed by foresters and use key tree attributes such as height, diameter at breast height (DBH), and species classification. By inputting these values into an allometric equation, we can estimate the total biomass of the tree.")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .accessibilityLabel("The app calculates tree biomass using allometric equations, which use tree height, DBH, and species classification to estimate total biomass.")
                 
+                // Allometric Equations Section
                 Text("Allometric Equations")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 Text("Allometric equations are mathematical models used in forestry to estimate tree biomass based on measurable parameters. The equation typically follows the form:")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .accessibilityLabel("Allometric equations are models used to estimate tree biomass based on measurable parameters.")
                 
                 Text("Biomass = a × (DBH)^b × (Height)^c")
                     .font(.headline)
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(10)
+                    .accessibilityLabel("Biomass equals a times DBH raised to the b power times Height raised to the c power")
                 
                 Text("where 'a', 'b', and 'c' are species-specific coefficients determined through extensive research.")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .accessibilityLabel("The coefficients a, b, and c are specific to each species and determined through research.")
                 
                 Divider()
                 
-                // Measuring Tree Height
+                // Measuring Tree Height Section
                 Text("Measuring Tree Height")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 VStack(alignment: .leading, spacing: 10) {
                     GuideStepView(stepNumber: "1", title: "Mark a Reference Point", description: "Stand near the tree and place a reference marker at the base to align measurements.")
@@ -79,10 +92,11 @@ struct BiomassGuideView: View {
                 
                 Divider()
                 
-                // Measuring Diameter
+                // Measuring Diameter Section
                 Text("Measuring Diameter at Breast Height (DBH)")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 VStack(alignment: .leading, spacing: 10) {
                     GuideStepView(stepNumber: "1", title: "Position Yourself", description: "Stand near the tree and align your camera at 1.3 meters (4.5 feet) above ground.")
@@ -91,14 +105,16 @@ struct BiomassGuideView: View {
                 
                 Divider()
                 
-                // Selecting Tree Species
+                // Selecting Tree Species Section
                 Text("Selecting Tree Species")
                     .font(.title2)
                     .fontWeight(.semibold)
+                    .accessibilityAddTraits(.isHeader)
                 
                 Text("Once the height and diameter are measured, you can select the tree species from a predefined list or use our AI classifier to automatically identify the species based on visual features.")
                     .font(.body)
                     .foregroundColor(.secondary)
+                    .accessibilityLabel("After measuring height and diameter, select the tree species from a list or use the AI classifier for automatic identification.")
             }
             .padding()
         }
@@ -128,6 +144,9 @@ struct GuideStepView: View {
                     .foregroundColor(.secondary)
             }
         }
+        // Combine the step number, title, and description for accessibility
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Step \(stepNumber): \(title). \(description)")
     }
 }
 

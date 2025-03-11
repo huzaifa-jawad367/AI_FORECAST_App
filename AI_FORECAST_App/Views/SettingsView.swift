@@ -29,6 +29,10 @@ struct SettingsView: View {
                     }
                     .foregroundColor(.blue)
                 }
+                // Accessibility for Back Button
+                .accessibilityLabel("Back to Dashboard")
+                .accessibilityHint("Tap to return to the dashboard screen")
+                
                 Spacer()
             }
             .padding(.top)
@@ -64,11 +68,17 @@ struct SettingsView: View {
                                     }
                                 }
                                 .padding(.vertical, 4)
+                                // Group the user info for accessibility
+                                .accessibilityElement(children: .combine)
+                                .accessibilityLabel("User Information")
+                                .accessibilityValue("\(user.username), email: \(sessionManager.user?.email ?? "No email provided")")
                             }
                             
                             // --- Edit Profile Section ---
                             Section {
                                 NavigationLink("Edit Profile", destination: EditProfileView())
+                                    .accessibilityLabel("Edit Profile")
+                                    .accessibilityHint("Tap to edit your profile information")
                             }
                             
                             // --- Account Actions Section ---
@@ -76,6 +86,8 @@ struct SettingsView: View {
                                 Button("Log Out") {
                                     viewModel.logOut()
                                 }
+                                .accessibilityLabel("Log Out")
+                                .accessibilityHint("Tap to log out from your account")
                                 
                                 Button("Delete Account", role: .destructive) {
                                     
@@ -86,6 +98,8 @@ struct SettingsView: View {
                                     authState = .signIn
                                     
                                 }
+                                .accessibilityLabel("Delete Account")
+                                .accessibilityHint("Tap to permanently delete your account")
                             }
                         }
                         .listStyle(InsetGroupedListStyle())
@@ -95,6 +109,9 @@ struct SettingsView: View {
                             Text("You are not signed in.")
                                 .font(.title3)
                                 .foregroundColor(.gray)
+                                // Accessibility
+                                .accessibilityLabel("Not signed in")
+                                .accessibilityHint("Please sign in to access your settings")
                             
                             Button("Sign In") {
                                 // Trigger your sign-in flow
@@ -102,6 +119,8 @@ struct SettingsView: View {
                                 print("Sign in tapped")
                             }
                             .buttonStyle(.borderedProminent)
+                            .accessibilityLabel("Sign In")
+                            .accessibilityHint("Tap to sign in to your account")
                         }
                         .padding()
                     }

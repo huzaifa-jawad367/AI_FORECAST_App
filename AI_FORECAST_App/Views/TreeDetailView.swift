@@ -75,21 +75,21 @@ struct TreeDetailView: View {
             }
             .padding()
             
-            Button(action: {
-                // If species is not selected, show alert
-                if selectedSpecies.isEmpty {
-                    showAlert = true
-                } else {
-                    
-                }
-            }) {
-                Text("Save")
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 200)
-                    .background(Color.blue)
-                    .cornerRadius(20)
-            }
+//            Button(action: {
+//                // If species is not selected, show alert
+//                if selectedSpecies.isEmpty {
+//                    showAlert = true
+//                } else {
+//                    
+//                }
+//            }) {
+//                Text("Save")
+//                    .foregroundColor(.white)
+//                    .padding()
+//                    .frame(width: 200)
+//                    .background(Color.blue)
+//                    .cornerRadius(20)
+//            }
             
             Spacer()
             
@@ -110,13 +110,7 @@ struct TreeDetailView: View {
                 Spacer()
                 
                 Button(action: {
-                    // If species is not selected, show alert
-                    if selectedSpecies.isEmpty {
-                        showAlert = true
-                    } else {
-                        // Navigate to ARView to measure next tree
-                        
-                    }
+                    authState = .scanPage
                 }) {
                     Text("Continue Scan")
                         .foregroundColor(.white)
