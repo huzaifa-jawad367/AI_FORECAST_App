@@ -154,15 +154,6 @@ struct SettingsView: View {
     }
 }
 
-// --- Example Placeholder for Edit Profile ---
-struct EditProfileView: View {
-    var body: some View {
-        Text("Edit Profile Screen")
-            .navigationTitle("Edit Profile")
-    }
-}
-
-
 
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {

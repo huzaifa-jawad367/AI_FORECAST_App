@@ -117,41 +117,41 @@ struct SignUpView: View {
 //                        .cornerRadius(30)
 //                    }
                     
-                    SignInWithAppleButton(.continue) { request in
-                        
-                        request.requestedScopes = [.email, .fullName]
-                        
-                    } onCompletion: { result in
-                        
-                        switch result {
-                        case .success(let auth):
-                            
-                            switch auth.credential {
-                            case let credential as ASAuthorizationAppleIDCredential:
-                                
-                                // User id
-                                let userId = credential.user
-                                
-                                // User Info
-                                let email = credential.email
-                                let firstName = credential.fullName?.givenName
-                                let lastName = credential.fullName?.familyName
-                                
-                            default:
-                                break
-                            }
-                            
-                        case .failure(let error):
-                            print(error)
-                        }
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(width: 300, height: 50)
-                    .background(Color.black)
-                    .cornerRadius(30)
-                    .accessibilityLabel("Sign Up with Apple")
-                    .accessibilityHint("Tap to sign up using your Apple account")
+//                    SignInWithAppleButton(.continue) { request in
+//                        
+//                        request.requestedScopes = [.email, .fullName]
+//                        
+//                    } onCompletion: { result in
+//                        
+//                        switch result {
+//                        case .success(let auth):
+//                            
+//                            switch auth.credential {
+//                            case let credential as ASAuthorizationAppleIDCredential:
+//                                
+//                                // User id
+//                                let userId = credential.user
+//                                
+//                                // User Info
+//                                let email = credential.email
+//                                let firstName = credential.fullName?.givenName
+//                                let lastName = credential.fullName?.familyName
+//                                
+//                            default:
+//                                break
+//                            }
+//                            
+//                        case .failure(let error):
+//                            print(error)
+//                        }
+//                    }
+//                    .font(.headline)
+//                    .foregroundColor(.white)
+//                    .frame(width: 300, height: 50)
+//                    .background(Color.black)
+//                    .cornerRadius(30)
+//                    .accessibilityLabel("Sign Up with Apple")
+//                    .accessibilityHint("Tap to sign up using your Apple account")
                     
                     // -- OR Sign Up with Google --
                     Button(action: {
