@@ -4,6 +4,8 @@
 //
 //  Created by Huzaifa Jawad on 05/02/2025.
 //
+
+
 import Foundation
 import SwiftUI
 
@@ -14,6 +16,26 @@ struct TreeMeasurementView: View {
         ZStack {
             CustomARViewRepresentable()
                 .ignoresSafeArea()
+            
+            GeometryReader { geometry in
+                let midX = geometry.size.width / 2
+                let midY = geometry.size.height / 2
+                let crosshairLength: CGFloat = 15
+
+                Path { path in
+                    // Horizontal line
+                    path.move(to: CGPoint(x: midX - crosshairLength, y: midY))
+                    path.addLine(to: CGPoint(x: midX + crosshairLength, y: midY))
+
+                    // Vertical line
+                    path.move(to: CGPoint(x: midX, y: midY - crosshairLength))
+                    path.addLine(to: CGPoint(x: midX, y: midY + crosshairLength))
+                }
+                .stroke(Color.red, lineWidth: 2)
+                // Ensures the crosshair does NOT block taps
+                .allowsHitTesting(false)
+            }
+            .ignoresSafeArea()
             
             VStack {
                 Spacer()
