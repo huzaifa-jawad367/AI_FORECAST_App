@@ -10,8 +10,10 @@ import Foundation
 import SwiftUI
 
 struct TreeMeasurementView: View {
+    
     var arView = CustomARView(frame: UIScreen.main.bounds) // Explicitly provide frame
-
+    @Binding var authState: AuthState
+    
     var body: some View {
         ZStack {
             CustomARViewRepresentable()
@@ -39,18 +41,34 @@ struct TreeMeasurementView: View {
             
             VStack {
                 Spacer()
-
-                Button(action: {
-                    DispatchQueue.main.async {
-                        arView.handleTap(UITapGestureRecognizer()) // Simulate user tap
+                
+                HStack(spacing: 20) {
+                    
+                    Button(action: {
+                        authState = .Dashboard
+                        print("Navigating to dashboard...")
+                    }) {
+                        Image(systemName: "house.fill")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Circle().fill(Color.blue))
+                            .shadow(radius: 5)
                     }
-                }) {
-                    Image(systemName: "camera.circle.fill")
-                        .resizable()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.white)
-                        .background(Circle().fill(Color.blue))
-                        .shadow(radius: 10)
+                    
+                    Button(action: {
+                        DispatchQueue.main.async {
+                            arView.handleTap(UITapGestureRecognizer()) // Simulate user tap
+                        }
+                    }) {
+                        Image(systemName: "camera.circle.fill")
+                            .resizable()
+                            .frame(width: 80, height: 80)
+                            .foregroundColor(.white)
+                            .background(Circle().fill(Color.blue))
+                            .shadow(radius: 10)
+                    }
                 }
                 .padding(.bottom, 40)
             }

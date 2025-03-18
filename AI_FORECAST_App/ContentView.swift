@@ -48,7 +48,7 @@ struct ContentView: View {
                         authState: $authState
                     )
                 case .scanPage:
-                    CustomARViewRepresentable()
+                    TreeMeasurementView (authState: $authState)
                 }
             }
         }
