@@ -83,6 +83,16 @@ struct TreeDetailView: View {
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel("Species: \(species)")
                 
+                HStack {
+                    Text("Biomass Estimation:")
+                        .fontWeight(.semibold)
+                    Spacer()
+                    Text("NA")
+                }
+                .padding(.horizontal)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Biomass Estimation: Not available")
+                
             }
             .padding()
             
