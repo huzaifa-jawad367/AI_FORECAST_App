@@ -27,4 +27,20 @@ struct ProjectRecord: Identifiable, Codable {
     }
 }
 
-
+struct ProjectRecord_write: Encodable {
+    // Computed property for SwiftUI
+    
+    var project_name: String
+    var creator_name: String
+    var description: String?
+    var created_at: String
+    
+    // Map JSON keys from Supabase to your property names
+    enum CodingKeys: String, CodingKey {
+        case project_name = "name"
+        case description
+        case created_at
+        case creator_name = "created_by"
+        
+    }
+}
