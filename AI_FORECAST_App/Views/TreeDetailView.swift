@@ -11,8 +11,9 @@ struct TreeDetailView: View {
     let image: UIImage
     var height: Double
     var diameter: Double
-    var timestamp: Date
+    var timestamp: String
     var species: String
+    var biomass_estimation: Float
     
     @Binding var authState: AuthState
     
@@ -64,11 +65,16 @@ struct TreeDetailView: View {
                     Text("Scan Time:")
                         .fontWeight(.semibold)
                     Spacer()
-                    Text(timestamp.formatted(date: .abbreviated, time: .shortened))
+                    if let date = ISO8601DateFormatter().date(from: timestamp) {
+                        Text(date.formatted(date: .abbreviated, time: .shortened))
+                    } else {
+                        // Fallback if the string cannot be parsed
+                        Text(timestamp)
+                    }
                 }
                 .padding(.horizontal)
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Scan Time: \(timestamp.formatted(date: .abbreviated, time: .shortened))")
+                .accessibilityLabel("Scan Time: \(ISO8601DateFormatter().date(from: timestamp)?.formatted(date: .abbreviated, time: .shortened) ?? timestamp)")
                 
                 HStack {
                     Text("Species:")
@@ -87,7 +93,7 @@ struct TreeDetailView: View {
                     Text("Biomass Estimation:")
                         .fontWeight(.semibold)
                     Spacer()
-                    Text("NA")
+                    Text("\(biomass_estimation)")
                 }
                 .padding(.horizontal)
                 .accessibilityElement(children: .combine)
@@ -161,8 +167,9 @@ struct TreeDetailView_Previews: PreviewProvider {
             image: UIImage(systemName: "leaf")!, // Placeholder image
             height: 12.5,
             diameter: 30.2,
-            timestamp: Date(),
+            timestamp: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short),
             species: "Pine",
+            biomass_estimation: 35.9,
             authState: .constant(.ScanResultView)
         )
     }
