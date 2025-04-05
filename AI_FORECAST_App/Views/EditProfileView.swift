@@ -15,6 +15,9 @@ struct EditProfileView: View {
     @State private var isShowingActionSheet = false
     @State private var isShowingPasswordReset = false
     
+    @EnvironmentObject var sessionManager: SessionManager
+    @StateObject private var viewModel = SettingsViewModel()
+    
     var body: some View {
         NavigationView {
             Form {
@@ -23,7 +26,6 @@ struct EditProfileView: View {
                     HStack {
                         Spacer()
                         ZStack(alignment: .bottomTrailing) {
-                            // Display the selected image or a placeholder
                             if let image = selectedImage {
                                 Image(uiImage: image)
                                     .resizable()
@@ -37,7 +39,6 @@ struct EditProfileView: View {
                                     .frame(width: 100, height: 100)
                             }
                             
-                            // Button to trigger photo selection action sheet
                             Button(action: {
                                 isShowingActionSheet = true
                             }, label: {
@@ -66,8 +67,13 @@ struct EditProfileView: View {
                 
                 // MARK: Username Section
                 Section(header: Text("Username")) {
-                    TextField("Enter your username", text: $username)
-                        .autocapitalization(.none)
+                    TextField("Enter your username", text: Binding(
+                        get: { viewModel.currentUser?.username ?? "" },
+                        set: { newUsername in
+                            viewModel.currentUser?.username = newUsername
+                        }
+                    ))
+                    .autocapitalization(.none)
                 }
                 
                 // MARK: Password Reset Section
@@ -98,15 +104,40 @@ struct EditProfileView: View {
             .sheet(isPresented: $isShowingPasswordReset) {
                 ResetPasswordView()
             }
+            // Use a .task modifier to load the current user when the view appears
+            .task {
+                await loadUserProfileIfSignedIn()
+            }
+        }
+    }
+    
+    /// Asynchronously loads the user profile if a session exists and prints the current username.
+    func loadUserProfileIfSignedIn() async {
+        guard let supabaseUser = sessionManager.user else {
+            print("No session user found.")
+            return
+        }
+        
+        do {
+            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+            viewModel.currentUser = profile
+            if let currentUsername = viewModel.currentUser?.username {
+                username = currentUsername
+                print("Retrieved current user with username: \(currentUsername)")
+            } else {
+                print("User profile loaded, but username is missing.")
+            }
+        } catch {
+            print("Error fetching profile: \(error.localizedDescription)")
         }
     }
     
     func updateProfile() {
-        // Add your update profile logic here
         print("Profile updated with username: \(username)")
-        // You might also want to upload the selectedImage if it exists
+        // Add additional update logic such as image uploading if needed
     }
 }
+
 
 struct ResetPasswordView: View {
     @Environment(\.presentationMode) var presentationMode
