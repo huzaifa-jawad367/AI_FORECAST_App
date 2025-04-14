@@ -12,6 +12,8 @@ import Supabase
 class SettingsViewModel: ObservableObject {
     @Published var currentUser: UserRecord? = nil
     @Published var isSignedIn: Bool = false
+    
+    @EnvironmentObject var sessionManager: SessionManager
         
     // We'll rely on the session manager's supabaseClient or create our own
     private let supabaseClient = client
@@ -49,8 +51,21 @@ class SettingsViewModel: ObservableObject {
         }
     }
     
-    func deleteAccount() {
+    func deleteAccount() async {
         // You might call a Supabase RPC or API to delete the user record.
         // Or rely on the auth admin API if you have it set up.
+        do {
+            
+            // Attempt to delete the account first
+            try await client.auth.admin.deleteUser(id: "aac07335-a97a-48fd-a7d8-c89128bee71d")
+            
+            // Once deletion is confirmed, sign out the user
+            try await client.auth.signOut()
+            
+            
+        } catch {
+            print("Account deletion or sign out failed: \(error)")
+            // Handle error appropriately
+        }
     }
 }
