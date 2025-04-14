@@ -37,6 +37,7 @@ struct SignInView: View {
                         .multilineTextAlignment(.leading)
                         .padding(.bottom, 20)
                         .accessibilityAddTraits(.isHeader)
+                        .foregroundColor(.black)
                     
                     TextField("Email", text: $email)
                         .padding()
