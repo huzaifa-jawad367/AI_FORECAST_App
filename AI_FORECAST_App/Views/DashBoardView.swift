@@ -59,7 +59,7 @@ struct DashBoardView: View {
                 
                 
                 Button {
-                    authState = .ProjectsList
+                    authState = .ScanResultView
                 } label: {
                     ZStack {
                         Color(hex: "#6b96db")

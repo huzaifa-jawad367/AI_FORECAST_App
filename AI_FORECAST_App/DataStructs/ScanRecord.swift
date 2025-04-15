@@ -38,3 +38,28 @@ struct ScanRecord: Identifiable, Codable {
         // You might also want case created_by = "created_by"
     }
 }
+
+
+struct ScanRecord_write: Encodable {
+    var height: Double
+    var diameter: Double
+    var species: String
+    var scan_time: String
+    var project_id: String
+    var user_id: String
+    var biomass_estimation: Double
+    var latitude: Float
+    var longitude: Float
+    
+    enum CodingKeys: String, CodingKey {
+        case height = "tree_height"
+        case diameter = "tree_diameter"
+        case species = "tree_species"
+        case scan_time = "created_at"
+        case project_id
+        case user_id
+        case biomass_estimation
+        case latitude
+        case longitude
+    }
+}
