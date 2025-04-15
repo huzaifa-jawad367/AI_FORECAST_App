@@ -5,6 +5,7 @@
 *.xccheckout
 *.moved-aside
 *.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata
 
 # Build & Derived Data
 DerivedData/
