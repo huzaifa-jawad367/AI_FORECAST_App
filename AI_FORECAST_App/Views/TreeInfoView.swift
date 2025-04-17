@@ -157,7 +157,7 @@ struct ScanResultView: View {
                             viewModel.isSignedIn = true
                             print("Step 3: Is signed in: \(profile)")
                             
-                            try await SaveScanedRecordToDatabase(height: height, diameter: diameter, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
+                            SaveScanedRecordToDatabase(height: height, diameter: diameter, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
                         } catch {
                             print("Error fetch profile: \(error.localizedDescription)")
                             viewModel.isSignedIn = false
