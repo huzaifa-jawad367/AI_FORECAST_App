@@ -10,15 +10,19 @@ import Foundation
 import SwiftUI
 
 struct TreeMeasurementView: View {
+    /// Hold a reference to the one true ARView instance
+    @State private var arView: CustomARView?
     
-    var arView = CustomARView(frame: UIScreen.main.bounds) // Explicitly provide frame
+    /// Binding back to your navigation/auth state
     @Binding var authState: AuthState
-    
+
     var body: some View {
         ZStack {
-            CustomARViewRepresentable()
+            // MARK: - AR View
+            CustomARViewRepresentable(arView: $arView)
                 .ignoresSafeArea()
-            
+
+            // MARK: - Crosshair Overlay
             GeometryReader { geometry in
                 let midX = geometry.size.width / 2
                 let midY = geometry.size.height / 2
@@ -28,26 +32,23 @@ struct TreeMeasurementView: View {
                     // Horizontal line
                     path.move(to: CGPoint(x: midX - crosshairLength, y: midY))
                     path.addLine(to: CGPoint(x: midX + crosshairLength, y: midY))
-
                     // Vertical line
                     path.move(to: CGPoint(x: midX, y: midY - crosshairLength))
                     path.addLine(to: CGPoint(x: midX, y: midY + crosshairLength))
                 }
                 .stroke(Color.red, lineWidth: 2)
-                // Ensures the crosshair does NOT block taps
-                .allowsHitTesting(false)
+                .allowsHitTesting(false)     // Pass taps through to ARView
             }
             .ignoresSafeArea()
-            
+
+            // MARK: - Bottom Controls
             VStack {
                 Spacer()
-                
                 HStack(spacing: 20) {
-                    
-                    Button(action: {
+                    // Home Button
+                    Button {
                         authState = .Dashboard
-                        print("Navigating to dashboard...")
-                    }) {
+                    } label: {
                         Image(systemName: "house.fill")
                             .resizable()
                             .frame(width: 40, height: 40)
@@ -56,16 +57,17 @@ struct TreeMeasurementView: View {
                             .background(Circle().fill(Color.blue))
                             .shadow(radius: 5)
                     }
-                    
-                    Button(action: {
-                        DispatchQueue.main.async {
-                            arView.handleTap(UITapGestureRecognizer()) // Simulate user tap
-                        }
-                    }) {
+
+                    // Manual Capture Button
+                    Button {
+                        // Simulate a tap on the actual ARView
+                        arView?.handleTap(UITapGestureRecognizer())
+                    } label: {
                         Image(systemName: "camera.circle.fill")
                             .resizable()
                             .frame(width: 80, height: 80)
                             .foregroundColor(.white)
+                            .padding(10)
                             .background(Circle().fill(Color.blue))
                             .shadow(radius: 10)
                     }
@@ -75,3 +77,9 @@ struct TreeMeasurementView: View {
         }
     }
 }
+
+#Preview {
+    TreeMeasurementView(authState: .constant(.scanPage))
+}
+
+

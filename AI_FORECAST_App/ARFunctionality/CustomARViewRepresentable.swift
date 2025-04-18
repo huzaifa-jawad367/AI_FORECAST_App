@@ -39,11 +39,13 @@ import RealityKit
 //}
 
 struct CustomARViewRepresentable: UIViewRepresentable {
+    @Binding var arView: CustomARView?
+
     func makeUIView(context: Context) -> CustomARView {
-        return CustomARView(frame: UIScreen.main.bounds)
+        let view = CustomARView(frame: UIScreen.main.bounds)
+        arView = view        // ← capture the actual instance
+        return view
     }
 
     func updateUIView(_ uiView: CustomARView, context: Context) {}
 }
-
-
