@@ -6,21 +6,69 @@
 //
 
 
-import Foundation
 import SwiftUI
+import RealityKit
+import Combine
 
 struct TreeMeasurementView: View {
     /// Hold a reference to the one true ARView instance
     @State private var arView: CustomARView?
-    
     /// Binding back to your navigation/auth state
     @Binding var authState: AuthState
+    /// Live distance from camera to reference point
+    @State private var distance: Float = 0.0
 
+    // Timer for updating distance
+    private let distanceTimer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+
+    // Steps for the top indicator
+    private let steps = ["Trunk", "Walk", "Base", "Top"]
+    
     var body: some View {
         ZStack {
             // MARK: - AR View
             CustomARViewRepresentable(arView: $arView)
                 .ignoresSafeArea()
+            
+            VStack {
+                ZStack {
+                    // Underline
+                    Rectangle()
+                        .fill(Color.gray)
+                        .frame(height: 2)
+                        .padding(.horizontal, 40)
+
+                    // Circles + labels
+                    HStack {
+                        // Compute completion statuses
+                        let refDone = ARManager.shared.referencePoint != nil
+                        let walkDone = refDone && distance >= 3.0
+                        let baseDone = ARManager.shared.bottomPoint != nil
+                        let topDone = ARManager.shared.topPoint != nil
+                        let statuses = [refDone, walkDone, baseDone, topDone]
+
+                        ForEach(0..<steps.count, id: \ .self) { index in
+                            VStack(spacing: 4) {
+                                Circle()
+                                    .fill(statuses[index] ? Color.green : Color.gray)
+                                    .frame(width: 20, height: 20)
+                                Text(steps[index])
+                                    .font(.caption2)
+                                    .foregroundColor(.white)
+                            }
+
+                            if index < steps.count - 1 {
+                                Spacer()
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 40)
+                }
+                .padding(.top, 60)
+
+                Spacer()
+            }
+            .ignoresSafeArea(edges: .top)
 
             // MARK: - Crosshair Overlay
             GeometryReader { geometry in
@@ -71,9 +119,28 @@ struct TreeMeasurementView: View {
                             .background(Circle().fill(Color.blue))
                             .shadow(radius: 10)
                     }
+
+                    // Distance Display
+                    ZStack {
+                        Circle()
+                            .fill(Color.blue)
+                            .frame(width: 60, height: 60)
+                            .shadow(radius: 5)
+                        Text(String(format: "%.1f m", distance))
+                            .foregroundColor(.white)
+                            .font(.headline)
+                    }
                 }
                 .padding(.bottom, 40)
             }
+        }
+        // Update distance on timer
+        .onReceive(distanceTimer) { _ in
+            // Compute only if reference point and ARView are available
+            guard let refPoint = ARManager.shared.referencePoint,
+                  let camTransform = arView?.cameraTransform else { return }
+            let camPos = camTransform.translation
+            distance = simd_distance(refPoint, camPos)
         }
     }
 }
