@@ -30,7 +30,7 @@ struct ContentView: View {
                 case .Dashboard:
                     DashBoardView(authState: $authState)
                 case .ScansList:
-                    ScansListView(authState: $authState)
+                    ScansListView(authState: $authState, projectID: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b")
                 case .ProjectsList:
                     ProjectListView(authState: $authState)
                 case .Settings:
@@ -43,7 +43,6 @@ struct ContentView: View {
                     ScanResultView(
                         image: UIImage(systemName: "leaf")!, // Placeholder image
                         height: 12.5,
-                        diameter: 30.2,
                         timestamp: Date(),
                         authState: $authState
                     )

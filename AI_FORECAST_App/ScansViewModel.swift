@@ -13,7 +13,7 @@ import SwiftUI
 class ScansViewModel: ObservableObject {
     @Published var scans: [ScanRecord] = []
     
-    func fetchScans() async {
+    func fetchScans(projectID: String) async {
         do {
             let response = try await client.database
                 .from("scans")
@@ -29,6 +29,7 @@ class ScansViewModel: ObservableObject {
                     latitude,
                     longitude
                 """)
+                .eq("project_id", value: projectID)
                 .execute()
             
             

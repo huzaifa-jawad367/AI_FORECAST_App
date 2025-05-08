@@ -7,6 +7,19 @@
 
 import SwiftUI
 import CoreLocation
+import Combine
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil, from: nil, for: nil
+        )
+    }
+}
+#endif
+
 
 let speciesCoefficients: [String: (a: Double, b: Double, c: Double)] = [
     "Oak":    (a: 0.12, b: 2.45, c: 1.10),
@@ -21,13 +34,13 @@ let speciesCoefficients: [String: (a: Double, b: Double, c: Double)] = [
 struct ScanResultView: View {
     let image: UIImage
     let height: Double
-    let diameter: Double
     let timestamp: Date
     
     @State private var Bestimation: Double = 0.0
     
     @Binding var authState: AuthState
     
+    @State private var diameterInput: String = ""
     @State private var selectedSpecies: String = "Other"
     let speciesOptions = ["Oak", "Pine", "Maple", "Birch", "Spruce", "Other"]
     
@@ -68,14 +81,37 @@ struct ScanResultView: View {
                 .accessibilityLabel("Height: \(String(format: "%.2f", height)) meters")
                 
                 HStack {
-                    Text("Diameter:")
+                    Text("Diameter (cm):")
                         .fontWeight(.semibold)
                     Spacer()
-                    Text(String(format: "%.2f cm", diameter))
+                    TextField("Enter diameter", text: $diameterInput)
+                      .keyboardType(.decimalPad)
+                      .multilineTextAlignment(.trailing)
+                      .frame(width: 100)
+                      .padding(6)
+                      .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.2)))
+                      .onChange(of: diameterInput) {
+                          // strip out any non-numeric/“.” chars
+                          let filtered = diameterInput.filter { "0123456789.".contains($0) }
+                          if filtered != diameterInput {
+                              diameterInput = filtered
+                          }
+                          recalcBiomass()
+                      }
+                      .submitLabel(.done)               // shows “Done” on hardware keyboards
+                      .onSubmit { hideKeyboard() }      // hides for hardware “Enter”
+                      .toolbar {                        // adds “Done” above the decimal pad
+                          ToolbarItemGroup(placement: .keyboard) {
+                              Spacer()
+                              Button("Done") {
+                                  hideKeyboard()
+                              }
+                          }
+                      }
                 }
                 .padding(.horizontal)
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameter)) centimeters")
+                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameterInput)) centimeters")
                 
                 HStack {
                     Text("Scan Time:")
@@ -157,7 +193,9 @@ struct ScanResultView: View {
                             viewModel.isSignedIn = true
                             print("Step 3: Is signed in: \(profile)")
                             
-                            SaveScanedRecordToDatabase(height: height, diameter: diameter, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
+                            let diam = Double(diameterInput) ?? 0
+                            
+                            SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
                         } catch {
                             print("Error fetch profile: \(error.localizedDescription)")
                             viewModel.isSignedIn = false
@@ -200,6 +238,7 @@ struct ScanResultView: View {
                         showAlert = true
                     } else {
                         // Show the biomass estimation number/ entry
+                        authState = .scanPage
                         
                     }
                 }) {
@@ -224,11 +263,13 @@ struct ScanResultView: View {
                 )
             }
         }
+        .contentShape(Rectangle())            // so empty space catches taps
+        .onTapGesture { hideKeyboard() }
         .navigationTitle("Scan Details")
         .onChange(of: selectedSpecies) { newSpecies, _ in
             Task {
                 do {
-                    Bestimation = try await calculateBiomass(for: newSpecies, diameter: diameter, height: height)
+                    Bestimation = try await calculateBiomass(for: newSpecies, diameter: Double(diameterInput) ?? 0, height: height)
                 } catch {
                     Bestimation = -1
                 }
@@ -238,7 +279,7 @@ struct ScanResultView: View {
         .task {
             do {
                 // calculate Biomass for the current instance
-                Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: diameter, height: height)
+                Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: Double(diameterInput) ?? 0, height: height)
             } catch {
                 print("Error calculating the biomass")
             }
@@ -281,6 +322,22 @@ struct ScanResultView: View {
             return (latitude: 0.0, longitude: 0.0)
         }
     }
+    
+    private func recalcBiomass() {
+        Task {
+            let diam = Double(diameterInput) ?? 0
+            do {
+                Bestimation = try await calculateBiomass(
+                    for: selectedSpecies,
+                    diameter: diam,
+                    height: height
+                )
+            } catch {
+                Bestimation = -1
+            }
+        }
+    }
+
     
     func calculateBiomass(for species: String, diameter: Double, height: Double) async throws -> Double {
         // Unwrap the coefficients, throwing an error if not found
@@ -340,7 +397,6 @@ struct ScanResultView_Previews: PreviewProvider {
         ScanResultView(
             image: UIImage(systemName: "leaf")!, // Placeholder image
             height: 12.5,
-            diameter: 30.2,
             timestamp: Date(),
             authState: .constant(.ScanResultView)
         )

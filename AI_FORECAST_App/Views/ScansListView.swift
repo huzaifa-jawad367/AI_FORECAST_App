@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ScansListView: View {
     @Binding var authState: AuthState
+    let projectID: String
     @StateObject private var viewModel = ScansViewModel()
     
     var body: some View {
@@ -39,7 +40,7 @@ struct ScansListView: View {
             .onAppear {
                 // Load scans when the view appears.
                 Task {
-                    await viewModel.fetchScans()
+                    await viewModel.fetchScans(projectID: projectID)
                     
                     for scan in viewModel.scans {
                         print("----- Scan Record -----")
@@ -59,7 +60,7 @@ struct ScansListView: View {
             
             
             // Floating circular button at the bottom right
-            NavigationLink(destination: CameraView()) {
+            NavigationLink(destination: TreeMeasurementView(authState: .constant(.scanPage))) {
                 Image(systemName: "plus")
                     .font(.system(size: 36))
                     .foregroundColor(.white)
@@ -90,6 +91,10 @@ struct CameraView: View {
 
 struct ScansListView_Previews: PreviewProvider {
     static var previews: some View {
-        ScansListView(authState: .constant(.ScansList))
+        ScansListView(
+            authState: .constant(.ScansList),
+            projectID: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b"
+        )
+        .environmentObject(SessionManager())
     }
 }

@@ -36,6 +36,7 @@
 		609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C12D5360E7006910B8 /* Supabase.swift */; };
 		609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */; };
 		609C13352CB16639002F39EF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 609C13342CB16639002F39EF /* Supabase */; };
+		609FCA4E2DC8D69900725FC4 /* ProjectMemberRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FCA4D2DC8D69900725FC4 /* ProjectMemberRecord.swift */; };
 		60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */; };
 		60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B8252CAE93A80086930F /* ColorExtension.swift */; };
 		60B6B8292CAEA4E50086930F /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 60B6B8282CAEA4E50086930F /* Auth */; };
@@ -102,6 +103,7 @@
 		609B5E852D6EF48800B7864D /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		609BA6C12D5360E7006910B8 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeMeasurementView.swift; sourceTree = "<group>"; };
+		609FCA4D2DC8D69900725FC4 /* ProjectMemberRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectMemberRecord.swift; sourceTree = "<group>"; };
 		60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
 		60B6B8252CAE93A80086930F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		60C2C5162CB6B2ED00C0BA3F /* CustomARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARView.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 		609B5E7E2D6DEFD600B7864D /* DataStructs */ = {
 			isa = PBXGroup;
 			children = (
+				609FCA4D2DC8D69900725FC4 /* ProjectMemberRecord.swift */,
 				60DF8B442D6F1E45003D5562 /* ProjectRecord.swift */,
 				609B5E812D6E05F200B7864D /* AlertItem.swift */,
 				609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */,
@@ -429,6 +432,7 @@
 				603A8BF22D6B46F400CF595A /* ScansListView.swift in Sources */,
 				600EB5182D848F29003B10CD /* EditProfileView.swift in Sources */,
 				607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */,
+				609FCA4E2DC8D69900725FC4 /* ProjectMemberRecord.swift in Sources */,
 				607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */,
 				609B5E802D6DF00A00B7864D /* UserRecord.swift in Sources */,
 				60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */,

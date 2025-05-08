@@ -5,142 +5,51 @@
 //  Created by Huzaifa Jawad on 09/10/2024.
 //
 
-//import ARKit
-//import RealityKit
-//import SwiftUI
-//import Combine
-//
-//class CustomARView: ARView {
-//    /// Tracks which marker to place next (0: trunk, 1: base, 2: top)
-//    var markCount = 0
-//
-//    required init(frame frameRect: CGRect) {
-//        super.init(frame: frameRect)
-//
-//        // 1) Take control of session configuration
-//        self.automaticallyConfigureSession = false
-//
-//        // 2) Build and run a world‐tracking config with vertical plane detection
-//        let config = ARWorldTrackingConfiguration()
-//        config.planeDetection = [.vertical]
-//        config.environmentTexturing = .automatic
-//        self.session.run(config)
-//
-//        // 3) Install tap gesture handling
-//        setupGestureRecognizers()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    private func setupGestureRecognizers() {
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-//        addGestureRecognizer(tapGesture)
-//    }
-//
-//    /// Core logic for processing a tap at any screen point
-//    func processTap(at screenLocation: CGPoint) {
-//        // Raycast against estimated vertical surfaces
-//        guard let result = self.raycast(
-//                from: screenLocation,
-//                allowing: .estimatedPlane,
-//                alignment: .vertical
-//              ).first
-//        else { return }
-//
-//        // Extract world position
-//        let worldPosition = SIMD3<Float>(
-//            result.worldTransform.columns.3.x,
-//            result.worldTransform.columns.3.y,
-//            result.worldTransform.columns.3.z
-//        )
-//
-//        // Decide which marker to place and store it
-//        let markerType: MarkerType
-//        switch markCount {
-//        case 0:
-//            markerType = .treeReference
-//            ARManager.shared.referencePoint = worldPosition
-//        case 1:
-//            markerType = .base
-//            ARManager.shared.bottomPoint = worldPosition
-//        case 2:
-//            markerType = .top
-//            ARManager.shared.topPoint = worldPosition
-//            calculateTreeHeight()
-//        default:
-//            return
-//        }
-//
-//        // Visualize the marker and advance step
-//        placeMarker(type: markerType, at: worldPosition)
-//        markCount += 1
-//    }
-//
-//    @objc private func handleTap(_ sender: UITapGestureRecognizer) {
-//        let location = sender.location(in: self)
-//        processTap(at: location)
-//    }
-//
-//    /// Simulate a tap at the center crosshair
-//    func handleCenterTap() {
-//        let center = CGPoint(x: bounds.midX, y: bounds.midY)
-//        processTap(at: center)
-//    }
-//
-//    /// Place a colored sphere at the given world position
-//    func placeMarker(type: MarkerType, at position: SIMD3<Float>) {
-//        let sphere = MeshResource.generateSphere(radius: 0.05)
-//        let uiColor = UIColor(type.color)
-//        let material = SimpleMaterial(color: uiColor, isMetallic: true)
-//
-//        let model = ModelEntity(mesh: sphere, materials: [material])
-//        model.position = position
-//
-//        let anchor = AnchorEntity(world: position)
-//        anchor.addChild(model)
-//        scene.addAnchor(anchor)
-//    }
-//
-//    /// Compute height between bottom & top points and show it
-//    private func calculateTreeHeight() {
-//        guard let height = ARManager.shared.calculateTreeHeight() else { return }
-//        print("Tree Height: \(height) meters")
-//        showAlert(
-//            title: "Tree Height", message: "The tree height is \(height) meters."
-//        )
-//    }
-//
-//    /// Display a simple alert
-//    private func showAlert(title: String, message: String) {
-//        DispatchQueue.main.async {
-//            let alert = UIAlertController(
-//                title: title,
-//                message: message,
-//                preferredStyle: .alert
-//            )
-//            alert.addAction(.init(title: "OK", style: .default))
-//            UIApplication.shared.windows.first?.rootViewController?
-//                .present(alert, animated: true)
-//        }
-//    }
-//}
-
-
-
-
 
 import ARKit
 import Combine
 import SwiftUI
 import RealityKit
 
+extension ARView {
+    /// Disables all plane detection on the running session
+    func disablePlaneDetection() {
+        guard let worldConfig = session.configuration as? ARWorldTrackingConfiguration else {
+            return
+        }
+        worldConfig.planeDetection = []                       // no more planes
+        session.run(worldConfig)                              // re‑run with updated config
+        print("Plane detection disabled")
+    }
+}
+
+extension ARView {
+  /// Turn vertical plane detection back on
+  func enablePlaneDetection() {
+    guard let cfg = session.configuration as? ARWorldTrackingConfiguration else { return }
+    cfg.planeDetection = [.vertical]
+    session.run(cfg, options: [])
+    print("Plane detection re‑enabled")
+  }
+}
+
+
 class CustomARView: ARView {
+    
+    private var markCount = 0
+    private var cancellables: Set<AnyCancellable> = []
+    private var trackedRaycasts: [ARTrackedRaycast] = []
+    
     required init(frame frameRect: CGRect) {
         print("Required Init running")
         super.init(frame: frameRect)
         
+        // 1) Configure session to detect vertical planes at first
+        automaticallyConfigureSession = false
+        let config = ARWorldTrackingConfiguration()
+        config.planeDetection = [.vertical]
+        session.run(config)
+        print("AR session started with vertical plane detection")
     }
     
     dynamic required init?(coder decoder: NSCoder) {
@@ -155,37 +64,198 @@ class CustomARView: ARView {
         subscribeToActionStream()
     }
     
-    private var cancellables: Set<AnyCancellable> = []
-    
     func subscribeToActionStream() {
         print("Subscribing to steam")
         ARManager.shared
             .actionStream
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] action in
+                guard let self = self else { return }
                 switch action {
+                    case .placeNextTreeMarker:
+                        self.placeNextTreeMarker()
                     case .placeBlock(let color):
-                        self?.placeBlock(ofColor: color)
-                    case .placeSphere(let color):
-                        self?.self .placeSphere(ofColor: color)
+                        self.placeBlock(ofColor: color)
+//                    case .placeTopMarker:
+//                        self.placeTopMarker()
                     case .removeAllAnchors:
-                        self?.scene.anchors.removeAll()
+                        self.scene.anchors.removeAll()
+                        self.markCount = 0
+                        self.enablePlaneDetection()
+                    case .placeSphere(let color):
+                        self.placeSphere(at: .zero, color: color)
+                    case .showHeight(let height):
+                        // You could pop an in-AR UI, or simply log it here.
+                        print("ARAction.showHeight(\(height)) received")
                 }
             }
             .store(in: &cancellables)
     }
     
-    func placeSphere(ofColor color: Color) {
-        print("Placing sphere of color \(color)")
-        // 1. Generate a sphere mesh with radius 0.25 m
+    /// **LEGACY**
+    /// 2) Raycast any surface to place bottom anchor
+//    private func placeBottomMarker() {
+//        guard let worldPos = raycastSurface(alignment: .any) else { return }
+//        ARManager.shared.bottomPoint = worldPos
+//        placeSphere(at: worldPos, color: .red)
+//        print("Bottom marker at \(worldPos)")
+//    }
+
+    /// **LEGACY**
+    /// 3) Raycast any surface to place top anchor and compute height
+//    private func placeTopMarker() {
+//        guard let worldPos = raycastSurface(alignment: .any) else { return }
+//        ARManager.shared.topPoint = worldPos
+//        placeSphere(at: worldPos, color: .red)
+//        print("Top marker at \(worldPos)")
+//        if let height = ARManager.shared.calculateTreeHeight() {
+//            print(String(format: "Tree height: %.2f m", height))
+//        }
+//    }
+
+    // MARK: - Raycast Helper
+    /// Performs a raycast from screen center, returns first hit world position
+    private func raycastSurface(alignment: ARRaycastQuery.TargetAlignment) -> SIMD3<Float>? {
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+//        guard let result = self.raycast(from: center,
+//                                        allowing: .estimatedPlane,
+//                                        alignment: alignment).first
+        guard let result = self.raycast(from: center,
+                                        allowing: .existingPlaneInfinite,
+                                        alignment: alignment).first
+        else {
+            print("Raycast failed for alignment \(alignment)")
+            return nil
+        }
+        let t = result.worldTransform.columns.3
+        return SIMD3<Float>(t.x, t.y, t.z)
+    }
+    
+    func placeTrunkMarker() {
+      print("▶ placeTrunkMarker() called")
+      
+      guard let query = makeRaycastQuery(
+              from: CGPoint(x: bounds.midX, y: bounds.midY),
+              allowing: .estimatedPlane,
+              alignment: .vertical)
+      else {
+        print("  ✖ Failed to create ARRaycastQuery")
+        return
+      }
+
+      // Kick off the tracked raycast while planes are still on:
+      startTrackedRaycast(with: query, color: .green) { [weak self] worldPos in
+        guard let self = self else { return }
+        // Now that we’ve placed the trunk, disable plane detection
+        self.disablePlaneDetection()
+        print("  • Plane detection disabled")
+      }
+    }
+    
+    func placePlaneMarker(color: Color) {
+        print("▶ placePlaneMarker() called (markCount = \(markCount))")
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        guard let query = makeRaycastQuery(
+            from: center,
+            allowing: .existingPlaneInfinite,
+            alignment: .vertical
+        ) else {
+            print("  ✖ Failed to create ARRaycastQuery for infinite plane")
+            return
+        }
+
+        guard let result = session.raycast(query).first else {
+            print("  ✖ Infinite-plane raycast failed")
+            return
+        }
+
+        let t = result.worldTransform.columns.3
+        let worldPos = SIMD3<Float>(t.x, t.y, t.z)
+        placeSphere(at: worldPos, color: color)
+
+        if markCount == 1 {
+            ARManager.shared.bottomPoint = worldPos
+            print("  ✓ Bottom at \(worldPos)")
+        } else {
+            ARManager.shared.topPoint = worldPos
+            print("  ✓ Top at \(worldPos)")
+            
+            if let hFloat = ARManager.shared.calculateTreeHeight() {
+                let h = Double(hFloat)
+                print(String(format: "  ▶ Tree height: %.2f m", h))
+                ARManager.shared.actionStream.send(.showHeight(h))
+            }
+        }
+    }
+    
+    func placeNextTreeMarker() {
+        switch markCount {
+        case 0:
+            placeTrunkMarker()
+            markCount += 1
+
+        case 1, 2:
+            // re-enable planes in case you disabled them after the trunk
+            enablePlaneDetection()
+            placePlaneMarker(color: .red)
+            markCount += 1
+
+        default:
+            print("❗ All three tree markers placed already.")
+        }
+    }
+
+    private func startTrackedRaycast(
+        with query: ARRaycastQuery,
+        color: Color,
+        onFirstHit: @escaping (SIMD3<Float>) -> Void
+    ) {
+      
+        print("▶ placeTrunkMarker() called")
+        // 1️⃣ Declare an optional var that both you and your closure can see:
+        var trackedRaycast: ARTrackedRaycast?
+
+        // 2️⃣ Kick off the raycast, assigning it to that var:
+        trackedRaycast = session.trackedRaycast(query, updateHandler: { [weak self] results in
+            guard let self = self, let first = results.first else { return }
+
+            // Compute the world position
+            let t = first.worldTransform.columns.3
+            let worldPos = SIMD3<Float>(t.x, t.y, t.z)
+
+            // Place your sphere
+            self.placeSphere(at: worldPos, color: color)
+            print("  • Tracked‐raycast sphere at \(worldPos)")
+
+            // Notify caller
+            onFirstHit(worldPos)
+
+            // Now stop *this* tracked raycast
+            trackedRaycast?.stopTracking()
+      })
+
+        // 3️⃣ Check that it actually started:
+        guard let raycast = trackedRaycast else {
+            print("  ✖ Failed to start tracked raycast")
+            return
+        }
+
+        // 4️⃣ Keep it alive somewhere (you already have an array for that):
+        trackedRaycasts.append(raycast)
+        print("  ✓ Tracked raycast started")
+    }
+
+
+
+
+    // MARK: - Sphere Placement
+    /// Adds a colored sphere anchor at the given world position
+    private func placeSphere(at worldPos: SIMD3<Float>, color: Color) {
+        let anchor = AnchorEntity(world: worldPos)
         let sphere = MeshResource.generateSphere(radius: 0.2)
-        // 2. Create a simple material from the SwiftUI Color
         let material = SimpleMaterial(color: UIColor(color), isMetallic: true)
-        // 3. Build the ModelEntity
-        let entity = ModelEntity(mesh: sphere, materials: [material])
-        // 4. Anchor to the nearest horizontal plane
-        let anchor = AnchorEntity(plane: .vertical)
-        anchor.addChild(entity)
-        // 5. Add it into the scene
+        let model = ModelEntity(mesh: sphere, materials: [material])
+        anchor.addChild(model)
         scene.addAnchor(anchor)
     }
     
@@ -200,5 +270,44 @@ class CustomARView: ARView {
         
         scene.addAnchor(anchor)
     }
-}
+    
+    /// 1st tap: finds a vertical surface under the crosshair, places a sphere,
+    /// then disables plane detection so the anchor will not drift.
+    /// Subsequent taps just place spheres (you can customize for base/top logic).
+    private func placeSphereViaRaycast(ofColor color: Color, Marker marker: Int) {
+        // 1. Raycast from center of screen
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+        guard let result = raycast(from: center,
+                                   allowing: .estimatedPlane,
+                                   alignment: .vertical).first
+        else {
+            print("Vertical raycast failed — no surface under crosshair")
+            return
+        }
 
+        // 2. Extract world position
+        let worldTransform = result.worldTransform
+        let worldPos = SIMD3<Float>(worldTransform.columns.3.x,
+                                    worldTransform.columns.3.y,
+                                    worldTransform.columns.3.z)
+
+        // 3. Create a fixed‑world anchor (not a plane anchor)
+        let anchor = AnchorEntity(plane: .vertical)
+        let sphereMesh = MeshResource.generateSphere(radius: 0.2)
+        let material   = SimpleMaterial(color: UIColor(color), isMetallic: true)
+        let sphereEnt  = ModelEntity(mesh: sphereMesh, materials: [material])
+        anchor.addChild(sphereEnt)
+        scene.addAnchor(anchor)
+        print("Sphere placed at \(worldPos)")
+
+        // 4. On the very first marker (tree trunk), disable plane detection
+        markCount += 1
+        if markCount == 1 {
+          // just placed trunk
+          disablePlaneDetection()
+        }
+
+    }
+
+    
+}

@@ -40,4 +40,7 @@ enum ARAction {
     case placeBlock(color: Color)
     case placeSphere(color: Color)
     case removeAllAnchors
+    case placeNextTreeMarker
+    case showHeight(Double)
+//    case placeTopMarker // *LEGACY*
 }
