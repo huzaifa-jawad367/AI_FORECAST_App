@@ -16,11 +16,14 @@ struct SignUpView: View {
     @State private var confirm_password = ""
     @State private var username: String = ""
     @State private var isSignedUp: Bool = false
-    @State private var alertItem: AlertItem?
     
     @StateObject private var signInViewModel = SignInViewModel()
     
     @AppStorage("email") var email: String = ""
+    
+    @State private var showingErrorAlert = false
+    @State private var errorMessage = ""
+    @State private var showingSuccessAlert = false
     
     var body: some View {
         
@@ -196,6 +199,22 @@ struct SignUpView: View {
                 .background(Color.white.opacity(0.5))
                 .cornerRadius(20)
                 .padding(.horizontal, 20)
+                .alert(isPresented: $showingErrorAlert) {
+                    Alert(
+                        title: Text("Sign Up Failed"),
+                        message: Text(errorMessage),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+                .alert(isPresented: $showingSuccessAlert) {
+                    Alert(
+                        title: Text("Account Created"),
+                        message: Text("Your account has been successfully created."),
+                        dismissButton: .default(Text("OK"), action: {
+                            authState = .signIn // optional: move to login after success
+                        })
+                    )
+                }
                 
                 Spacer()
             }
@@ -209,18 +228,24 @@ struct SignUpView: View {
         // 1. Basic checks (e.g., ensure passwords match)
         // Check if form fields are filled
         guard !email.isEmpty, !username.isEmpty, !password.isEmpty, !confirm_password.isEmpty else {
+            errorMessage = "Please fill in all fields."
+            showingErrorAlert = true
             print("Please fill in all fields.")
             return
         }
         
         // Confirm passwords match
         guard password == confirm_password else {
+            errorMessage = "Passwords do not match."
+            showingErrorAlert = true
             print("Passwords do not match.")
             return
         }
         
         // Optionally, do extra validation using the isSignUpFormValid
         guard signInViewModel.isSignUpFormValid(email: email, password: password, username: username) else {
+            errorMessage = "Invalid email or password format."
+            showingErrorAlert = true
             print("Sign up form is invalid. Check logs.")
             return
         }
@@ -233,9 +258,12 @@ struct SignUpView: View {
                     password: password,
                     username: username
                 )
+                showingSuccessAlert = true
                 // If successful, set `isSignedUp = true` or navigate to another screen, etc.
                 isSignedUp = true
             } catch {
+                errorMessage = "Sign up failed: \(error.localizedDescription)"
+                showingErrorAlert = true
                 // Handle error (show alert, etc.)
                 print("Sign up failed: \(error.localizedDescription)")
             }

@@ -18,6 +18,9 @@ struct SignInView: View {
     @EnvironmentObject var sessionManager: SessionManager 
     @StateObject private var signInViewModel = SignInViewModel()
     
+    @State private var showingErrorAlert = false
+    @State private var errorMessage = ""
+    
     var body: some View {
         
         ZStack {
@@ -147,7 +150,13 @@ struct SignInView: View {
                 Spacer()
             }
             .padding()
-            
+            .alert(isPresented: $showingErrorAlert) {
+                Alert(
+                    title: Text("Login Failed"),
+                    message: Text(errorMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
         }
         
     }
@@ -155,12 +164,16 @@ struct SignInView: View {
     func signIn() {
         
         guard !email.isEmpty, !password.isEmpty else {
+            errorMessage = "Please fill in all fields."
+            showingErrorAlert = true
             print("Please fill in all fields.")
             return
         }
         
         // validation using the isSignUpFormValid
         guard signInViewModel.isSignInFormValid(email: email, password: password) else {
+            errorMessage = "Invalid email or password format."
+            showingErrorAlert = true
             print("Sign up form is invalid. Check logs.")
             return
         }
@@ -177,6 +190,9 @@ struct SignInView: View {
                 isSignedIn = true
                 authState = .Dashboard
             } catch {
+                print("Sign in failed: \(error.localizedDescription)")
+                errorMessage = "Incorrect email or password. Please try again."
+                showingErrorAlert = true
                 // Handle error (show alert, etc.)
                 print("Sign in failed: \(error.localizedDescription)")
             }

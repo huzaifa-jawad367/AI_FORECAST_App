@@ -13,28 +13,45 @@ import SwiftUI
 class ProjectViewModel: ObservableObject {
     @Published var projects: [ProjectRecord] = []
     
-    func fetchScans() async {
-        do {
-            
-            let response = try await client.database
-                .from("projects")
-                .select("""
-                    id, 
-                    name, 
-                    description, 
-                    created_by, 
-                    created_at, 
-                    users(full_name)
-                """)
-                .execute()
-            
-            
-            // Decode the raw Data into an array of ScanRecord
-            let records = try JSONDecoder().decode([ProjectRecord].self, from: response.data)
-            self.projects = records
-        } catch {
-            print("Error fetching scans: \(error.localizedDescription)")
+    func fetchProjects(for userID: String) async {
+            do {
+                // 1) grab all membership rows for this user
+                let memberResp = try await client.database
+                    .from("project_members")
+                    .select("id, project_id")
+                    .eq("user_id", value: userID)
+                    .execute()
+
+                let members = try JSONDecoder()
+                    .decode([ProjectMemberRecord].self, from: memberResp.data)
+                let ids = members.map(\.project_id)
+
+                guard !ids.isEmpty else {
+                    projects = []
+                    return
+                }
+
+                // 2) fetch only those projects whose id is in `ids`
+                let projResp = try await client.database
+                    .from("projects")
+                    .select("""
+                        id,
+                        name,
+                        description,
+                        created_by,
+                        created_at,
+                        users(full_name)
+                    """)
+                    .in("id", value: ids)
+                    .execute()
+
+                projects = try JSONDecoder()
+                    .decode([ProjectRecord].self, from: projResp.data)
+
+            } catch {
+                print("Error fetching user’s projects:", error)
+                projects = []
+            }
         }
 
-    }
 }

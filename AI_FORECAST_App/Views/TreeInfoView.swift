@@ -6,6 +6,20 @@
 //
 
 import SwiftUI
+import CoreLocation
+import Combine
+
+#if canImport(UIKit)
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil, from: nil, for: nil
+        )
+    }
+}
+#endif
+
 
 let speciesCoefficients: [String: (a: Double, b: Double, c: Double)] = [
     "Oak":    (a: 0.12, b: 2.45, c: 1.10),
@@ -20,18 +34,22 @@ let speciesCoefficients: [String: (a: Double, b: Double, c: Double)] = [
 struct ScanResultView: View {
     let image: UIImage
     let height: Double
-    let diameter: Double
     let timestamp: Date
     
     @State private var Bestimation: Double = 0.0
     
     @Binding var authState: AuthState
     
+    @State private var diameterInput: String = ""
     @State private var selectedSpecies: String = "Other"
     let speciesOptions = ["Oak", "Pine", "Maple", "Birch", "Spruce", "Other"]
     
     // Toggle for alert
     @State private var showAlert = false
+    
+    @StateObject private var viewModel = SettingsViewModel()
+    
+    @EnvironmentObject var sessionManager: SessionManager
     
     var body: some View {
         VStack {
@@ -63,14 +81,37 @@ struct ScanResultView: View {
                 .accessibilityLabel("Height: \(String(format: "%.2f", height)) meters")
                 
                 HStack {
-                    Text("Diameter:")
+                    Text("Diameter (cm):")
                         .fontWeight(.semibold)
                     Spacer()
-                    Text(String(format: "%.2f cm", diameter))
+                    TextField("Enter diameter", text: $diameterInput)
+                      .keyboardType(.decimalPad)
+                      .multilineTextAlignment(.trailing)
+                      .frame(width: 100)
+                      .padding(6)
+                      .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.2)))
+                      .onChange(of: diameterInput) {
+                          // strip out any non-numeric/“.” chars
+                          let filtered = diameterInput.filter { "0123456789.".contains($0) }
+                          if filtered != diameterInput {
+                              diameterInput = filtered
+                          }
+                          recalcBiomass()
+                      }
+                      .submitLabel(.done)               // shows “Done” on hardware keyboards
+                      .onSubmit { hideKeyboard() }      // hides for hardware “Enter”
+                      .toolbar {                        // adds “Done” above the decimal pad
+                          ToolbarItemGroup(placement: .keyboard) {
+                              Spacer()
+                              Button("Done") {
+                                  hideKeyboard()
+                              }
+                          }
+                      }
                 }
                 .padding(.horizontal)
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameter)) centimeters")
+                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameterInput)) centimeters")
                 
                 HStack {
                     Text("Scan Time:")
@@ -133,10 +174,34 @@ struct ScanResultView: View {
             
             Button(action: {
                 // If species is not selected, show alert
-                if selectedSpecies.isEmpty {
+                if selectedSpecies == "Other" {
                     showAlert = true
                 } else {
-                    
+                    Task {
+                        guard let supabaseUser = sessionManager.user else {
+                            viewModel.isSignedIn = false
+                            return
+                        }
+                        print("user is signed in\n\n")
+                        
+                        do {
+                            print("Step 0")
+                            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+                            print("Step 1")
+                            viewModel.currentUser = profile
+                            print("Step 2")
+                            viewModel.isSignedIn = true
+                            print("Step 3: Is signed in: \(profile)")
+                            
+                            let diam = Double(diameterInput) ?? 0
+                            
+                            SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
+                        } catch {
+                            print("Error fetch profile: \(error.localizedDescription)")
+                            viewModel.isSignedIn = false
+                        }
+                         
+                    }
                 }
             }) {
                 Text("Save")
@@ -173,6 +238,7 @@ struct ScanResultView: View {
                         showAlert = true
                     } else {
                         // Show the biomass estimation number/ entry
+                        authState = .scanPage
                         
                     }
                 }) {
@@ -197,11 +263,13 @@ struct ScanResultView: View {
                 )
             }
         }
+        .contentShape(Rectangle())            // so empty space catches taps
+        .onTapGesture { hideKeyboard() }
         .navigationTitle("Scan Details")
         .onChange(of: selectedSpecies) { newSpecies, _ in
             Task {
                 do {
-                    Bestimation = try await calculateBiomass(for: newSpecies, diameter: diameter, height: height)
+                    Bestimation = try await calculateBiomass(for: newSpecies, diameter: Double(diameterInput) ?? 0, height: height)
                 } catch {
                     Bestimation = -1
                 }
@@ -211,12 +279,65 @@ struct ScanResultView: View {
         .task {
             do {
                 // calculate Biomass for the current instance
-                Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: diameter, height: height)
+                Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: Double(diameterInput) ?? 0, height: height)
             } catch {
                 print("Error calculating the biomass")
             }
         }
     }
+    
+    private func getCurrentTimestamp() -> String {
+        let now = Date()
+        
+        // Format the main data and time
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let baseString = formatter.string(from: now)
+        
+        // Extract the nanosecond component and convert to microsecond
+        let calendar = Calendar.current
+        let nanoseconds = calendar.component(.nanosecond, from: now)
+        let microseconds = nanoseconds / 1000
+
+        // Combine the formatted date string with the microseconds (6 digits)
+        return String(format: "%@.%06d", baseString, microseconds)
+    }
+    
+    // A simple function to return the current coordinates.
+    // In production, consider managing a persistent CLLocationManager instance for continuous location updates.
+    private func getCurrentCoordinates() -> (latitude: Double, longitude: Double) {
+        let locationManager = CLLocationManager()
+        // Request permission from the user to use location services.
+        locationManager.requestWhenInUseAuthorization()
+        
+        // Try to get the current location from the location manager.
+        if let currentLocation = locationManager.location {
+            let latitude = currentLocation.coordinate.latitude
+            let longitude = currentLocation.coordinate.longitude
+            print("latitude: \(latitude), longitude: \(longitude)")
+            return (latitude: latitude, longitude: longitude)
+        } else {
+            // Fallback values if location is not available.
+            print("Current location is not available. Returning default coordinates.")
+            return (latitude: 0.0, longitude: 0.0)
+        }
+    }
+    
+    private func recalcBiomass() {
+        Task {
+            let diam = Double(diameterInput) ?? 0
+            do {
+                Bestimation = try await calculateBiomass(
+                    for: selectedSpecies,
+                    diameter: diam,
+                    height: height
+                )
+            } catch {
+                Bestimation = -1
+            }
+        }
+    }
+
     
     func calculateBiomass(for species: String, diameter: Double, height: Double) async throws -> Double {
         // Unwrap the coefficients, throwing an error if not found
@@ -232,8 +353,40 @@ struct ScanResultView: View {
         return biomass
     }
     
-    func SaveScanedRecordToDatabase() {
+    private func SaveScanedRecordToDatabase(height: Double, diameter: Double, species: String, project_id: String, user_id: String, biomass_estimation: Double) {
+        // Get the current timestamp.
+        let scanTimestamp = getCurrentTimestamp()
         
+        // Get the current coordinates from our helper function.
+        let coordinates = getCurrentCoordinates()
+        
+        // Create a ScanRecord_write instance using the current data.
+        let scanRecord = ScanRecord_write(
+            height: height,
+            diameter: diameter,
+            species: species,
+            scan_time: scanTimestamp,
+            project_id: project_id,
+            user_id: user_id,
+            biomass_estimation: biomass_estimation,
+            latitude: Float(coordinates.latitude),
+            longitude: Float(coordinates.longitude)
+        )
+        
+        print("The scan record instance I am adding: \(scanRecord)")
+        
+        // Perform the asynchronous database insertion.
+        Task {
+            do {
+                try await client.database
+                    .from("scans")  // Make sure this table name matches your schema
+                    .insert(scanRecord)
+                    .execute()
+                print("Scan record saved successfully")
+            } catch {
+                print("Error saving scan record: \(error.localizedDescription)")
+            }
+        }
     }
 
 }
@@ -244,9 +397,9 @@ struct ScanResultView_Previews: PreviewProvider {
         ScanResultView(
             image: UIImage(systemName: "leaf")!, // Placeholder image
             height: 12.5,
-            diameter: 30.2,
             timestamp: Date(),
             authState: .constant(.ScanResultView)
         )
+        .environmentObject(SessionManager())
     }
 }

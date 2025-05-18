@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		600EB5182D848F29003B10CD /* EditProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600EB5172D848F29003B10CD /* EditProfileView.swift */; };
+		600EB51A2D84B48C003B10CD /* NavBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 600EB5192D84B48C003B10CD /* NavBarView.swift */; };
 		6021C78C2D7188A300E8BF27 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6021C78B2D71889C00E8BF27 /* SessionManager.swift */; };
 		603A8BDB2D661F7F00CF595A /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 603A8BDA2D661F7F00CF595A /* GoogleSignIn */; };
 		603A8BDD2D661F7F00CF595A /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 603A8BDC2D661F7F00CF595A /* GoogleSignInSwift */; };
@@ -34,6 +36,7 @@
 		609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C12D5360E7006910B8 /* Supabase.swift */; };
 		609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */; };
 		609C13352CB16639002F39EF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 609C13342CB16639002F39EF /* Supabase */; };
+		609FCA4E2DC8D69900725FC4 /* ProjectMemberRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609FCA4D2DC8D69900725FC4 /* ProjectMemberRecord.swift */; };
 		60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */; };
 		60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B6B8252CAE93A80086930F /* ColorExtension.swift */; };
 		60B6B8292CAEA4E50086930F /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 60B6B8282CAEA4E50086930F /* Auth */; };
@@ -51,6 +54,8 @@
 		60C56C0F2C982FE800810952 /* AI_FORECAST_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C56C0E2C982FE800810952 /* AI_FORECAST_AppUITests.swift */; };
 		60C56C112C982FE800810952 /* AI_FORECAST_AppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C56C102C982FE800810952 /* AI_FORECAST_AppUITestsLaunchTests.swift */; };
 		60DF8B452D6F1E50003D5562 /* ProjectRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DF8B442D6F1E45003D5562 /* ProjectRecord.swift */; };
+		60E618A32D7F49C8005DE53A /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E618A22D7F49C8005DE53A /* SplashScreenView.swift */; };
+		60E618A52D7F5C4D005DE53A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +76,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		600EB5172D848F29003B10CD /* EditProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileView.swift; sourceTree = "<group>"; };
+		600EB5192D84B48C003B10CD /* NavBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavBarView.swift; sourceTree = "<group>"; };
 		6021C78B2D71889C00E8BF27 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		603A8BDE2D6663B500CF595A /* AI_FORECAST_App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AI_FORECAST_App.entitlements; sourceTree = "<group>"; };
 		603A8BE52D67631600CF595A /* ScanRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanRecord.swift; sourceTree = "<group>"; };
@@ -96,6 +103,7 @@
 		609B5E852D6EF48800B7864D /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		609BA6C12D5360E7006910B8 /* Supabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Supabase.swift; sourceTree = "<group>"; };
 		609BA6C32D53D3A6006910B8 /* TreeMeasurementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeMeasurementView.swift; sourceTree = "<group>"; };
+		609FCA4D2DC8D69900725FC4 /* ProjectMemberRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectMemberRecord.swift; sourceTree = "<group>"; };
 		60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashBoardView.swift; sourceTree = "<group>"; };
 		60B6B8252CAE93A80086930F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		60C2C5162CB6B2ED00C0BA3F /* CustomARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARView.swift; sourceTree = "<group>"; };
@@ -111,6 +119,9 @@
 		60C56C0E2C982FE800810952 /* AI_FORECAST_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI_FORECAST_AppUITests.swift; sourceTree = "<group>"; };
 		60C56C102C982FE800810952 /* AI_FORECAST_AppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI_FORECAST_AppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		60DF8B442D6F1E45003D5562 /* ProjectRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectRecord.swift; sourceTree = "<group>"; };
+		60E618A22D7F49C8005DE53A /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		60E618A82D7F6E6A005DE53A /* AI-FORECAST-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "AI-FORECAST-App-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +160,7 @@
 		609B5E7E2D6DEFD600B7864D /* DataStructs */ = {
 			isa = PBXGroup;
 			children = (
+				609FCA4D2DC8D69900725FC4 /* ProjectMemberRecord.swift */,
 				60DF8B442D6F1E45003D5562 /* ProjectRecord.swift */,
 				609B5E812D6E05F200B7864D /* AlertItem.swift */,
 				609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */,
@@ -201,6 +213,8 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */,
+				60E618A82D7F6E6A005DE53A /* AI-FORECAST-App-Info.plist */,
 				60DF8B412D6F1A5B003D5562 /* Views */,
 				609B5E7E2D6DEFD600B7864D /* DataStructs */,
 				603A8BEF2D6B469C00CF595A /* ScansViewModel.swift */,
@@ -260,6 +274,9 @@
 				60B6B81C2CAD7FFE0086930F /* DashBoardView.swift */,
 				606E9C1D2D6F55A600998468 /* ProjectListView.swift */,
 				606E9C232D70463F00998468 /* CreateProjectView.swift */,
+				60E618A22D7F49C8005DE53A /* SplashScreenView.swift */,
+				600EB5172D848F29003B10CD /* EditProfileView.swift */,
+				600EB5192D84B48C003B10CD /* NavBarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -382,6 +399,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E618A52D7F5C4D005DE53A /* LaunchScreen.storyboard in Resources */,
 				60C56BFB2C982FE800810952 /* Preview Assets.xcassets in Resources */,
 				60C56BF82C982FE800810952 /* Assets.xcassets in Resources */,
 			);
@@ -410,8 +428,11 @@
 			files = (
 				607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */,
 				609B5E862D6EF49800B7864D /* SettingsViewModel.swift in Sources */,
+				600EB51A2D84B48C003B10CD /* NavBarView.swift in Sources */,
 				603A8BF22D6B46F400CF595A /* ScansListView.swift in Sources */,
+				600EB5182D848F29003B10CD /* EditProfileView.swift in Sources */,
 				607254B92CAD3BD800F15EAE /* SignInView.swift in Sources */,
+				609FCA4E2DC8D69900725FC4 /* ProjectMemberRecord.swift in Sources */,
 				607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */,
 				609B5E802D6DF00A00B7864D /* UserRecord.swift in Sources */,
 				60B6B8262CAE93A80086930F /* ColorExtension.swift in Sources */,
@@ -431,6 +452,7 @@
 				606E9C222D702F1400998468 /* TreeDetailView.swift in Sources */,
 				603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */,
 				60B6B81D2CAD7FFE0086930F /* DashBoardView.swift in Sources */,
+				60E618A32D7F49C8005DE53A /* SplashScreenView.swift in Sources */,
 				606E9C202D6F561500998468 /* ProjectViewModel.swift in Sources */,
 				609BA6C22D5360EB006910B8 /* Supabase.swift in Sources */,
 				607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */,
@@ -603,12 +625,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AI_FORECAST_App/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JYGJRKTRP6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AI-FORECAST-App-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Needed to show AR View";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -618,7 +641,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "LearningReact.AI-FORECAST-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.huzaifa-jawad367.AI-FORECAST-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -635,12 +658,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"AI_FORECAST_App/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = JYGJRKTRP6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "AI-FORECAST-App-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Needed to show AR View";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -650,7 +674,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "LearningReact.AI-FORECAST-App";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.huzaifa-jawad367.AI-FORECAST-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

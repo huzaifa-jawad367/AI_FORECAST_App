@@ -1,0 +1,36 @@
+name: AI_FORECAST_App
+options:
+  bundleIdPrefix: com.huzaifajawad
+
+packages:
+  supabase:
+    url: https://github.com/supabase/supabase-swift.git
+    from: 2.26.1
+
+targets:
+  AI_FORECAST_App:
+    type: application
+    platform: iOS
+    sources: [AI_FORECAST_App]
+    resources:
+      - AI_FORECAST_App/Assets.xcassets
+      - AI_FORECAST_App/LaunchScreen.storyboard
+    dependencies:
+      - package: supabase
+    info:
+      path: ./AI-FORECAST-App-Info.plist
+
+  AI_FORECAST_AppTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [AI_FORECAST_AppTests]
+    dependencies:
+      - target: AI_FORECAST_App
+
+  AI_FORECAST_AppUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [AI_FORECAST_AppUITests]
+    dependencies:
+      - target: AI_FORECAST_App
+

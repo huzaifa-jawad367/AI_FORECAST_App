@@ -1,0 +1,63 @@
+# Xcode
+*.xcuserdata
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.moved-aside
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata
+
+# Build & Derived Data
+DerivedData/
+build/
+*.hmap
+*.ipa
+*.app.dSYM.zip
+*.app.dSYM
+
+# Logs
+*.log
+
+# User Settings
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+
+# SwiftPM
+.swiftpm
+.build/
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# CocoaPods
+Pods/
+Podfile.lock
+
+# Carthage
+Carthage/Build/
+
+# SPM binary cache
+.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+
+# Firebase / Crashlytics
+*.dSYM.zip
+*.dSYM
+
+# Other
+*.DS_Store
+*.orig
+*.swp
+
+# Environment
+.env
+.env.*
+
+
