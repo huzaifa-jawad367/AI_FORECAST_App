@@ -149,6 +149,7 @@ class CustomARView: ARView {
         // Now that we’ve placed the trunk, disable plane detection
         self.disablePlaneDetection()
         print("  • Plane detection disabled")
+        markCount += 1
       }
     }
     
@@ -176,9 +177,11 @@ class CustomARView: ARView {
         if markCount == 1 {
             ARManager.shared.bottomPoint = worldPos
             print("  ✓ Bottom at \(worldPos)")
+            markCount += 1
         } else {
             ARManager.shared.topPoint = worldPos
             print("  ✓ Top at \(worldPos)")
+            markCount += 1
             
             if let hFloat = ARManager.shared.calculateTreeHeight() {
                 let h = Double(hFloat)
@@ -192,13 +195,13 @@ class CustomARView: ARView {
         switch markCount {
         case 0:
             placeTrunkMarker()
-            markCount += 1
+//            markCount += 1
 
         case 1, 2:
             // re-enable planes in case you disabled them after the trunk
             enablePlaneDetection()
             placePlaneMarker(color: .red)
-            markCount += 1
+//            markCount += 1
 
         default:
             print("❗ All three tree markers placed already.")
