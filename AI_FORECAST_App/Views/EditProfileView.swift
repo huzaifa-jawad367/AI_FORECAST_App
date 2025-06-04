@@ -13,13 +13,7 @@ struct EditProfileView: View {
     @State private var isShowingImagePicker = false
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var isShowingActionSheet = false
-    
-    // New state variables for password reset fields
-    @State private var newPassword: String = ""
-    @State private var confirmNewPassword: String = ""
-    
-    @EnvironmentObject var sessionManager: SessionManager
-    @StateObject private var viewModel = SettingsViewModel()
+    @State private var isShowingPasswordReset = false
     
     var body: some View {
         NavigationView {
@@ -29,6 +23,7 @@ struct EditProfileView: View {
                     HStack {
                         Spacer()
                         ZStack(alignment: .bottomTrailing) {
+                            // Display the selected image or a placeholder
                             if let image = selectedImage {
                                 Image(uiImage: image)
                                     .resizable()
@@ -42,6 +37,7 @@ struct EditProfileView: View {
                                     .frame(width: 100, height: 100)
                             }
                             
+                            // Button to trigger photo selection action sheet
                             Button(action: {
                                 isShowingActionSheet = true
                             }, label: {
@@ -70,21 +66,14 @@ struct EditProfileView: View {
                 
                 // MARK: Username Section
                 Section(header: Text("Username")) {
-                    TextField("Enter your username", text: Binding(
-                        get: { viewModel.currentUser?.username ?? "" },
-                        set: { newUsername in
-                            viewModel.currentUser?.username = newUsername
-                        }
-                    ))
-                    .autocapitalization(.none)
+                    TextField("Enter your username", text: $username)
+                        .autocapitalization(.none)
                 }
                 
-                // MARK: Reset Password Section
-                Section(header: Text("Reset Password")) {
-                    SecureField("New Password", text: $newPassword)
-                    SecureField("Confirm New Password", text: $confirmNewPassword)
+                // MARK: Password Reset Section
+                Section {
                     Button(action: {
-                        resetPassword()
+                        isShowingPasswordReset = true
                     }) {
                         Text("Reset Password")
                             .foregroundColor(.red)
@@ -101,63 +90,23 @@ struct EditProfileView: View {
                 }
             }
             .navigationTitle("Edit Profile")
+            // Present the ImagePicker when needed
             .sheet(isPresented: $isShowingImagePicker) {
                 ImagePicker(image: $selectedImage, sourceType: imageSource)
             }
-            .task {
-                await loadUserProfileIfSignedIn()
+            // Present the ResetPasswordView modally
+            .sheet(isPresented: $isShowingPasswordReset) {
+                ResetPasswordView()
             }
         }
-    }
-    
-    /// Loads the user profile asynchronously and prints the username.
-    func loadUserProfileIfSignedIn() async {
-        guard let supabaseUser = sessionManager.user else {
-            print("No session user found.")
-            return
-        }
-        
-        do {
-            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
-            viewModel.currentUser = profile
-            if let currentUsername = viewModel.currentUser?.username {
-                username = currentUsername
-                print("Retrieved current user with username: \(currentUsername)")
-            } else {
-                print("User profile loaded, but username is missing.")
-            }
-        } catch {
-            print("Error fetching profile: \(error.localizedDescription)")
-        }
-    }
-    
-    /// Dummy implementation for resetting the password.
-    /// TODO: Replace this dummy implementation with a call to viewModel.resetPassword(newPassword:) when available.
-    func resetPassword() {
-        guard !newPassword.isEmpty else {
-            print("New password is empty.")
-            return
-        }
-        
-        guard newPassword == confirmNewPassword else {
-            print("Passwords do not match.")
-            return
-        }
-        
-        // Dummy reset password implementation.
-        print("Dummy password reset successful. (Replace with actual implementation)")
-        // Clear the fields after successful reset
-        newPassword = ""
-        confirmNewPassword = ""
     }
     
     func updateProfile() {
+        // Add your update profile logic here
         print("Profile updated with username: \(username)")
-        // Add any additional update logic, such as uploading the selected image, here.
+        // You might also want to upload the selectedImage if it exists
     }
 }
-
-
 
 struct ResetPasswordView: View {
     @Environment(\.presentationMode) var presentationMode
