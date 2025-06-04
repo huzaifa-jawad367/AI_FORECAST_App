@@ -121,6 +121,9 @@ import Combine
 
 struct TreeMeasurementView: View {
     @Binding var authState: AuthState
+    
+    @StateObject private var arManager = ARManager.shared
+    
     @State private var scannedHeight: Double = 0
     @State private var goToResult = false
     @State private var arView: CustomARView?
@@ -141,10 +144,10 @@ struct TreeMeasurementView: View {
                 // MARK: - Step Indicator
                 VStack {
                     HStack {
-                        let refDone  = ARManager.shared.referencePoint != nil
+                        let refDone  = arManager.referencePoint != nil
                         let walkDone = refDone && (3.0...5.0).contains(distance)
-                        let baseDone = ARManager.shared.bottomPoint != nil
-                        let topDone  = ARManager.shared.topPoint != nil
+                        let baseDone = arManager.bottomPoint != nil
+                        let topDone  = arManager.topPoint != nil
                         let statuses = [refDone, walkDone, baseDone, topDone]
                         
                         ForEach(0..<steps.count, id: \.self) { idx in

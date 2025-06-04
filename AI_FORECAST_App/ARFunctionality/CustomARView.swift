@@ -150,6 +150,8 @@ class CustomARView: ARView {
         self.disablePlaneDetection()
         print("  • Plane detection disabled")
         markCount += 1
+        ARManager.shared.referencePoint = worldPos
+        print("📌 referencePoint set to \(worldPos)")
       }
     }
     
