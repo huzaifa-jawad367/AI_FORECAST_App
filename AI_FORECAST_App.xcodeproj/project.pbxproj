@@ -28,6 +28,7 @@
 		607254BB2CAD3DCF00F15EAE /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BA2CAD3DCF00F15EAE /* SignUpView.swift */; };
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
 		607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */; };
+		6073B0BF2DFBFAB9007CC7DA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6073B0BE2DFBFAB9007CC7DA /* StoreKit.framework */; };
 		6088572C2D7937410063F99E /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6088572B2D7937370063F99E /* GuideView.swift */; };
 		609B5E802D6DF00A00B7864D /* UserRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */; };
 		609B5E822D6E060000B7864D /* AlertItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E812D6E05F200B7864D /* AlertItem.swift */; };
@@ -96,6 +97,7 @@
 		607254BA2CAD3DCF00F15EAE /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
+		6073B0BE2DFBFAB9007CC7DA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6088572B2D7937370063F99E /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 		609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecord.swift; sourceTree = "<group>"; };
 		609B5E812D6E05F200B7864D /* AlertItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertItem.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6073B0BF2DFBFAB9007CC7DA /* StoreKit.framework in Frameworks */,
 				60B6B82D2CAEA4E50086930F /* PostgREST in Frameworks */,
 				60B6B82B2CAEA4E50086930F /* Functions in Frameworks */,
 				609C13352CB16639002F39EF /* Supabase in Frameworks */,
@@ -173,6 +176,7 @@
 		609C13332CB16639002F39EF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6073B0BE2DFBFAB9007CC7DA /* StoreKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -630,6 +634,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "AI-FORECAST-App-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Needed to show AR View";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location services to enhance the AR experience and ensure accurate measurements.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -640,7 +645,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.huzaifa-jawad367.AI-FORECAST-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -663,6 +668,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "AI-FORECAST-App-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Needed to show AR View";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location services to enhance the AR experience and ensure accurate measurements.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "";
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = arkit;
@@ -673,7 +679,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.huzaifa-jawad367.AI-FORECAST-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
