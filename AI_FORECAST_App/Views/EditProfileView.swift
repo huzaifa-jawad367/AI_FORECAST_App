@@ -16,88 +16,86 @@ struct EditProfileView: View {
     @State private var isShowingPasswordReset = false
     
     var body: some View {
-        NavigationView {
-            Form {
-                // MARK: Profile Picture Section
-                Section(header: Text("Profile Picture")) {
-                    HStack {
-                        Spacer()
-                        ZStack(alignment: .bottomTrailing) {
-                            // Display the selected image or a placeholder
-                            if let image = selectedImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 100, height: 100)
-                                    .clipShape(Circle())
-                            } else {
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .foregroundColor(.gray)
-                                    .frame(width: 100, height: 100)
-                            }
-                            
-                            // Button to trigger photo selection action sheet
-                            Button(action: {
-                                isShowingActionSheet = true
-                            }, label: {
-                                Image(systemName: "camera.fill")
-                                    .padding(8)
-                                    .background(Color.white)
-                                    .clipShape(Circle())
-                            })
-                            .actionSheet(isPresented: $isShowingActionSheet) {
-                                ActionSheet(title: Text("Select Photo"), buttons: [
-                                    .default(Text("Photo Library")) {
-                                        imageSource = .photoLibrary
-                                        isShowingImagePicker = true
-                                    },
-                                    .default(Text("Camera")) {
-                                        imageSource = .camera
-                                        isShowingImagePicker = true
-                                    },
-                                    .cancel()
-                                ])
-                            }
+        Form {
+            // MARK: Profile Picture Section
+            Section(header: Text("Profile Picture")) {
+                HStack {
+                    Spacer()
+                    ZStack(alignment: .bottomTrailing) {
+                        // Display the selected image or a placeholder
+                        if let image = selectedImage {
+                            Image(uiImage: image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 100, height: 100)
+                                .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .foregroundColor(.gray)
+                                .frame(width: 100, height: 100)
                         }
-                        Spacer()
+                        
+                        // Button to trigger photo selection action sheet
+                        Button(action: {
+                            isShowingActionSheet = true
+                        }, label: {
+                            Image(systemName: "camera.fill")
+                                .padding(8)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                        })
+                        .actionSheet(isPresented: $isShowingActionSheet) {
+                            ActionSheet(title: Text("Select Photo"), buttons: [
+                                .default(Text("Photo Library")) {
+                                    imageSource = .photoLibrary
+                                    isShowingImagePicker = true
+                                },
+                                .default(Text("Camera")) {
+                                    imageSource = .camera
+                                    isShowingImagePicker = true
+                                },
+                                .cancel()
+                            ])
+                        }
                     }
-                }
-                
-                // MARK: Username Section
-                Section(header: Text("Username")) {
-                    TextField("Enter your username", text: $username)
-                        .autocapitalization(.none)
-                }
-                
-                // MARK: Password Reset Section
-                Section {
-                    Button(action: {
-                        isShowingPasswordReset = true
-                    }) {
-                        Text("Reset Password")
-                            .foregroundColor(.red)
-                    }
-                }
-                
-                // MARK: Save Changes Section
-                Section {
-                    Button(action: {
-                        updateProfile()
-                    }) {
-                        Text("Save Changes")
-                    }
+                    Spacer()
                 }
             }
-            .navigationTitle("Edit Profile")
-            // Present the ImagePicker when needed
-            .sheet(isPresented: $isShowingImagePicker) {
-                ImagePicker(image: $selectedImage, sourceType: imageSource)
+            
+            // MARK: Username Section
+            Section(header: Text("Username")) {
+                TextField("Enter your username", text: $username)
+                    .autocapitalization(.none)
             }
-            // Present the ResetPasswordView modally
-            .sheet(isPresented: $isShowingPasswordReset) {
-                ResetPasswordView()
+            
+            // MARK: Password Reset Section
+            Section {
+                Button(action: {
+                    isShowingPasswordReset = true
+                }) {
+                    Text("Reset Password")
+                        .foregroundColor(.red)
+                }
             }
+            
+            // MARK: Save Changes Section
+            Section {
+                Button(action: {
+                    updateProfile()
+                }) {
+                    Text("Save Changes")
+                }
+            }
+        }
+        .navigationTitle("Edit Profile")
+        // Present the ImagePicker when needed
+        .sheet(isPresented: $isShowingImagePicker) {
+            ImagePicker(image: $selectedImage, sourceType: imageSource)
+        }
+        // Present the ResetPasswordView modally
+        .sheet(isPresented: $isShowingPasswordReset) {
+            ResetPasswordView()
         }
     }
     
