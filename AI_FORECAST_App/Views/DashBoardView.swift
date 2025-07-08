@@ -132,18 +132,14 @@ struct DashBoardView: View {
                         .accessibilityLabel("Album")
                         .accessibilityHint("Opens the list of scanned projects")
                         
-                        Button {
-                            print("Settings Button Tapped")
-                            authState = .Settings
-                            
-                        } label: {
+                        NavigationLink(destination: SettingsView(authState: $authState).environmentObject(sessionManager)) {
                             VStack(spacing: 8) {
                                 ZStack {
                                     Circle()
                                         .fill(Color.white)
                                         .frame(width: 50, height: 50)
                                     
-                                    Image(systemName: "gearshape.fill") // Replace with your custom icon if needed
+                                    Image(systemName: "gearshape.fill")
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 30, height: 30)
@@ -158,7 +154,6 @@ struct DashBoardView: View {
                             .background(Color.green.opacity(0.2))
                             .cornerRadius(20)
                         }
-                        // Accessibility
                         .accessibilityLabel("Settings")
                         .accessibilityHint("Tap to view or change settings")
                         .accessibilityAddTraits(.isButton)

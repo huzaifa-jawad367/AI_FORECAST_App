@@ -8,7 +8,7 @@
 import Combine
 import RealityKit
 
-class ARManager {
+class ARManager: ObservableObject {
     static let shared = ARManager()
     private init() {}
 
@@ -16,9 +16,9 @@ class ARManager {
     let actionStream = PassthroughSubject<ARAction, Never>()
     
     /// Stored world‑space points
-    var referencePoint: SIMD3<Float>?
-    var bottomPoint:    SIMD3<Float>?
-    var topPoint:       SIMD3<Float>?
+    @Published var referencePoint: SIMD3<Float>? = nil
+    @Published var bottomPoint:    SIMD3<Float>? = nil
+    @Published var topPoint:       SIMD3<Float>? = nil
     
     /// Compute Euclidean distance between bottom & top
     func calculateTreeHeight() -> Float? {
