@@ -18,6 +18,7 @@ enum AuthState {
     case ProjectsList
     case CreateProject
     case Guide
+    case resetPasswordFlow
 }
 
 

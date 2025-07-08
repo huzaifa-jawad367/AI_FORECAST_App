@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var authState: AuthState = .signIn
     @State private var showSplash: Bool = true
     @StateObject private var sessionManager = SessionManager()
-    
+
     var body: some View {
         ZStack {
             // Show SplashScreenView first
@@ -48,6 +48,8 @@ struct ContentView: View {
                     )
                 case .scanPage:
                     TreeMeasurementView (authState: $authState)
+                case .resetPasswordFlow:
+                    NewPasswordView(authState: $authState)
                 }
             }
         }
@@ -57,6 +59,25 @@ struct ContentView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 withAnimation {
                     showSplash = false
+                }
+            }
+        }
+        .onOpenURL { url in
+            guard url.host == "reset-password" else { return }
+
+            Task {
+                do {
+                    // this is async and will throw on error
+                    _ = try await sessionManager
+                            .supabaseClient
+                            .auth
+                            .session(from: url)
+
+                    print("✅ Session restored")
+                    authState = .resetPasswordFlow
+
+                } catch {
+                    print("❌ Failed to restore session:", error.localizedDescription)
                 }
             }
         }
