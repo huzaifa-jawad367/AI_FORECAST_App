@@ -50,17 +50,23 @@ class CustomARView: ARView {
         config.planeDetection = [.vertical]
         session.run(config)
         print("AR session started with vertical plane detection")
+        
+        // 3) Turn on the two debug overlays:
+        //    • showAnchorGeometry draws a wireframe over every detected plane anchor.
+        //    • showFeaturePoints draws ARKit’s raw feature-point cloud.
+        debugOptions.insert(.showAnchorGeometry)
+        debugOptions.insert(.showFeaturePoints)
     }
     
-    dynamic required init?(coder decoder: NSCoder) {
+    // This is only needed if you instantiate from a Storyboard or XIB
+    @available(*, unavailable)
+    required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // This is the init that we will actually use
+    // If you’re using SwiftUI or manually creating it without a frame:
     convenience init() {
-        print("Convenience init running")
         self.init(frame: UIScreen.main.bounds)
-        
         subscribeToActionStream()
     }
     
@@ -150,6 +156,8 @@ class CustomARView: ARView {
         self.disablePlaneDetection()
         print("  • Plane detection disabled")
         markCount += 1
+        ARManager.shared.referencePoint = worldPos
+        print("📌 referencePoint set to \(worldPos)")
       }
     }
     
