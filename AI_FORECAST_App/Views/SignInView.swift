@@ -20,6 +20,7 @@ struct SignInView: View {
     
     @State private var showingErrorAlert = false
     @State private var errorMessage = ""
+    @State private var isShowingPasswordReset = false
     
     var body: some View {
         
@@ -84,6 +85,21 @@ struct SignInView: View {
                     .padding(.top, 10)
                     .accessibilityLabel("Sign Up")
                     .accessibilityHint("Tap to navigate to the sign up screen")
+                    
+                    // Forgot Password Link
+                    Button(action: {
+                        isShowingPasswordReset = true
+                    }) {
+                        Text("Forgot Password?")
+                            .font(.footnote)
+                            .foregroundColor(.blue)
+                            .underline()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.bottom, 4)
+                    .accessibilityLabel("Forgot Password")
+                    .accessibilityHint("Tap to reset your password")
+                    
                     
                     // -- OR Sign In with Google --
                     Button(action: {
@@ -158,7 +174,9 @@ struct SignInView: View {
                 )
             }
         }
-        
+        .sheet(isPresented: $isShowingPasswordReset) {
+            ResetPasswordView()
+        }
     }
 
     func signIn() {

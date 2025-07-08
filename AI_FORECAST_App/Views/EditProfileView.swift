@@ -116,7 +116,9 @@ struct ResetPasswordView: View {
                 Section(header: Text("Enter your email")) {
                     TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
+                        .textContentType(.emailAddress)
                         .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                 }
                 
                 Section {
