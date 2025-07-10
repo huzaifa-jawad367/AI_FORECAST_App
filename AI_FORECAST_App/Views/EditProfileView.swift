@@ -152,6 +152,7 @@ struct ResetPasswordView: View {
         }
         Task {
             do {
+                print("🔗 Sending reset password link to \(email)")
                 try await client.auth.resetPasswordForEmail(email, redirectTo: URL(string: "myapp://reset-password"))
                 alertMessage = "A password reset link has been sent to your email."
                 showingAlert = true
