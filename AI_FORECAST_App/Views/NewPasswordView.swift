@@ -51,6 +51,9 @@ struct NewPasswordView: View {
                 }
             }
             .navigationTitle("Reset Password")
+            .navigationBarItems(leading: Button("Cancel") {
+                authState = .signIn
+            })
         }
     }
 
