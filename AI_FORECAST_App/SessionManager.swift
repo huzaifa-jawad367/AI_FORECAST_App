@@ -15,6 +15,8 @@ class SessionManager: ObservableObject {
     // Possibly store the session itself if you need tokens
     // @Published var session: Session? = nil
     
+    @Published var authState: AuthState = .signIn
+    
     // A quick helper to check if user is signed in
     var isSignedIn: Bool {
         user != nil
@@ -25,14 +27,20 @@ class SessionManager: ObservableObject {
     let supabaseClient: SupabaseClient = client
     
     // Sign out:
+//    func signOut() async throws {
+//        do {
+//            try await supabaseClient.auth.signOut()
+//            user = nil
+//            // session = nil
+//        } catch {
+//            print("Sign out error: \(error.localizedDescription)")
+//            throw error
+//        }
+//    }
+    // Sign out
     func signOut() async throws {
-        do {
-            try await supabaseClient.auth.signOut()
-            user = nil
-            // session = nil
-        } catch {
-            print("Sign out error: \(error.localizedDescription)")
-            throw error
-        }
+        try await supabaseClient.auth.signOut()
+        user = nil
+        authState = .signIn
     }
 }
