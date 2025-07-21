@@ -11,10 +11,11 @@ import ARKit
 import UIKit
 
 struct ContentView: View {
-    @State private var authState: AuthState = .signIn
+    // @State private var authState: AuthState = .signIn
     @State private var showSplash: Bool = true
-    @StateObject private var sessionManager = SessionManager()
-    
+//    @StateObject private var sessionManager = SessionManager()
+    @EnvironmentObject var sessionManager: SessionManager
+
     var body: some View {
         ZStack {
             // Show SplashScreenView first
@@ -22,32 +23,35 @@ struct ContentView: View {
                 SplashScreenView()
             } else {
                 // Then show the main content based on authState
-                switch authState {
+                switch sessionManager.authState {
                 case .signIn:
-                    SignInView(authState: $authState)
+                    SignInView(authState: $sessionManager.authState)
                 case .signUp:
-                    SignUpView(authState: $authState)
+                    SignUpView(authState: $sessionManager.authState)
                 case .Dashboard:
-                    DashBoardView(authState: $authState)
+                    DashBoardView(authState: $sessionManager.authState)
                 case .ScansList:
-                    ScansListView(authState: $authState, projectID: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b")
+                    ScansListView(authState: $sessionManager.authState, projectID: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b")
                 case .ProjectsList:
-                    ProjectListView(authState: $authState)
+                    ProjectListView(authState: $sessionManager.authState)
                 case .Settings:
-                    SettingsView(authState: $authState)
+                    SettingsView(authState: $sessionManager.authState)
                 case .Guide:
-                    BiomassGuideView(authState: $authState)
+                    BiomassGuideView(authState: $sessionManager.authState)
                 case .CreateProject:
-                    SettingsView(authState: $authState)
+                    SettingsView(authState: $sessionManager.authState)
                 case .ScanResultView:
                     ScanResultView(
                         image: UIImage(systemName: "leaf")!, // Placeholder image
                         height: 12.5,
                         timestamp: Date(),
-                        authState: $authState
+                        authState: $sessionManager.authState
                     )
                 case .scanPage:
-                    TreeMeasurementView (authState: $authState)
+                    TreeMeasurementView (authState: $sessionManager.authState)
+                case .resetPasswordFlow:
+                    NewPasswordView(authState: $sessionManager.authState)
+                        .onAppear { print("🔑 NewPasswordView") }
                 }
             }
         }
@@ -60,6 +64,28 @@ struct ContentView: View {
                 }
             }
         }
+//        .onOpenURL { url in
+//            print("🔑 onOpenURL: \(url)")
+//            guard url.host == "reset-password" else { return }
+//            authState = .resetPasswordFlow
+//
+//            Task {
+//                do {
+//                    // this is async and will throw on error
+//                    print("🔑 Attempting to restore session from URL: \(url)")
+//                    _ = try await sessionManager
+//                            .supabaseClient
+//                            .auth
+//                            .session(from: url) 
+//
+//                    print("✅ Session restored")
+//                    // authState = .resetPasswordFlow
+//
+//                } catch {
+//                    print("❌ Failed to restore session:", error.localizedDescription)
+//                }
+//            }
+//        }
     }
 }
 

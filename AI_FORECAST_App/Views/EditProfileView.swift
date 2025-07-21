@@ -109,6 +109,8 @@ struct EditProfileView: View {
 struct ResetPasswordView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var email: String = ""
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
     
     var body: some View {
         NavigationView {
@@ -116,14 +118,14 @@ struct ResetPasswordView: View {
                 Section(header: Text("Enter your email")) {
                     TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
+                        .textContentType(.emailAddress)
                         .autocapitalization(.none)
+                        .textInputAutocapitalization(.never)
                 }
                 
                 Section {
                     Button("Reset Password") {
-                        // Add password reset logic here
-                        print("Password reset for \(email)")
-                        presentationMode.wrappedValue.dismiss()
+                        handleResetPassword()
                     }
                 }
             }
@@ -131,9 +133,48 @@ struct ResetPasswordView: View {
             .navigationBarItems(leading: Button("Cancel") {
                 presentationMode.wrappedValue.dismiss()
             })
+            .alert(isPresented: $showingAlert) {
+                Alert(title: Text("Password Reset"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
+        }
+    }
+    
+    func handleResetPassword() {
+        guard !email.isEmpty else {
+            alertMessage = "Please enter your email."
+            showingAlert = true
+            return
+        }
+        guard email.isEmailValid() else {
+            alertMessage = "Please enter a valid email address."
+            showingAlert = true
+            return
+        }
+        Task {
+            do {
+                print("🔗 Sending reset password link to \(email)")
+                try await client.auth.resetPasswordForEmail(email, redirectTo: URL(string: "myapp://reset-password"))
+                alertMessage = "A password reset link has been sent to your email."
+                showingAlert = true
+                // Dismiss after a short delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            } catch {
+                alertMessage = "Failed to send reset email: \(error.localizedDescription)"
+                showingAlert = true
+            }
         }
     }
 }
+
+// extension String {
+//     func isEmailValid() -> Bool {
+//         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+//         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+//         return emailPredicate.evaluate(with: self)
+//     }
+// }
 
 // A simple ImagePicker to wrap UIImagePickerController
 struct ImagePicker: UIViewControllerRepresentable {
