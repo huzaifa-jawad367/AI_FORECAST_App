@@ -98,6 +98,11 @@ struct EditProfileView: View {
         .sheet(isPresented: $isShowingPasswordReset) {
             ResetPasswordView()
         }
+        .onAppear {
+            Task {
+                await fetchProfilePicture()
+            }
+        }
     }
     
     func updateProfile() {
@@ -168,6 +173,36 @@ struct EditProfileView: View {
         }
     }
 
+    func fetchProfilePicture() async {
+        guard let user = sessionManager.user else { return }
+        let userId = user.id.uuidString.lowercased()
+        do {
+            // Fetch the user's profile from Supabase
+            let response = try await client.database
+                .from("users")
+                .select("profile_picture_url")
+                .eq("id", value: userId)
+                .single()
+                .execute()
+            
+            struct ProfilePicResponse: Decodable {
+                let profile_picture_url: String?
+            }
+            let profile = try JSONDecoder().decode(ProfilePicResponse.self, from: response.data)
+            if let urlString = profile.profile_picture_url, let url = URL(string: urlString) {
+                // Download the image data
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if let image = UIImage(data: data) {
+                    // Update on main thread
+                    await MainActor.run {
+                        self.selectedImage = image
+                    }
+                }
+            }
+        } catch {
+            print("Failed to fetch profile picture: \(error.localizedDescription)")
+        }
+    }
 }
 
 struct ResetPasswordView: View {
