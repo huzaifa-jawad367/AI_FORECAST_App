@@ -14,6 +14,7 @@ struct EditProfileView: View {
     @State private var imageSource: UIImagePickerController.SourceType = .photoLibrary
     @State private var isShowingActionSheet = false
     @State private var isShowingPasswordReset = false
+    @EnvironmentObject var sessionManager: SessionManager // <-- Add this line
     
     var body: some View {
         Form {
@@ -100,10 +101,73 @@ struct EditProfileView: View {
     }
     
     func updateProfile() {
-        // Add your update profile logic here
         print("Profile updated with username: \(username)")
-        // You might also want to upload the selectedImage if it exists
+
+        // Convert selected image to JPEG data
+        if let image = selectedImage {
+            if let jpegData = image.jpegData(compressionQuality: 0.8) {
+                print("✅ Successfully converted image to JPEG. Size: \(jpegData.count) bytes")
+                Task {
+                    await uploadToSupabase(jpegData)
+                }
+            } else {
+                print("❌ Failed to convert image to JPEG.")
+            }
+        } else {
+            print("ℹ️ No profile image selected.")
+        }
     }
+
+    // Uploads the image data to Supabase Storage in the 'profile-pics' bucket
+    func uploadToSupabase(_ data: Data) async {
+        guard let user = sessionManager.user else {
+            print("❌ No user signed in.")
+            return
+        }
+        let userId = user.id.uuidString.lowercased()
+        let fileId = UUID().uuidString
+        let filename = "\(fileId).jpg"
+        let path = "\(userId)/\(filename)"
+        
+        do {
+            print("STEP 1: Starting upload to Supabase Storage")
+            // Upload the JPEG data
+            try await client.storage
+                .from("profile-pics")
+                .upload(
+                    path: path,
+                    file: data
+                )
+            print("STEP 2: ✅ Uploaded to Supabase at path: \(path)")
+            
+            // 1️⃣ Retrieve the public URL after upload
+            print("STEP 3: Attempting to get public URL")
+            let publicUrl = try client.storage
+                .from("profile-pics")
+                .getPublicURL(path: path)
+            print("STEP 4: 🖼 Public URL: \(publicUrl)")
+
+            // Update the user's profile with the new avatar URL
+            print("STEP 5: Attempting to update user profile in database")
+            let res = try await client.database
+                .from("users")
+                .update([                       // ← no `values:` label
+                    "profile_picture_url": publicUrl.absoluteString
+                ])
+                .eq("id", value: userId)       // ← no `column:` label, keep `value:` only on second arg
+                .execute()
+            print("STEP 6: Database update response received")
+            guard res.status == 200 || res.status == 204 else {
+                print("STEP 7: Unexpected HTTP status code: \(res.status)")
+                return
+            }
+            print("STEP 8: Profile picture URL updated successfully.")
+
+        } catch {
+            print("❌ Failed to upload or update: \(error.localizedDescription)")
+        }
+    }
+
 }
 
 struct ResetPasswordView: View {
