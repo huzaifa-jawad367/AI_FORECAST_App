@@ -58,6 +58,7 @@
 		60DF8B452D6F1E50003D5562 /* ProjectRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DF8B442D6F1E45003D5562 /* ProjectRecord.swift */; };
 		60E618A32D7F49C8005DE53A /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E618A22D7F49C8005DE53A /* SplashScreenView.swift */; };
 		60E618A52D7F5C4D005DE53A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */; };
+		60F19C3B2E3759DB00EC0951 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F19C3A2E3759D000EC0951 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		60E618A22D7F49C8005DE53A /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		60E618A82D7F6E6A005DE53A /* AI-FORECAST-App-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "AI-FORECAST-App-Info.plist"; sourceTree = SOURCE_ROOT; };
+		60F19C3A2E3759D000EC0951 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				60F19C3A2E3759D000EC0951 /* LocationManager.swift */,
 				60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */,
 				60E618A82D7F6E6A005DE53A /* AI-FORECAST-App-Info.plist */,
 				60DF8B412D6F1A5B003D5562 /* Views */,
@@ -469,6 +472,7 @@
 				606E9C182D6F2A3B00998468 /* ProjectCardView.swift in Sources */,
 				609BA6C42D53D3A6006910B8 /* TreeMeasurementView.swift in Sources */,
 				609B5E842D6EDE7200B7864D /* SettingsView.swift in Sources */,
+				60F19C3B2E3759DB00EC0951 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

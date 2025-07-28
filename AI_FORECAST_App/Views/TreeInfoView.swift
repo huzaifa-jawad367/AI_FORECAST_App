@@ -54,6 +54,7 @@ struct ScanResultView: View {
     @State private var selectedProjectId: String? = nil
     
     @EnvironmentObject var sessionManager: SessionManager
+    @StateObject private var locationManager = LocationManager.shared
 
     init(
         image: UIImage,
@@ -357,26 +358,6 @@ struct ScanResultView: View {
         return String(format: "%@.%06d", baseString, microseconds)
     }
     
-    // A simple function to return the current coordinates.
-    // In production, consider managing a persistent CLLocationManager instance for continuous location updates.
-    private func getCurrentCoordinates() -> (latitude: Double, longitude: Double) {
-        let locationManager = CLLocationManager()
-        // Request permission from the user to use location services.
-        locationManager.requestWhenInUseAuthorization()
-        
-        // Try to get the current location from the location manager.
-        if let currentLocation = locationManager.location {
-            let latitude = currentLocation.coordinate.latitude
-            let longitude = currentLocation.coordinate.longitude
-            print("latitude: \(latitude), longitude: \(longitude)")
-            return (latitude: latitude, longitude: longitude)
-        } else {
-            // Fallback values if location is not available.
-            print("Current location is not available. Returning default coordinates.")
-            return (latitude: 0.0, longitude: 0.0)
-        }
-    }
-    
     private func recalcBiomass() {
         Task {
             let diam = Double(diameterInput) ?? 0
@@ -411,8 +392,9 @@ struct ScanResultView: View {
         // Get the current timestamp.
         let scanTimestamp = getCurrentTimestamp()
         
-        // Get the current coordinates from our helper function.
-        let coordinates = getCurrentCoordinates()
+        // pull coords from our shared manager
+        let lat = Float(locationManager.currentLocation?.coordinate.latitude ?? 0)
+        let lon = Float(locationManager.currentLocation?.coordinate.longitude ?? 0)
         
         // Create a ScanRecord_write instance using the current data.
         let scanRecord = ScanRecord_write(
@@ -423,8 +405,8 @@ struct ScanResultView: View {
             project_id: project_id,
             user_id: user_id,
             biomass_estimation: biomass_estimation,
-            latitude: Float(coordinates.latitude),
-            longitude: Float(coordinates.longitude)
+            latitude: lat,
+            longitude: lon
         )
         
         print("The scan record instance I am adding: \(scanRecord)")
