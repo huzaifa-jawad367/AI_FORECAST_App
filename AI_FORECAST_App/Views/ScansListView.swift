@@ -60,7 +60,7 @@ struct ScansListView: View {
             
             
             // Floating circular button at the bottom right
-            NavigationLink(destination: TreeMeasurementView(authState: .constant(.scanPage))) {
+            NavigationLink(destination: TreeMeasurementView(authState: .constant(.scanPage), projectID: projectID)) {
                 Image(systemName: "plus")
                     .font(.system(size: 36))
                     .foregroundColor(.white)

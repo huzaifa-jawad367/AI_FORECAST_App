@@ -35,6 +35,7 @@ struct ScanResultView: View {
     let image: UIImage
     let height: Double
     let timestamp: Date
+    let projectId: String? // <-- Default value is nil
     
     @State private var Bestimation: Double = 0.0
     
@@ -46,10 +47,27 @@ struct ScanResultView: View {
     
     // Toggle for alert
     @State private var showAlert = false
+    @State private var alertMessage = ""
     
     @StateObject private var viewModel = SettingsViewModel()
+    @StateObject private var projectViewModel = ProjectViewModel()
+    @State private var selectedProjectId: String? = nil
     
     @EnvironmentObject var sessionManager: SessionManager
+
+    init(
+        image: UIImage,
+        height: Double,
+        timestamp: Date,
+        projectId: String? = nil,
+        authState: Binding<AuthState>
+    ) {
+        self.image = image
+        self.height = height
+        self.timestamp = timestamp
+        self.projectId = projectId
+        self._authState = authState
+    }
     
     var body: some View {
         VStack {
@@ -172,9 +190,36 @@ struct ScanResultView: View {
             }
             .padding()
             
+            // Project Picker if projectId is nil
+            if projectId == nil {
+                VStack(alignment: .leading) {
+                    Text("Select Project:")
+                        .fontWeight(.semibold)
+                    Picker("Project", selection: $selectedProjectId) {
+                        Text("Select a project").tag(String?.none)
+                        ForEach(projectViewModel.projects) { project in
+                            Text(project.project_name).tag(Optional(project.project_id))
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .onAppear {
+                        if let user = sessionManager.user {
+                            Task {
+                                await projectViewModel.fetchProjects(for: user.id.uuidString)
+                            }
+                        }
+                    }
+                }
+                .padding(.horizontal)
+            }
+            
             Button(action: {
                 // If species is not selected, show alert
                 if selectedSpecies == "Other" {
+                    alertMessage = "Please select the tree species before proceeding."
+                    showAlert = true
+                } else if projectId == nil && selectedProjectId == nil {
+                    alertMessage = "Please select a project before saving."
                     showAlert = true
                 } else {
                     Task {
@@ -194,8 +239,10 @@ struct ScanResultView: View {
                             print("Step 3: Is signed in: \(profile)")
                             
                             let diam = Double(diameterInput) ?? 0
+                            let finalProjectId = projectId ?? selectedProjectId!
                             
-                            SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
+                            SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: finalProjectId, user_id: profile.id, biomass_estimation: Bestimation)
+                            // SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
                         } catch {
                             print("Error fetch profile: \(error.localizedDescription)")
                             viewModel.isSignedIn = false
@@ -213,6 +260,13 @@ struct ScanResultView: View {
             }
             .accessibilityLabel("Save")
             .accessibilityHint("Tap to save this scan record after selecting a species")
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Missing Information"),
+                    message: Text(alertMessage),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
             
             Spacer()
             

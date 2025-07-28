@@ -48,7 +48,7 @@ struct ContentView: View {
                         authState: $sessionManager.authState
                     )
                 case .scanPage:
-                    TreeMeasurementView (authState: $sessionManager.authState)
+                    TreeMeasurementView(authState: $sessionManager.authState, projectID: nil)
                 case .resetPasswordFlow:
                     NewPasswordView(authState: $sessionManager.authState)
                         .onAppear { print("🔑 NewPasswordView") }
