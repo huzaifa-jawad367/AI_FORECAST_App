@@ -134,6 +134,8 @@ struct TreeMeasurementView: View {
     @State private var scannedImage: UIImage? = nil
     @State private var scannedTimestamp = Date()
     
+    var projectID: String? // <-- Make this optional
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -267,6 +269,7 @@ struct TreeMeasurementView: View {
                     image:     scannedImage ?? UIImage(),
                     height:    scannedHeight,
                     timestamp: scannedTimestamp,
+                    projectId: projectID, // <-- Pass projectID
                     authState: $authState
                 )
             }
@@ -284,5 +287,5 @@ struct TreeMeasurementView: View {
 
 
 #Preview {
-    TreeMeasurementView(authState: .constant(.scanPage))
+    TreeMeasurementView(authState: .constant(.scanPage), projectID: nil)
 }
