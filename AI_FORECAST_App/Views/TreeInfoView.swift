@@ -188,31 +188,32 @@ struct ScanResultView: View {
                     .accessibilityLabel("Biomass Estimation: \(Bestimation)")
                 }
                 
-            }
-            .padding()
-            
-            // Project Picker if projectId is nil
-            if projectId == nil {
-                VStack(alignment: .leading) {
-                    Text("Select Project:")
-                        .fontWeight(.semibold)
-                    Picker("Project", selection: $selectedProjectId) {
-                        Text("Select a project").tag(String?.none)
-                        ForEach(projectViewModel.projects) { project in
-                            Text(project.project_name).tag(Optional(project.project_id))
+                // Project Picker if projectId is nil
+                if projectId == nil {
+                    HStack(alignment: .center) {
+                        Text("Select Project:")
+                            .fontWeight(.semibold)
+                        Spacer()
+                        Picker("Project", selection: $selectedProjectId) {
+                            Text("Select a project").tag(String?.none)
+                            ForEach(projectViewModel.projects) { project in
+                                Text(project.project_name).tag(Optional(project.project_id))
+                            }
                         }
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                    .onAppear {
-                        if let user = sessionManager.user {
-                            Task {
-                                await projectViewModel.fetchProjects(for: user.id.uuidString)
+                        .pickerStyle(MenuPickerStyle())
+                        .onAppear {
+                            if let user = sessionManager.user {
+                                Task {
+                                    await projectViewModel.fetchProjects(for: user.id.uuidString)
+                                }
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
             }
+            .padding()
+            
             
             Button(action: {
                 // If species is not selected, show alert

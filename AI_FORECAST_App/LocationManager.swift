@@ -12,14 +12,19 @@ import Combine
 final class LocationManager: NSObject, ObservableObject {
     static let shared = LocationManager()
     @Published var currentLocation: CLLocation?
+    @Published var authorizationStatus: CLAuthorizationStatus
     
     private let manager = CLLocationManager()
     
     private override init() {
+        self.authorizationStatus = manager.authorizationStatus
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
-        
+        askForPermissionIfNeeded()
+    }
+    
+    private func askForPermissionIfNeeded() {
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
