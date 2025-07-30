@@ -345,14 +345,18 @@ struct ScanResultView: View {
                     || locationManager.authorizationStatus == .restricted)
                    && showWarningBanner
                 {
-                    HStack(spacing: 8) {
+                    HStack(alignment: .top, spacing: 8) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.white)
-                        Text("Location is off—scans won’t be tagged with coordinates.")
-                            .foregroundColor(.white)
-                            .font(.subheadline)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Location is off—scans won’t be tagged with coordinates.")
+                                .foregroundColor(.white)
+                                .font(.subheadline)
+                            Text("To include coordinates in your scans, go to Settings > Privacy & Security > Location Services and enable location permission for this app.")
+                                .foregroundColor(.white.opacity(0.9))
+                                .font(.caption2)
+                                .lineLimit(3)
+                        }
                         Spacer()
                         Button(action: { showWarningBanner = false }) {
                             Image(systemName: "xmark.circle.fill")
@@ -376,11 +380,6 @@ struct ScanResultView: View {
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
                 locationManager.refreshAuthorization()
             }
-            // .onChange(of: scenePhase) { _, newPhase in
-            //     if newPhase == .active {
-            //         locationManager.refreshAuthorization()
-            //     }
-            // }
         }
         .onAppear { _ = locationManager }
     }
