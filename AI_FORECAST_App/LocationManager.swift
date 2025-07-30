@@ -34,6 +34,16 @@ final class LocationManager: NSObject, ObservableObject {
             break
         }
     }
+
+    func refreshAuthorization() {
+        let newStatus = manager.authorizationStatus
+        DispatchQueue.main.async {
+            self.authorizationStatus = newStatus
+            if newStatus == .authorizedWhenInUse || newStatus == .authorizedAlways {
+                self.manager.startUpdatingLocation()
+            }
+        }
+    }
 }
 
 extension LocationManager: CLLocationManagerDelegate {

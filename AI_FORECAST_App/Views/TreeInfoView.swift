@@ -30,7 +30,7 @@ let speciesCoefficients: [String: (a: Double, b: Double, c: Double)] = [
     "Other":  (a: 0.10, b: 2.40, c: 1.10)  // Default for unspecified species
 ]
 
-
+// TODO: Extract subviews/project picker/etc. into smaller components to improve compile times and maintainability
 struct ScanResultView: View {
     let image: UIImage
     let height: Double
@@ -53,8 +53,10 @@ struct ScanResultView: View {
     @StateObject private var projectViewModel = ProjectViewModel()
     @State private var selectedProjectId: String? = nil
     
+    @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject var sessionManager: SessionManager
     @StateObject private var locationManager = LocationManager.shared
+    @State private var showWarningBanner = true
 
     init(
         image: UIImage,
@@ -71,275 +73,316 @@ struct ScanResultView: View {
     }
     
     var body: some View {
-        VStack {
-            // Tree image preview
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFit()
-                .frame(height: 250)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding()
-                .accessibilityLabel("Tree Image")
-                .accessibilityHint("Preview of the scanned tree")
-            
-            // Measurements and info
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Tree Measurements")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .accessibilityAddTraits(.isHeader)
-                
-                HStack {
-                    Text("Height:")
-                        .fontWeight(.semibold)
-                    Spacer()
-                    Text(String(format: "%.2f meters", height))
-                }
-                .padding(.horizontal)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("Height: \(String(format: "%.2f", height)) meters")
-                
-                HStack {
-                    Text("Diameter (cm):")
-                        .fontWeight(.semibold)
-                    Spacer()
-                    TextField("Enter diameter", text: $diameterInput)
-                      .keyboardType(.decimalPad)
-                      .multilineTextAlignment(.trailing)
-                      .frame(width: 100)
-                      .padding(6)
-                      .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.2)))
-                      .onChange(of: diameterInput) {
-                          // strip out any non-numeric/“.” chars
-                          let filtered = diameterInput.filter { "0123456789.".contains($0) }
-                          if filtered != diameterInput {
-                              diameterInput = filtered
-                          }
-                          recalcBiomass()
-                      }
-                      .submitLabel(.done)               // shows “Done” on hardware keyboards
-                      .onSubmit { hideKeyboard() }      // hides for hardware “Enter”
-                      .toolbar {                        // adds “Done” above the decimal pad
-                          ToolbarItemGroup(placement: .keyboard) {
-                              Spacer()
-                              Button("Done") {
-                                  hideKeyboard()
-                              }
-                          }
-                      }
-                }
-                .padding(.horizontal)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("Diameter: \(String(format: "%.2f", diameterInput)) centimeters")
-                
-                HStack {
-                    Text("Scan Time:")
-                        .fontWeight(.semibold)
-                    Spacer()
-                    Text(timestamp.formatted(date: .abbreviated, time: .shortened))
-                }
-                .padding(.horizontal)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("Scan Time: \(timestamp.formatted(date: .abbreviated, time: .shortened))")
-                
-                HStack {
-                    Text("Species:")
-                        .fontWeight(.semibold)
+        GeometryReader { geo in
+            ZStack(alignment: .top) {
+                VStack {
+                    // Tree image preview
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 250)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding()
+                        .accessibilityLabel("Tree Image")
+                        .accessibilityHint("Preview of the scanned tree")
                     
-                    Spacer()
-                    
-                    // Species dropdown
-                    Picker("Species", selection: $selectedSpecies) {
-                        ForEach(speciesOptions, id: \.self) { species in
-                            Text(species)
+                    // Measurements and info
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("Tree Measurements")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .accessibilityAddTraits(.isHeader)
+                        
+                        HStack {
+                            Text("Height:")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(String(format: "%.2f meters", height))
                         }
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                    .padding(.horizontal)
-                    .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
-                    //                    .padding()
-                }
-                .padding(.horizontal)
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("Species: \(selectedSpecies)")
-                .accessibilityHint("Double tap to choose a tree species")
-                
-                if selectedSpecies.isEmpty {
-                    HStack {
-                        Text("Biomass Estimation:")
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Text("NA")
-                    }
-                    .padding(.horizontal)
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Biomass Estimation: Not available")
-                    
-                } else {
-                    // Show the biomass estimation number/ entry
-                    HStack {
-                        Text("Biomass Estimation:")
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Text("\(Bestimation)")
-                    }
-                    .padding(.horizontal)
-                    .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Biomass Estimation: \(Bestimation)")
-                }
-                
-                // Project Picker if projectId is nil
-                if projectId == nil {
-                    HStack(alignment: .center) {
-                        Text("Select Project:")
-                            .fontWeight(.semibold)
-                        Spacer()
-                        Picker("Project", selection: $selectedProjectId) {
-                            Text("Select a project").tag(String?.none)
-                            ForEach(projectViewModel.projects) { project in
-                                Text(project.project_name).tag(Optional(project.project_id))
-                            }
+                        .padding(.horizontal)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Height: \(String(format: "%.2f", height)) meters")
+                        
+                        HStack {
+                            Text("Diameter (cm):")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            TextField("Enter diameter", text: $diameterInput)
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 100)
+                                .padding(6)
+                                .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.2)))
+                                .onChange(of: diameterInput) {
+                                    // strip out any non-numeric/“.” chars
+                                    let filtered = diameterInput.filter { "0123456789.".contains($0) }
+                                    if filtered != diameterInput {
+                                        diameterInput = filtered
+                                    }
+                                    recalcBiomass()
+                                }
+                                .submitLabel(.done)               // shows “Done” on hardware keyboards
+                                .onSubmit { hideKeyboard() }      // hides for hardware “Enter”
+                                .toolbar {                        // adds “Done” above the decimal pad
+                                    ToolbarItemGroup(placement: .keyboard) {
+                                        Spacer()
+                                        Button("Done") {
+                                            hideKeyboard()
+                                        }
+                                    }
+                                }
                         }
-                        .pickerStyle(MenuPickerStyle())
-                        .onAppear {
-                            if let user = sessionManager.user {
-                                Task {
-                                    await projectViewModel.fetchProjects(for: user.id.uuidString)
+                        .padding(.horizontal)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Diameter: \(String(format: "%.2f", diameterInput)) centimeters")
+                        
+                        HStack {
+                            Text("Scan Time:")
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text(timestamp.formatted(date: .abbreviated, time: .shortened))
+                        }
+                        .padding(.horizontal)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Scan Time: \(timestamp.formatted(date: .abbreviated, time: .shortened))")
+                        
+                        HStack {
+                            Text("Species:")
+                                .fontWeight(.semibold)
+                            
+                            Spacer()
+                            
+                            // Species dropdown
+                            Picker("Species", selection: $selectedSpecies) {
+                                ForEach(speciesOptions, id: \.self) { species in
+                                    Text(species)
                                 }
                             }
+                            .pickerStyle(MenuPickerStyle())
+                            .padding(.horizontal)
+                            .background(RoundedRectangle(cornerRadius: 10).fill(Color.gray.opacity(0.2)))
+                            //                    .padding()
                         }
-                    }
-                    .padding(.horizontal)
-                }
-            }
-            .padding()
-            
-            
-            Button(action: {
-                // If species is not selected, show alert
-                if selectedSpecies == "Other" {
-                    alertMessage = "Please select the tree species before proceeding."
-                    showAlert = true
-                } else if projectId == nil && selectedProjectId == nil {
-                    alertMessage = "Please select a project before saving."
-                    showAlert = true
-                } else {
-                    Task {
-                        guard let supabaseUser = sessionManager.user else {
-                            viewModel.isSignedIn = false
-                            return
-                        }
-                        print("user is signed in\n\n")
+                        .padding(.horizontal)
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Species: \(selectedSpecies)")
+                        .accessibilityHint("Double tap to choose a tree species")
                         
-                        do {
-                            print("Step 0")
-                            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
-                            print("Step 1")
-                            viewModel.currentUser = profile
-                            print("Step 2")
-                            viewModel.isSignedIn = true
-                            print("Step 3: Is signed in: \(profile)")
+                        if selectedSpecies.isEmpty {
+                            HStack {
+                                Text("Biomass Estimation:")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Text("NA")
+                            }
+                            .padding(.horizontal)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Biomass Estimation: Not available")
                             
-                            let diam = Double(diameterInput) ?? 0
-                            let finalProjectId = projectId ?? selectedProjectId!
-                            
-                            SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: finalProjectId, user_id: profile.id, biomass_estimation: Bestimation)
-                            // SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: "16089a3d-ca0d-4e73-ace4-ff4813bb9f0b", user_id: profile.id, biomass_estimation: Bestimation)
-                        } catch {
-                            print("Error fetch profile: \(error.localizedDescription)")
-                            viewModel.isSignedIn = false
+                        } else {
+                            // Show the biomass estimation number/ entry
+                            HStack {
+                                Text("Biomass Estimation:")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Text("\(Bestimation)")
+                            }
+                            .padding(.horizontal)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("Biomass Estimation: \(Bestimation)")
                         }
-                         
+                        
+                        // Project Picker if projectId is nil
+                        if projectId == nil {
+                            HStack(alignment: .center) {
+                                Text("Select Project:")
+                                    .fontWeight(.semibold)
+                                Spacer()
+                                Picker("Project", selection: $selectedProjectId) {
+                                    Text("Select a project").tag(String?.none)
+                                    ForEach(projectViewModel.projects) { project in
+                                        Text(project.project_name).tag(Optional(project.project_id))
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .onAppear {
+                                    if let user = sessionManager.user {
+                                        Task {
+                                            await projectViewModel.fetchProjects(for: user.id.uuidString)
+                                        }
+                                    }
+                                }
+                            }
+                            .padding(.horizontal)
+                        }
                     }
-                }
-            }) {
-                Text("Save")
-                    .foregroundColor(.white)
                     .padding()
-                    .frame(width: 200)
-                    .background(Color.blue)
-                    .cornerRadius(20)
-            }
-            .accessibilityLabel("Save")
-            .accessibilityHint("Tap to save this scan record after selecting a species")
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Missing Information"),
-                    message: Text(alertMessage),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-            
-            Spacer()
-            
-            // Navigation buttons at the bottom
-            HStack(spacing: 30) {
-                Button(action: {
-                    // Navigation back to dashboard
-                    authState = .Dashboard
-                }) {
-                    Text("Dashboard")
-                        .foregroundColor(.white)
-                        .padding()
-                    //                        .frame(maxWidth: .infinity)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                }
-                .accessibilityLabel("Dashboard")
-                .accessibilityHint("Tap to return to the dashboard")
-                
-                Button(action: {
-                    // If species is not selected, show alert
-                    if selectedSpecies.isEmpty {
-                        showAlert = true
-                    } else {
-                        // Show the biomass estimation number/ entry
-                        authState = .scanPage
-                        
+                    
+                    Button(action: {
+                        // If species is not selected, show alert
+                        if selectedSpecies == "Other" {
+                            alertMessage = "Please select the tree species before proceeding."
+                            showAlert = true
+                        } else if projectId == nil && selectedProjectId == nil {
+                            alertMessage = "Please select a project before saving."
+                            showAlert = true
+                        } else {
+                            Task {
+                                guard let supabaseUser = sessionManager.user else {
+                                    viewModel.isSignedIn = false
+                                    return
+                                }
+                                print("user is signed in\n\n")
+                                
+                                do {
+                                    let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+                                    viewModel.currentUser = profile
+                                    viewModel.isSignedIn = true
+                                    
+                                    let diam = Double(diameterInput) ?? 0
+                                    let finalProjectId = projectId ?? selectedProjectId!
+                                    
+                                    SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: finalProjectId, user_id: profile.id, biomass_estimation: Bestimation)
+                                } catch {
+                                    print("Error fetch profile: \(error.localizedDescription)")
+                                    viewModel.isSignedIn = false
+                                }
+                                
+                            }
+                        }
+                    }) {
+                        Text("Save")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(width: 200)
+                            .background(Color.blue)
+                            .cornerRadius(20)
                     }
-                }) {
-                    Text("Continue Scan")
-                        .foregroundColor(.white)
-                        .padding()
-                    //                        .frame(maxWidth: .infinity)
-                        .background(Color.green)
-                        .cornerRadius(10)
+                    .accessibilityLabel("Save")
+                    .accessibilityHint("Tap to save this scan record after selecting a species")
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Missing Information"),
+                            message: Text(alertMessage),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
+                    
+                    Spacer()
+                    
+                    // Navigation buttons at the bottom
+                    HStack(spacing: 30) {
+                        Button(action: {
+                            // Navigation back to dashboard
+                            authState = .Dashboard
+                        }) {
+                            Text("Dashboard")
+                                .foregroundColor(.white)
+                                .padding()
+                            //                        .frame(maxWidth: .infinity)
+                                .background(Color.blue)
+                                .cornerRadius(10)
+                        }
+                        .accessibilityLabel("Dashboard")
+                        .accessibilityHint("Tap to return to the dashboard")
+                        
+                        Button(action: {
+                            // If species is not selected, show alert
+                            if selectedSpecies.isEmpty {
+                                showAlert = true
+                            } else {
+                                // Show the biomass estimation number/ entry
+                                authState = .scanPage
+                                
+                            }
+                        }) {
+                            Text("Continue Scan")
+                                .foregroundColor(.white)
+                                .padding()
+                            //                        .frame(maxWidth: .infinity)
+                                .background(Color.green)
+                                .cornerRadius(10)
+                        }
+                        .accessibilityLabel("Continue Scan")
+                        .accessibilityHint("Tap to continue scanning")
+                    }
+                    .padding([.horizontal, .bottom])
+                    .accessibilityElement(children: .contain)
+                    .accessibilityLabel("Navigation options: Dashboard and Continue Scan")
+                    .alert(isPresented: $showAlert) {
+                        Alert(
+                            title: Text("Species Not Selected"),
+                            message: Text("Please select the tree species before proceeding."),
+                            dismissButton: .default(Text("OK"))
+                        )
+                    }
                 }
-                .accessibilityLabel("Continue Scan")
-                .accessibilityHint("Tap to continue scanning")
-            }
-            .padding([.horizontal, .bottom])
-            .accessibilityElement(children: .contain)
-            .accessibilityLabel("Navigation options: Dashboard and Continue Scan")
-            .alert(isPresented: $showAlert) {
-                Alert(
-                    title: Text("Species Not Selected"),
-                    message: Text("Please select the tree species before proceeding."),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
-        }
-        .contentShape(Rectangle())            // so empty space catches taps
-        .onTapGesture { hideKeyboard() }
-        .navigationTitle("Scan Details")
-        .onChange(of: selectedSpecies) { newSpecies, _ in
-            Task {
-                do {
-                    Bestimation = try await calculateBiomass(for: newSpecies, diameter: Double(diameterInput) ?? 0, height: height)
-                } catch {
-                    Bestimation = -1
+                .contentShape(Rectangle())            // so empty space catches taps
+                .onTapGesture { hideKeyboard() }
+                .navigationTitle("Scan Details")
+                .onChange(of: selectedSpecies) { newSpecies, _ in
+                    Task {
+                        do {
+                            Bestimation = try await calculateBiomass(for: newSpecies, diameter: Double(diameterInput) ?? 0, height: height)
+                        } catch {
+                            Bestimation = -1
+                        }
+                    }
+                    
                 }
+                .task {
+                    do {
+                        // calculate Biomass for the current instance
+                        Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: Double(diameterInput) ?? 0, height: height)
+                    } catch {
+                        print("Error calculating the biomass")
+                    }
+                }
+                
+                // ─────────────────────────────
+                // 2️⃣ Floating banner
+                if (locationManager.authorizationStatus == .denied
+                    || locationManager.authorizationStatus == .restricted)
+                   && showWarningBanner
+                {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.white)
+                        Text("Location is off—scans won’t be tagged with coordinates.")
+                            .foregroundColor(.white)
+                            .font(.subheadline)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                        Spacer()
+                        Button(action: { showWarningBanner = false }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .background(Color.orange)
+                    .cornerRadius(8)
+                    // shift down by the device’s top inset so it sits just under (or over) the notch
+                    .padding(.top, geo.safeAreaInsets.top)
+                    .padding(.horizontal, 16)
+                    .zIndex(1)
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                
             }
-            
-        }
-        .task {
-            do {
-                // calculate Biomass for the current instance
-                Bestimation = try await calculateBiomass(for:selectedSpecies, diameter: Double(diameterInput) ?? 0, height: height)
-            } catch {
-                print("Error calculating the biomass")
+            // make sure the banner can occupy the notch area
+            // .ignoresSafeArea(edges: .top)
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                locationManager.refreshAuthorization()
             }
+            // .onChange(of: scenePhase) { _, newPhase in
+            //     if newPhase == .active {
+            //         locationManager.refreshAuthorization()
+            //     }
+            // }
         }
+        .onAppear { _ = locationManager }
     }
     
     private func getCurrentTimestamp() -> String {
