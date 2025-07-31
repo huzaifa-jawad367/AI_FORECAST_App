@@ -1,4 +1,5 @@
 //
+//
 //  DashBoardView.swift
 //  AI_FORECAST_App
 //
@@ -22,6 +23,45 @@ struct DashBoardView: View {
 
     let SizeData: Int = 0;
     
+    // Environment for color scheme detection
+    @Environment(\.colorScheme) var colorScheme
+    
+    // Dynamic color helpers
+    var cardBackground: Color {
+        colorScheme == .dark
+            ? Color(.secondarySystemBackground)
+            : Color(.systemBackground)
+    }
+    
+    var elevatedCardBackground: Color {
+        colorScheme == .dark
+            ? Color(.secondarySystemBackground).opacity(1.1)
+            : Color(.systemBackground)
+    }
+    
+    var gradientColors: [Color] {
+        colorScheme == .dark
+            ? [Color.blue.opacity(0.7), Color.green.opacity(0.7)]
+            : [Color.blue, Color.green]
+    }
+    
+    var cardAccentGradient: [Color] {
+        colorScheme == .dark
+            ? [Color.blue.opacity(0.2), Color.green.opacity(0.15)]
+            : [Color.blue.opacity(0.3), Color.green.opacity(0.2)]
+    }
+    
+    var shadowColor: Color {
+        colorScheme == .dark
+            ? Color.clear
+            : Color.black.opacity(0.1)
+    }
+    
+    var lightShadowColor: Color {
+        colorScheme == .dark
+            ? Color.clear
+            : Color.black.opacity(0.05)
+    }
     
     func loadCounts(tables: String) async {
         
@@ -56,27 +96,27 @@ struct DashBoardView: View {
                     .font(.largeTitle.bold())
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.blue, .green],
+                            colors: gradientColors,
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
                     .padding()
-                    .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
+                    .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
                 
                 
                 Button {
                     authState = .ScanResultView
                 } label: {
                     ZStack {
-                        // Enhanced glassmorphism with vibrant gradient
+                        // Enhanced glassmorphism with dynamic colors
                         RoundedRectangle(cornerRadius: 25)
-                            .fill(.ultraThinMaterial)
+                            .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 25)
                                     .stroke(
                                         LinearGradient(
-                                            colors: [.white.opacity(0.8), .clear],
+                                            colors: [Color.primary.opacity(0.3), Color.clear],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         ),
@@ -87,7 +127,7 @@ struct DashBoardView: View {
                                 RoundedRectangle(cornerRadius: 25)
                                     .fill(
                                         LinearGradient(
-                                            colors: [Color(hex: "#6b96db").opacity(0.3), Color(hex: "#4CAF50").opacity(0.2)],
+                                            colors: cardAccentGradient,
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
@@ -107,7 +147,7 @@ struct DashBoardView: View {
                                 .font(.title2.bold())
                                 .foregroundStyle(
                                     LinearGradient(
-                                        colors: [.blue, .green],
+                                        colors: gradientColors,
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     )
@@ -117,8 +157,8 @@ struct DashBoardView: View {
                     }
                     .frame(width: 350, height: 170)
                 }
-                .shadow(color: .black.opacity(0.15), radius: 15, x: 0, y: 8)
-                .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+                .shadow(color: shadowColor, radius: 15, x: 0, y: 8)
+                .shadow(color: lightShadowColor, radius: 5, x: 0, y: 2)
                 // Accessibility
                 .accessibilityLabel("AI-ForCaST button")
                 .accessibilityHint("Tap to open the AI-ForCaST Projects list")
@@ -140,21 +180,18 @@ struct DashBoardView: View {
                     VStack {
                         
                         NavigationLink {
-                            //                        print("Album button tapped")
-                            //
-                            //                        authState = .ProjectsList
                             ProjectListView(authState: .constant(.ProjectsList))
                             
                         } label: {
                             VStack(spacing: 12) {
                                 ZStack {
                                     Circle()
-                                        .fill(.ultraThinMaterial)
+                                        .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                         .overlay(
                                             Circle()
                                                 .stroke(
                                                     LinearGradient(
-                                                        colors: [.white.opacity(0.8), .clear],
+                                                        colors: [Color.primary.opacity(0.3), Color.clear],
                                                         startPoint: .topLeading,
                                                         endPoint: .bottomTrailing
                                                     ),
@@ -177,12 +214,12 @@ struct DashBoardView: View {
                             .frame(width: 175, height: 150)
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(.ultraThinMaterial)
+                                    .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 20)
                                             .stroke(
                                                 LinearGradient(
-                                                    colors: [.white.opacity(0.8), .clear],
+                                                    colors: [Color.primary.opacity(0.3), Color.clear],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
                                                 ),
@@ -194,15 +231,15 @@ struct DashBoardView: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(
                                         LinearGradient(
-                                            colors: [.blue.opacity(0.25), .blue.opacity(0.15)],
+                                            colors: [Color.blue.opacity(colorScheme == .dark ? 0.15 : 0.25), Color.blue.opacity(colorScheme == .dark ? 0.1 : 0.15)],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
                                     )
                             )
                         }
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+                        .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
+                        .shadow(color: lightShadowColor, radius: 3, x: 0, y: 2)
                         // Accessibility
                         .accessibilityLabel("Album")
                         .accessibilityHint("Opens the list of scanned projects")
@@ -211,12 +248,12 @@ struct DashBoardView: View {
                             VStack(spacing: 12) {
                                 ZStack {
                                     Circle()
-                                        .fill(.ultraThinMaterial)
+                                        .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                         .overlay(
                                             Circle()
                                                 .stroke(
                                                     LinearGradient(
-                                                        colors: [.white.opacity(0.8), .clear],
+                                                        colors: [Color.primary.opacity(0.3), Color.clear],
                                                         startPoint: .topLeading,
                                                         endPoint: .bottomTrailing
                                                     ),
@@ -239,12 +276,12 @@ struct DashBoardView: View {
                             .frame(width: 175, height: 150)
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(.ultraThinMaterial)
+                                    .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 20)
                                             .stroke(
                                                 LinearGradient(
-                                                    colors: [.white.opacity(0.8), .clear],
+                                                    colors: [Color.primary.opacity(0.3), Color.clear],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
                                                 ),
@@ -256,15 +293,15 @@ struct DashBoardView: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(
                                         LinearGradient(
-                                            colors: [.green.opacity(0.25), .green.opacity(0.15)],
+                                            colors: [Color.green.opacity(colorScheme == .dark ? 0.15 : 0.25), Color.green.opacity(colorScheme == .dark ? 0.1 : 0.15)],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
                                     )
                             )
                         }
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+                        .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
+                        .shadow(color: lightShadowColor, radius: 3, x: 0, y: 2)
                         .accessibilityLabel("Settings")
                         .accessibilityHint("Tap to view or change settings")
                         .accessibilityAddTraits(.isButton)
@@ -280,12 +317,12 @@ struct DashBoardView: View {
                             VStack(spacing: 12) {
                                 ZStack {
                                     Circle()
-                                        .fill(.ultraThinMaterial)
+                                        .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                         .overlay(
                                             Circle()
                                                 .stroke(
                                                     LinearGradient(
-                                                        colors: [.white.opacity(0.8), .clear],
+                                                        colors: [Color.primary.opacity(0.3), Color.clear],
                                                         startPoint: .topLeading,
                                                         endPoint: .bottomTrailing
                                                     ),
@@ -308,12 +345,12 @@ struct DashBoardView: View {
                             .frame(width: 175, height: 150)
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(.ultraThinMaterial)
+                                    .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 20)
                                             .stroke(
                                                 LinearGradient(
-                                                    colors: [.white.opacity(0.8), .clear],
+                                                    colors: [Color.primary.opacity(0.3), Color.clear],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
                                                 ),
@@ -325,15 +362,15 @@ struct DashBoardView: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(
                                         LinearGradient(
-                                            colors: [.red.opacity(0.25), .red.opacity(0.15)],
+                                            colors: [Color.red.opacity(colorScheme == .dark ? 0.15 : 0.25), Color.red.opacity(colorScheme == .dark ? 0.1 : 0.15)],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
                                     )
                             )
                         }
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+                        .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
+                        .shadow(color: lightShadowColor, radius: 3, x: 0, y: 2)
                         // Accessibility
                         .accessibilityLabel("Camera")
                         .accessibilityHint("Tap to capture a new tree scan")
@@ -347,12 +384,12 @@ struct DashBoardView: View {
                             VStack(spacing: 12) {
                                 ZStack {
                                     Circle()
-                                        .fill(.ultraThinMaterial)
+                                        .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                         .overlay(
                                             Circle()
                                                 .stroke(
                                                     LinearGradient(
-                                                        colors: [.white.opacity(0.8), .clear],
+                                                        colors: [Color.primary.opacity(0.3), Color.clear],
                                                         startPoint: .topLeading,
                                                         endPoint: .bottomTrailing
                                                     ),
@@ -375,12 +412,12 @@ struct DashBoardView: View {
                             .frame(width: 175, height: 150)
                             .background(
                                 RoundedRectangle(cornerRadius: 20)
-                                    .fill(.ultraThinMaterial)
+                                    .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 20)
                                             .stroke(
                                                 LinearGradient(
-                                                    colors: [.white.opacity(0.8), .clear],
+                                                    colors: [Color.primary.opacity(0.3), Color.clear],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
                                                 ),
@@ -392,15 +429,15 @@ struct DashBoardView: View {
                                 RoundedRectangle(cornerRadius: 20)
                                     .fill(
                                         LinearGradient(
-                                            colors: [.purple.opacity(0.25), .purple.opacity(0.15)],
+                                            colors: [Color.purple.opacity(colorScheme == .dark ? 0.15 : 0.25), Color.purple.opacity(colorScheme == .dark ? 0.1 : 0.15)],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
                                         )
                                     )
                             )
                         }
-                        .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                        .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+                        .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
+                        .shadow(color: lightShadowColor, radius: 3, x: 0, y: 2)
                         // Accessibility
                         .accessibilityLabel("Guide or Help")
                         .accessibilityHint("Tap to read instructions or get help")
@@ -430,10 +467,6 @@ struct DashBoardView: View {
                         Text("\(Num_Projects)")
                             .font(.title.bold())
                             .foregroundColor(.green)
-                        
-                        //                    Text(userProfileId)
-                        //                        .font(.caption.bold())
-                        //                        .foregroundColor(.green)
                     }
                     
                 }
@@ -441,12 +474,12 @@ struct DashBoardView: View {
                 .frame(width: 350, height: 100)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .fill(.ultraThinMaterial)
+                        .fill(colorScheme == .dark ? .thinMaterial : .ultraThinMaterial)
                         .overlay(
                             RoundedRectangle(cornerRadius: 20)
                                 .stroke(
                                     LinearGradient(
-                                        colors: [.white.opacity(0.8), .clear],
+                                        colors: [Color.primary.opacity(0.3), Color.clear],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     ),
@@ -458,14 +491,14 @@ struct DashBoardView: View {
                     RoundedRectangle(cornerRadius: 20)
                         .fill(
                             LinearGradient(
-                                colors: [Color(hex: "#4CAF50").opacity(0.2), Color(hex: "#6b96db").opacity(0.15)],
+                                colors: cardAccentGradient,
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
                 )
-                .shadow(color: .black.opacity(0.1), radius: 10, x: 0, y: 5)
-                .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
+                .shadow(color: shadowColor, radius: 10, x: 0, y: 5)
+                .shadow(color: lightShadowColor, radius: 3, x: 0, y: 2)
                 // Accessibility: group these two for VoiceOver
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel(
@@ -474,7 +507,7 @@ struct DashBoardView: View {
                 )
                 .accessibilityHint("Statistics about your scans and projects")
             }
-            .background(Color(hex: "#F9FAFB"))
+            .background(Color(.systemBackground))
             .task {
                 await loadCounts(tables: "scans")
                 await loadCounts(tables: "projects")
