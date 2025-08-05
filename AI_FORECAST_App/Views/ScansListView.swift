@@ -11,9 +11,51 @@ struct ScansListView: View {
     @Binding var authState: AuthState
     let projectID: String
     @StateObject private var viewModel = ScansViewModel()
+    @State private var showSuccessNotification = false
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
+            // Success notification card
+            if showSuccessNotification {
+                VStack {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.white)
+                            .font(.title2)
+                        
+                        Text("Scan successfully deleted!")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.green.opacity(0.9), Color.green.opacity(0.7)]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .shadow(color: Color.green.opacity(0.4), radius: 8, x: 0, y: 4)
+                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                    
+                    Spacer()
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .zIndex(1)
+            }
+            
             List(viewModel.scans) { scan in
                 NavigationLink {
                     TreeDetailView(
@@ -75,6 +117,14 @@ struct ScansListView: View {
             .accessibilityHint("Tap to open the camera and capture a new scan")
         }
         .accessibilityIdentifier("scansListView")
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ScanDeletedSuccessfully"))) { _ in
+            showSuccessNotification = true
+            
+            // Hide notification after 2 seconds
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                showSuccessNotification = false
+            }
+        }
             
     }
 }

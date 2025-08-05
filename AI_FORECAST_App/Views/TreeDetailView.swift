@@ -18,6 +18,7 @@ struct TreeDetailView: View {
     
     @Binding var authState: AuthState
     @EnvironmentObject var sessionManager: SessionManager
+    @Environment(\.dismiss) private var dismiss
     
     @State private var selectedSpecies: String = ""
 
@@ -26,7 +27,6 @@ struct TreeDetailView: View {
     @State private var showDeleteConfirmation = false
     @State private var isDeleting = false
     @State private var alertMessage = ""
-    @State private var showSuccessNotification = false
 
     var body: some View {
         ZStack {
@@ -197,47 +197,6 @@ struct TreeDetailView: View {
             }
             .navigationTitle("Scan Details")
             .accessibilityIdentifier("treeDetailView")
-            
-            // Success notification card
-            if showSuccessNotification {
-                VStack {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.white)
-                            .font(.title2)
-                        
-                        Text("Scan successfully deleted!")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 16)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.green.opacity(0.9), Color.green.opacity(0.7)]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-                    .shadow(color: Color.green.opacity(0.4), radius: 8, x: 0, y: 4)
-                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    
-                    Spacer()
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-                .zIndex(1)
-            }
         }
     }
     
@@ -255,15 +214,20 @@ struct TreeDetailView: View {
                 
                 print("Scan deleted successfully: \(scanId)")
                 
-                // Show success notification and navigate back to ScansList
+                // Pop back immediately, then show notification on ScansListView
                 await MainActor.run {
                     isDeleting = false
-                    showSuccessNotification = true
                     
-                    // Hide notification after 2 seconds and navigate
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        showSuccessNotification = false
-                        authState = .ScansList
+                    // Pop back immediately
+                    dismiss()
+                    
+                    // Show notification on ScansListView after a brief delay
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        // We'll need to trigger this from ScansListView
+                        NotificationCenter.default.post(
+                            name: NSNotification.Name("ScanDeletedSuccessfully"),
+                            object: nil
+                        )
                     }
                 }
                 
