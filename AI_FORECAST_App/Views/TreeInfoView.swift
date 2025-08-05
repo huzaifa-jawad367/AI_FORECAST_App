@@ -243,6 +243,9 @@ struct ScanResultView: View {
                                     let finalProjectId = projectId ?? selectedProjectId!
                                     
                                     SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: finalProjectId, user_id: profile.id, biomass_estimation: Bestimation)
+                                    
+                                    // Navigate to dashboard after saving
+                                    authState = .Dashboard
                                 } catch {
                                     print("Error fetch profile: \(error.localizedDescription)")
                                     viewModel.isSignedIn = false
@@ -252,11 +255,27 @@ struct ScanResultView: View {
                         }
                     }) {
                         Text("Save")
+                            .font(.headline)
+                            .fontWeight(.semibold)
                             .foregroundColor(.white)
-                            .padding()
-                            .frame(width: 200)
-                            .background(Color.blue)
-                            .cornerRadius(20)
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 32)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color.blue.opacity(0.8), Color.blue.opacity(0.6)]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .shadow(color: Color.blue.opacity(0.4), radius: 8, x: 0, y: 4)
+                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
                     }
                     .accessibilityLabel("Save")
                     .accessibilityHint("Tap to save this scan record after selecting a species")
@@ -267,48 +286,41 @@ struct ScanResultView: View {
                             dismissButton: .default(Text("OK"))
                         )
                     }
+                    .padding(.horizontal)
                     
                     Spacer()
                     
-                    // Navigation buttons at the bottom
-                    HStack(spacing: 30) {
-                        Button(action: {
-                            // Navigation back to dashboard
-                            authState = .Dashboard
-                        }) {
-                            Text("Dashboard")
-                                .foregroundColor(.white)
-                                .padding()
-                            //                        .frame(maxWidth: .infinity)
-                                .background(Color.blue)
-                                .cornerRadius(10)
-                        }
-                        .accessibilityLabel("Dashboard")
-                        .accessibilityHint("Tap to return to the dashboard")
-                        
-                        Button(action: {
-                            // If species is not selected, show alert
-                            if selectedSpecies.isEmpty {
-                                showAlert = true
-                            } else {
-                                // Show the biomass estimation number/ entry
-                                authState = .scanPage
-                                
-                            }
-                        }) {
-                            Text("Continue Scan")
-                                .foregroundColor(.white)
-                                .padding()
-                            //                        .frame(maxWidth: .infinity)
-                                .background(Color.green)
-                                .cornerRadius(10)
-                        }
-                        .accessibilityLabel("Continue Scan")
-                        .accessibilityHint("Tap to continue scanning")
+                    // Dashboard button at the bottom
+                    Button(action: {
+                        // Navigation back to dashboard
+                        authState = .Dashboard
+                    }) {
+                        Text("Dashboard")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .padding(.horizontal, 32)
+                            .frame(maxWidth: .infinity)
+                            .background(
+                                LinearGradient(
+                                    gradient: Gradient(colors: [Color.orange.opacity(0.8), Color.orange.opacity(0.6)]),
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .shadow(color: Color.orange.opacity(0.4), radius: 8, x: 0, y: 4)
+                            .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
                     }
+                    .accessibilityLabel("Dashboard")
+                    .accessibilityHint("Tap to return to the dashboard")
                     .padding([.horizontal, .bottom])
-                    .accessibilityElement(children: .contain)
-                    .accessibilityLabel("Navigation options: Dashboard and Continue Scan")
                     .alert(isPresented: $showAlert) {
                         Alert(
                             title: Text("Species Not Selected"),
