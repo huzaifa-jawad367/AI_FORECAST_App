@@ -14,6 +14,7 @@ struct TreeDetailView: View {
     var timestamp: String
     var species: String
     var biomass_estimation: Float
+    let scanId: String // Add scan ID for deletion
     
     @Binding var authState: AuthState
     @EnvironmentObject var sessionManager: SessionManager
@@ -22,6 +23,9 @@ struct TreeDetailView: View {
 
     // Toggle for alert
     @State private var showAlert = false
+    @State private var showDeleteConfirmation = false
+    @State private var isDeleting = false
+    @State private var alertMessage = ""
 
     var body: some View {
         VStack {
@@ -128,38 +132,60 @@ struct TreeDetailView: View {
             
             // Navigation buttons at the bottom
             Button(action: {
+                // Haptic feedback for button press
+                let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+                impactFeedback.impactOccurred()
                 
+                showDeleteConfirmation = true
             }) {
-                Text("Delete")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 16)
-                    .padding(.horizontal, 32)
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.red.opacity(0.8), Color.red.opacity(0.6)]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                HStack {
+                    if isDeleting {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .scaleEffect(0.8)
+                    }
+                    Text(isDeleting ? "Deleting..." : "Delete")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.white)
+                }
+                .padding(.vertical, 16)
+                .padding(.horizontal, 32)
+                .frame(maxWidth: .infinity)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.red.opacity(0.8), Color.red.opacity(0.6)]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
                     )
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                    .shadow(color: Color.orange.opacity(0.4), radius: 8, x: 0, y: 4)
-                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
+                )
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                )
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .shadow(color: Color.red.opacity(0.4), radius: 8, x: 0, y: 4)
+                .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
             }
-            .accessibilityLabel("Dashboard")
-            .accessibilityHint("Tap to return to the dashboard")
+            .disabled(isDeleting)
+            .accessibilityLabel("Delete Scan")
+            .accessibilityHint("Tap to delete this scan")
             .padding([.horizontal, .bottom])
+            .alert("Delete Scan", isPresented: $showDeleteConfirmation) {
+                Button("Cancel", role: .cancel) {
+                    // Do nothing, just dismiss
+                }
+                Button("Delete", role: .destructive) {
+                    deleteScan()
+                }
+            } message: {
+                Text("Are you sure you want to delete this scan? This action cannot be undone.")
+            }
             .alert(isPresented: $showAlert) {
                 Alert(
-                    title: Text("Species Not Selected"),
-                    message: Text("Please select the tree species before proceeding."),
+                    title: Text("Error"),
+                    message: Text(alertMessage.isEmpty ? "An error occurred while deleting the scan." : alertMessage),
                     dismissButton: .default(Text("OK"))
                 )
             }
@@ -169,6 +195,38 @@ struct TreeDetailView: View {
         }
         .navigationTitle("Scan Details")
         .accessibilityIdentifier("treeDetailView")
+    }
+    
+    private func deleteScan() {
+        isDeleting = true
+        
+        Task {
+            do {
+                // Delete the scan from Supabase
+                try await client.database
+                    .from("scans")
+                    .delete()
+                    .eq("id", value: scanId)
+                    .execute()
+                
+                print("Scan deleted successfully: \(scanId)")
+                
+                // Navigate back to ScansList
+                await MainActor.run {
+                    isDeleting = false
+                    authState = .ScansList
+                }
+                
+            } catch {
+                print("Error deleting scan: \(error.localizedDescription)")
+                
+                await MainActor.run {
+                    isDeleting = false
+                    alertMessage = "Failed to delete scan: \(error.localizedDescription)"
+                    showAlert = true
+                }
+            }
+        }
     }
 }
 
@@ -182,6 +240,7 @@ struct TreeDetailView_Previews: PreviewProvider {
             timestamp: DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short),
             species: "Pine",
             biomass_estimation: 35.9,
+            scanId: "preview-scan-id",
             authState: .constant(.ScanResultView)
         )
     }
