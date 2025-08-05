@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SignInView: View {
 
@@ -21,6 +22,7 @@ struct SignInView: View {
     @State private var showingErrorAlert = false
     @State private var errorMessage = ""
     @State private var isShowingPasswordReset = false
+    @State private var isLoading = false
     
     var body: some View {
         
@@ -64,13 +66,21 @@ struct SignInView: View {
                         signIn()
 //                        authState = .Dashboard
                     }) {
-                        Text("Sign In")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(width: 200, height: 50)
-                            .background(Color.blue)
-                            .cornerRadius(10)
+                        HStack {
+                            if isLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .scaleEffect(0.8)
+                            }
+                            Text(isLoading ? "Signing In..." : "Sign In")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                        }
+                        .frame(width: 200, height: 50)
+                        .background(isLoading ? Color.gray : Color.blue)
+                        .cornerRadius(10)
                     }
+                    .disabled(isLoading)
                     .accessibilityLabel("Sign In")
                     .accessibilityHint("Tap to sign in using your email and password")
                     
@@ -166,13 +176,16 @@ struct SignInView: View {
                 Spacer()
             }
             .padding()
-            .alert(isPresented: $showingErrorAlert) {
-                Alert(
-                    title: Text("Login Failed"),
-                    message: Text(errorMessage),
-                    dismissButton: .default(Text("OK"))
-                )
-            }
+                            .alert(isPresented: $showingErrorAlert) {
+                    Alert(
+                        title: Text("Login Failed"),
+                        message: Text(errorMessage),
+                        dismissButton: .default(Text("OK"))
+                    )
+                }
+                .onTapGesture {
+                    hideKeyboard()
+                }
         }
         .sheet(isPresented: $isShowingPasswordReset) {
             ResetPasswordView()
@@ -196,6 +209,12 @@ struct SignInView: View {
             return
         }
         
+        isLoading = true
+        
+        // Haptic feedback for button press
+        let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+        impactFeedback.impactOccurred()
+        
     //  Perform the sign up using a Task to allow async/await calls
         Task {
             do {
@@ -205,14 +224,29 @@ struct SignInView: View {
                     sessionManager: sessionManager
                 )
                 // If successful, set `isSignedUp = true` or navigate to another screen, etc.
-                isSignedIn = true
-                authState = .Dashboard
+                await MainActor.run {
+                    isSignedIn = true
+                    authState = .Dashboard
+                }
             } catch {
-                print("Sign in failed: \(error.localizedDescription)")
-                errorMessage = "Incorrect email or password. Please try again."
-                showingErrorAlert = true
-                // Handle error (show alert, etc.)
-                print("Sign in failed: \(error.localizedDescription)")
+                await MainActor.run {
+                    print("Sign in failed: \(error.localizedDescription)")
+                    
+                    // More specific error messages
+                    if error.localizedDescription.contains("Invalid login credentials") {
+                        errorMessage = "Incorrect email or password. Please try again."
+                    } else if error.localizedDescription.contains("network") {
+                        errorMessage = "Network error. Please check your connection and try again."
+                    } else {
+                        errorMessage = "Sign in failed. Please try again."
+                    }
+                    
+                    showingErrorAlert = true
+                }
+            }
+            
+            await MainActor.run {
+                isLoading = false
             }
         }
     }
