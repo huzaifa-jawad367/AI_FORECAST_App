@@ -28,7 +28,13 @@ struct ProjectCardView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.green)
+        .background(
+           LinearGradient(
+               colors: [Color.green.opacity(0.8), Color.blue.opacity(0.8)],
+               startPoint: .topLeading,
+               endPoint: .bottomTrailing
+           )
+        )
         .cornerRadius(12)
         .shadow(radius: 4)
         .padding()
