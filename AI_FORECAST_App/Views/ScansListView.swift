@@ -24,7 +24,7 @@ struct ScansListView: View {
                         timestamp: scan.scan_time,
                         species: scan.species,
                         biomass_estimation: scan.biomass_estimation ?? -1.0,
-                        authState: .constant(.ScanResultView)
+                        authState: $authState
                     )
                 } label: {
                     //                List(viewModel.scans) { scan in
