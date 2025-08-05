@@ -86,7 +86,7 @@ struct BiomassGuideView: View {
                 
                 VStack(alignment: .leading, spacing: 10) {
                     GuideStepView(stepNumber: "1", title: "Mark a Reference Point", description: "Stand near the tree and place a reference marker at the base to align measurements.")
-                    GuideStepView(stepNumber: "2", title: "Mark the Bottom", description: "Move back and use the camera to mark the bottom of the tree.")
+                    GuideStepView(stepNumber: "2", title: "Mark the Bottom", description: "Move back approximately 4.0 meters and use the camera to mark the bottom of the tree.")
                     GuideStepView(stepNumber: "3", title: "Mark the Top", description: "Point the camera to the top of the tree and mark it to get the height calculation.")
                 }
                 
@@ -98,10 +98,16 @@ struct BiomassGuideView: View {
                     .fontWeight(.semibold)
                     .accessibilityAddTraits(.isHeader)
                 
-                VStack(alignment: .leading, spacing: 10) {
-                    GuideStepView(stepNumber: "1", title: "Position Yourself", description: "Stand near the tree and align your camera at 1.3 meters (4.5 feet) above ground.")
-                    GuideStepView(stepNumber: "2", title: "Mark Both Sides", description: "Move back and mark both edges of the tree trunk to measure its diameter.")
-                }
+                Text("Currently, you need to manually input the diameter measurement. Use a measuring tape or caliper to measure the tree's diameter at breast height (1.3 meters or 4.5 feet above ground) and enter the value in centimeters.")
+                    .font(.body)
+                    .foregroundColor(.secondary)
+                    .accessibilityLabel("Currently, manually input the diameter measurement using a measuring tape or caliper at 1.3 meters above ground and enter in centimeters.")
+                
+                Text("(Future versions of the app will include diameter at breast height measurement with AR capabilities)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .italic()
+                    .accessibilityLabel("Future versions will include AR capabilities for diameter measurement")
                 
                 Divider()
                 
