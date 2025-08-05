@@ -64,19 +64,22 @@ class SessionManager: ObservableObject {
     }
 
     // Temporarily disabled due to syntax issues with authStateChanges
-    // func setupAuthListener() {
-    //     Task {
-    //         for await (event, session) in supabaseClient.auth.authStateChanges {
-    //             await MainActor.run {
-    //                 if let session = session {
-    //                     self.user = session.user
-    //                     self.authState = .Dashboard
-    //                 } else {
-    //                     self.user = nil
-    //                     self.authState = .signIn
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+    func setupAuthListener() {
+        Task {
+            // await the AsyncStream itself
+            let stream = await supabaseClient.auth.authStateChanges
+
+            for await (event, session) in stream {
+                await MainActor.run {
+                    if let session = session {
+                        self.user = session.user
+                        self.authState = .Dashboard
+                    } else {
+                        self.user = nil
+                        self.authState = .signIn
+                    }
+                }
+            }
+        }
+    }
 }
