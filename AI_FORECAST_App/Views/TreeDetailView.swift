@@ -127,55 +127,44 @@ struct TreeDetailView: View {
             Spacer()
             
             // Navigation buttons at the bottom
-            // Button(action: {
-            //     // Navigation back to dashboard
-            //     print("Dashboard button pressed - changing authState to Dashboard")
-            //     print("Before change - authState: \(authState)")
-            //     authState = .Dashboard
-            //     sessionManager.authState = .Dashboard
-            //     print("After change - authState: \(authState)")
-            //     print("SessionManager authState: \(sessionManager.authState)")
+            Button(action: {
                 
-            //     // Also check SessionManager state
-            //     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            //         print("SessionManager authState after delay: \(sessionManager.authState)")
-            //     }
-            // }) {
-            //     Text("Dashboard")
-            //         .font(.headline)
-            //         .fontWeight(.semibold)
-            //         .foregroundColor(.white)
-            //         .padding(.vertical, 16)
-            //         .padding(.horizontal, 32)
-            //         .frame(maxWidth: .infinity)
-            //         .background(
-            //             LinearGradient(
-            //                 gradient: Gradient(colors: [Color.orange.opacity(0.8), Color.orange.opacity(0.6)]),
-            //                 startPoint: .topLeading,
-            //                 endPoint: .bottomTrailing
-            //             )
-            //         )
-            //         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
-            //         .overlay(
-            //             RoundedRectangle(cornerRadius: 20)
-            //                 .stroke(Color.white.opacity(0.3), lineWidth: 1)
-            //         )
-            //         .clipShape(RoundedRectangle(cornerRadius: 20))
-            //         .shadow(color: Color.orange.opacity(0.4), radius: 8, x: 0, y: 4)
-            //         .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
-            // }
-            // .accessibilityLabel("Dashboard")
-            // .accessibilityHint("Tap to return to the dashboard")
-            // .padding([.horizontal, .bottom])
-            // .alert(isPresented: $showAlert) {
-            //     Alert(
-            //         title: Text("Species Not Selected"),
-            //         message: Text("Please select the tree species before proceeding."),
-            //         dismissButton: .default(Text("OK"))
-            //     )
-            // }
-            // .padding(.horizontal, 35)
-            // .padding(.bottom)
+            }) {
+                Text("Delete")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 32)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color.red.opacity(0.8), Color.red.opacity(0.6)]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.white.opacity(0.3), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .shadow(color: Color.orange.opacity(0.4), radius: 8, x: 0, y: 4)
+                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 2)
+            }
+            .accessibilityLabel("Dashboard")
+            .accessibilityHint("Tap to return to the dashboard")
+            .padding([.horizontal, .bottom])
+            .alert(isPresented: $showAlert) {
+                Alert(
+                    title: Text("Species Not Selected"),
+                    message: Text("Please select the tree species before proceeding."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+            .padding(.horizontal, 35)
+            .padding(.bottom)
             
         }
         .navigationTitle("Scan Details")
