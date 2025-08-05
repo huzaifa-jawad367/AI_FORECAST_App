@@ -22,9 +22,13 @@ class SessionManager: ObservableObject {
         user != nil
     }
     
-    // Provide a reference to your Supabase client if you’d like
+    // Provide a reference to your Supabase client if you'd like
     // or you can keep it private.
     let supabaseClient: SupabaseClient = client
+    
+    init() {
+        // setupAuthListener() // Temporarily disabled due to syntax issues
+    }
     
     // Sign out:
 //    func signOut() async throws {
@@ -43,4 +47,36 @@ class SessionManager: ObservableObject {
         user = nil
         authState = .signIn
     }
+
+    func restoreSession() async {
+        do {
+            let session = try await supabaseClient.auth.session
+            await MainActor.run {
+                user = session.user
+                authState = .Dashboard
+            }
+        } catch {
+            await MainActor.run {
+                user = nil
+                authState = .signIn
+            }
+        }
+    }
+
+    // Temporarily disabled due to syntax issues with authStateChanges
+    // func setupAuthListener() {
+    //     Task {
+    //         for await (event, session) in supabaseClient.auth.authStateChanges {
+    //             await MainActor.run {
+    //                 if let session = session {
+    //                     self.user = session.user
+    //                     self.authState = .Dashboard
+    //                 } else {
+    //                     self.user = nil
+    //                     self.authState = .signIn
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 }

@@ -57,10 +57,17 @@ struct ContentView: View {
         }
         .environmentObject(sessionManager)
         .onAppear {
-            // Display splash screen for 2 seconds, then switch to the Sign In view
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                withAnimation {
-                    showSplash = false
+            // First, try to restore the session
+            Task {
+                await sessionManager.restoreSession()
+                
+                // After session restoration, hide splash screen
+                await MainActor.run {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                        withAnimation {
+                            showSplash = false
+                        }
+                    }
                 }
             }
         }
