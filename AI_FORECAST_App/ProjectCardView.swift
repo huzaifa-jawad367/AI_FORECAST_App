@@ -87,7 +87,7 @@ struct ProjectCardView: View {
                 try await client.database
                     .from("projects")
                     .delete()
-                    .eq("project_id", value: project.project_id)
+                    .eq("id", value: project.project_id)
                     .execute()
                 
                 print("Project deleted successfully: \(project.project_id)")
