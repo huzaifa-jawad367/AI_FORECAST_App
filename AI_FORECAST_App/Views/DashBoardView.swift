@@ -106,7 +106,7 @@ struct DashBoardView: View {
                 
                 
                 Button {
-                    authState = .ScanResultView
+                    // authState = .ScanResultView  // Temporarily disabled
                 } label: {
                     ZStack {
                         // Enhanced glassmorphism with dynamic colors
@@ -157,11 +157,12 @@ struct DashBoardView: View {
                     }
                     .frame(width: 350, height: 170)
                 }
+                .disabled(true)  // Make button unclickable
                 .shadow(color: shadowColor, radius: 15, x: 0, y: 8)
                 .shadow(color: lightShadowColor, radius: 5, x: 0, y: 2)
                 // Accessibility
-                .accessibilityLabel("AI-ForCaST button")
-                .accessibilityHint("Tap to open the AI-ForCaST Projects list")
+                .accessibilityLabel("AI-ForCaST button (Disabled)")
+                .accessibilityHint("This feature is temporarily unavailable")
                 .accessibilityAddTraits(.isButton)
                 
                 
