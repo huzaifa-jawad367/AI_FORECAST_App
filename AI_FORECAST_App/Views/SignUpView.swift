@@ -156,43 +156,43 @@ struct SignUpView: View {
 //                    .accessibilityLabel("Sign Up with Apple")
 //                    .accessibilityHint("Tap to sign up using your Apple account")
                     
-                    // -- OR Sign Up with Google --
-                    Button(action: {
+                    // // -- OR Sign Up with Google --
+                    // Button(action: {
                             
-                    }) {
-                        HStack {
-                            Image("google-icon") // your custom google icon
-                                .resizable()
-                                .frame(width: 20, height: 20)
-                            Text("Sign Up with Google")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(width: 300, height: 50)
-                        .background(Color.red)
-                        .cornerRadius(30)
-                    }
-                    .accessibilityLabel("Sign Up with Google")
-                    .accessibilityHint("Tap to sign up using your Google account")
+                    // }) {
+                    //     HStack {
+                    //         Image("google-icon") // your custom google icon
+                    //             .resizable()
+                    //             .frame(width: 20, height: 20)
+                    //         Text("Sign Up with Google")
+                    //     }
+                    //     .font(.headline)
+                    //     .foregroundColor(.white)
+                    //     .frame(width: 300, height: 50)
+                    //     .background(Color.red)
+                    //     .cornerRadius(30)
+                    // }
+                    // .accessibilityLabel("Sign Up with Google")
+                    // .accessibilityHint("Tap to sign up using your Google account")
                     
-                    // -- OR Sign Up with Facebook --
-                    Button(action: {
+                    // // -- OR Sign Up with Facebook --
+                    // Button(action: {
                         
-                    }) {
-                        HStack {
-                            Image("facebook-icon") // your custom facebook icon
-                                .resizable()
-                                .frame(width: 30, height: 20)
-                            Text("Sign Up with Facebook")
-                        }
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .frame(width: 300, height: 50)
-                        .background(Color.blue)
-                        .cornerRadius(30)
-                    }
-                    .accessibilityLabel("Sign Up with Facebook")
-                    .accessibilityHint("Tap to sign up using your Facebook account")
+                    // }) {
+                    //     HStack {
+                    //         Image("facebook-icon") // your custom facebook icon
+                    //             .resizable()
+                    //             .frame(width: 30, height: 20)
+                    //         Text("Sign Up with Facebook")
+                    //     }
+                    //     .font(.headline)
+                    //     .foregroundColor(.white)
+                    //     .frame(width: 300, height: 50)
+                    //     .background(Color.blue)
+                    //     .cornerRadius(30)
+                    // }
+                    // .accessibilityLabel("Sign Up with Facebook")
+                    // .accessibilityHint("Tap to sign up using your Facebook account")
                     
                 }
                 .padding()
