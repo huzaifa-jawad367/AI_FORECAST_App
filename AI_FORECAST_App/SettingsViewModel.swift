@@ -42,7 +42,7 @@ class SettingsViewModel: ObservableObject {
     func logOut() {
         Task {
             do {
-                try await supabaseClient.auth.signOut()
+                try await sessionManager.signOut()
                 currentUser = nil
                 isSignedIn = false
             } catch {

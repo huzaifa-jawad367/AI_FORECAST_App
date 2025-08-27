@@ -99,16 +99,84 @@ class SessionManagerTests: XCTestCase {
     
     // MARK: - Thread Safety Tests
     
-    func testMainActorUpdates() async {
-        // Given: SessionManager
+    func testMainActorUpdates() {
+        // Given: SessionManager is on main actor
         
         // When: Updating published properties
-        await MainActor.run {
-            sessionManager.authState = .Dashboard
-        }
+        sessionManager.authState = .Dashboard
         
-        // Then: Should update without warnings
+        // Then: Should not crash
         XCTAssertEqual(sessionManager.authState, .Dashboard)
+    }
+    
+    // MARK: - Keychain Integration Tests
+    
+    func testKeychainSessionStorage() {
+        // Given: SessionManager with Keychain integration
+        
+        // When: Checking if we can work offline
+        let canWorkOffline = sessionManager.canWorkOffline()
+        
+        // Then: Should return appropriate value based on stored session
+        // This will be false initially since no session is stored
+        XCTAssertFalse(canWorkOffline)
+    }
+    
+    func testHasValidStoredSession() {
+        // Given: SessionManager with Keychain integration
+        
+        // When: Checking for valid stored session
+        let hasValidSession = sessionManager.hasValidStoredSession()
+        
+        // Then: Should return false initially (no stored session)
+        XCTAssertFalse(hasValidSession)
+    }
+    
+    func testOfflineStatusMessage() {
+        // Given: SessionManager in online mode
+        
+        // When: Getting offline status message
+        let message = sessionManager.getOfflineStatusMessage()
+        
+        // Then: Should indicate connected status
+        XCTAssertEqual(message, "Connected to server")
+        
+        // When: Setting offline mode
+        sessionManager.isOffline = true
+        
+        // Then: Should indicate offline status
+        XCTAssertEqual(sessionManager.getOfflineStatusMessage(), "Working offline - some features may be limited")
+    }
+    
+    func testTokenStatusCheck() {
+        // Given: SessionManager with no session
+        
+        // When: Checking token status
+        let status = sessionManager.checkTokenStatus()
+        
+        // Then: Should indicate no valid session
+        XCTAssertTrue(status.isExpired)
+        XCTAssertFalse(status.canRefresh)
+    }
+    
+    func testManualTokenRefresh() async {
+        // Given: SessionManager
+        
+        // When: Manually triggering token refresh
+        await sessionManager.manualTokenRefresh()
+        
+        // Then: Should not crash (even with no session)
+        // This is more of an integration test to ensure the method works
+    }
+    
+    func testCanWorkOffline() {
+        // Given: SessionManager with no stored session
+        
+        // When: Checking if can work offline
+        let canWorkOffline = sessionManager.canWorkOffline()
+        
+        // Then: Should return false initially
+        XCTAssertFalse(canWorkOffline)
     }
     
     // MARK: - Error Handling Tests

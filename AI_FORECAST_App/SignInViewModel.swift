@@ -107,9 +107,15 @@ class SignInViewModel: ObservableObject {
                 password: password
             )
             
+            // Get the current session after sign in
+            let session = try await supabaseClient.auth.session
+            
+            // Store the session in Keychain for offline persistence
+            sessionManager.storeSession(session)
+            
             // Update the session manager
             sessionManager.user = result.user
-            // sessionManager.session = result.session
+            sessionManager.session = session
             print("Sign in successful. User ID: \(result.user.id)")
             
         } catch {

@@ -29,6 +29,7 @@
 		607254BD2CAD3DEA00F15EAE /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BC2CAD3DEA00F15EAE /* AuthState.swift */; };
 		607254BF2CAD4FCD00F15EAE /* SignInViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */; };
 		6073B0BF2DFBFAB9007CC7DA /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6073B0BE2DFBFAB9007CC7DA /* StoreKit.framework */; };
+		607A39162E5F2832004793E6 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607A39152E5F2827004793E6 /* KeychainManager.swift */; };
 		60862CD32E1D1A3600A85291 /* NewPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60862CD22E1D1A3600A85291 /* NewPasswordView.swift */; };
 		6088572C2D7937410063F99E /* GuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6088572B2D7937370063F99E /* GuideView.swift */; };
 		609B5E802D6DF00A00B7864D /* UserRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */; };
@@ -100,6 +101,7 @@
 		607254BC2CAD3DEA00F15EAE /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		607254BE2CAD4FCD00F15EAE /* SignInViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewModel.swift; sourceTree = "<group>"; };
 		6073B0BE2DFBFAB9007CC7DA /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		607A39152E5F2827004793E6 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		60862CD22E1D1A3600A85291 /* NewPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPasswordView.swift; sourceTree = "<group>"; };
 		6088572B2D7937370063F99E /* GuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuideView.swift; sourceTree = "<group>"; };
 		609B5E7F2D6DEFFB00B7864D /* UserRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRecord.swift; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 		60C56BF22C982FE700810952 /* AI_FORECAST_App */ = {
 			isa = PBXGroup;
 			children = (
+				607A39152E5F2827004793E6 /* KeychainManager.swift */,
 				60F19C3A2E3759D000EC0951 /* LocationManager.swift */,
 				60E618A42D7F5C4D005DE53A /* LaunchScreen.storyboard */,
 				60E618A82D7F6E6A005DE53A /* AI-FORECAST-App-Info.plist */,
@@ -459,6 +462,7 @@
 				603A8BE82D692F2200CF595A /* ScanCardView.swift in Sources */,
 				609B5E822D6E060000B7864D /* AlertItem.swift in Sources */,
 				60C2C51A2CB6B52E00C0BA3F /* CustomARViewRepresentable.swift in Sources */,
+				607A39162E5F2832004793E6 /* KeychainManager.swift in Sources */,
 				606EB43F2D639C0F0048EF5C /* TreeInfoView.swift in Sources */,
 				606E9C222D702F1400998468 /* TreeDetailView.swift in Sources */,
 				603A8BE62D67632800CF595A /* ScanRecord.swift in Sources */,
