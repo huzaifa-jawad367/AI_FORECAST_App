@@ -13,7 +13,7 @@ class SettingsViewModel: ObservableObject {
     @Published var currentUser: UserRecord? = nil
     @Published var isSignedIn: Bool = false
     
-    @EnvironmentObject var sessionManager: SessionManager
+    // @EnvironmentObject var sessionManager: SessionManager
         
     // We'll rely on the session manager's supabaseClient or create our own
     private let supabaseClient = client
@@ -39,7 +39,7 @@ class SettingsViewModel: ObservableObject {
         
     }
     
-    func logOut() {
+    func logOut(sessionManager: SessionManager) {
         Task {
             do {
                 try await sessionManager.signOut()

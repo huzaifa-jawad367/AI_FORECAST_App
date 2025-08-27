@@ -15,100 +15,79 @@ struct SettingsView: View {
 
     var body: some View {
         VStack {
-            if viewModel.isSignedIn, let user = viewModel.currentUser {
-                List {
-                    // --- User Info Section ---
-                    Section {
-                        HStack(spacing: 16) {
-                            AsyncImage(url: URL(string: user.profile_picture_url ?? "")) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            } placeholder: {
-                                // Placeholder if no profile pic is available
-                                Circle()
-                                    .fill(Color.gray.opacity(0.3))
-                                    .overlay(Text("No Image"))
-                            }
-                            .frame(width: 60, height: 60)
-                            .clipShape(Circle())
-                            
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(user.username)
-                                    .font(.headline)
-                                Text(sessionManager.user?.email ?? "No email provided")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
+            List {
+                // --- User Info Section ---
+                Section {
+                    HStack(spacing: 16) {
+                        AsyncImage(url: URL(string: viewModel.currentUser?.profile_picture_url ?? "")) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } placeholder: {
+                            // Placeholder if no profile pic is available
+                            Circle()
+                                .fill(Color.gray.opacity(0.3))
+                                .overlay(Text("No Image"))
                         }
-                        .padding(.vertical, 4)
-                        // Group the user info for accessibility
-                        .accessibilityElement(children: .combine)
-                        .accessibilityLabel("User Information")
-                        .accessibilityValue("\(user.username), email: \(sessionManager.user?.email ?? "No email provided")")
-                    }
-                    
-                    // --- Edit Profile Section ---
-                    Section {
-                        NavigationLink("Edit Profile", destination: EditProfileView())
-                            .accessibilityLabel("Edit Profile")
-                            .accessibilityHint("Tap to edit your profile information")
-                    }
-                    
-                    // --- Account Actions Section ---
-                    Section {
-                        Button("Log Out") {
-                            viewModel.logOut()
-                        }
-                        .accessibilityLabel("Log Out")
-                        .accessibilityHint("Tap to log out from your account")
+                        .frame(width: 60, height: 60)
+                        .clipShape(Circle())
                         
-                        Button("Delete Account", role: .destructive) {
-                            
-                            Task {
-                                await viewModel.deleteAccount()
-                            }
-                            
-                            authState = .signIn
-                            
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(viewModel.currentUser?.username ?? "Loading...")
+                                .font(.headline)
+                            Text(sessionManager.user?.email ?? "No email provided")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
                         }
-                        .accessibilityLabel("Delete Account")
-                        .accessibilityHint("Tap to permanently delete your account")
                     }
+                    .padding(.vertical, 4)
+                    // Group the user info for accessibility
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("User Information")
+                    .accessibilityValue("\(viewModel.currentUser?.username ?? "Loading..."), email: \(sessionManager.user?.email ?? "No email provided")")
                 }
-                .listStyle(InsetGroupedListStyle())
-            } else {
-                // If not signed in, show a fallback view
-                VStack(spacing: 20) {
-                    Text("You are not signed in.")
-                        .font(.title3)
-                        .foregroundColor(.gray)
-                        // Accessibility
-                        .accessibilityLabel("Not signed in")
-                        .accessibilityHint("Please sign in to access your settings")
+                
+                // --- Edit Profile Section ---
+                Section {
+                    NavigationLink("Edit Profile", destination: EditProfileView())
+                        .accessibilityLabel("Edit Profile")
+                        .accessibilityHint("Tap to edit your profile information")
+                }
+                
+                // --- Account Actions Section ---
+                Section {
+                    Button("Log Out") {
+                        // viewModel.logOut()
+                        viewModel.logOut(sessionManager: sessionManager)
+                    }
+                    .accessibilityLabel("Log Out")
+                    .accessibilityHint("Tap to log out from your account")
                     
-                    Button("Sign In") {
-                        // Trigger your sign-in flow
+                    Button("Delete Account", role: .destructive) {
+                        
+                        Task {
+                            await viewModel.deleteAccount()
+                        }
+                        
                         authState = .signIn
-                        print("Sign in tapped")
+                        
                     }
-                    .buttonStyle(.borderedProminent)
-                    .accessibilityLabel("Sign In")
-                    .accessibilityHint("Tap to sign in to your account")
+                    .accessibilityLabel("Delete Account")
+                    .accessibilityHint("Tap to permanently delete your account")
                 }
-                .padding()
             }
+            .listStyle(InsetGroupedListStyle())
         }
         .navigationTitle("Settings")
         .task {
-            await loadUserProfileIfSignedIn()
+            await loadUserProfile()
         }
     }
     
-    /// Loads the user profile from the supabase Database if sessionManager.user exists
-    func loadUserProfileIfSignedIn() async {
+    /// Loads the user profile from the supabase Database
+    func loadUserProfile() async {
         guard let supabaseUser = sessionManager.user else {
-            viewModel.isSignedIn = false
+            print("No user found in session manager")
             return
         }
         
@@ -118,7 +97,7 @@ struct SettingsView: View {
             viewModel.currentUser = profile
             viewModel.isSignedIn = true
         } catch {
-            print("Error fetch profile: \(error.localizedDescription)")
+            print("Error fetching profile: \(error.localizedDescription)")
             viewModel.isSignedIn = false
         }
     }

@@ -36,10 +36,12 @@ struct ContentView: View {
                     ProjectListView(authState: $sessionManager.authState)
                 case .Settings:
                     SettingsView(authState: $sessionManager.authState)
+                        .environmentObject(sessionManager)
                 case .Guide:
                     BiomassGuideView(authState: $sessionManager.authState)
                 case .CreateProject:
                     SettingsView(authState: $sessionManager.authState)
+                        .environmentObject(sessionManager)
                 case .ScanResultView:
                     ScanResultView(
                         image: UIImage(systemName: "leaf")!, // Placeholder image
