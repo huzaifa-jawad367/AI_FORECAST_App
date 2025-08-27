@@ -1,0 +1,37 @@
+default_platform(:ios)
+
+platform :ios do
+  private_lane :api_key do
+    app_store_connect_api_key(
+      key_id: "X7Q7UP24MC",
+      issuer_id: "f1a4154d-aae7-4394-9514-f1a1167ecc93",
+      key_filepath: "./Auths/AuthKey_X7Q7UP24MC.p8",
+      in_house: false
+    )
+  end
+
+  desc "Build and upload to TestFlight (external)"
+  lane :beta do
+    api_key
+    build_ios_app(
+      scheme: "AI_FORECAST_App"
+      # export_method: "app-store"   # optional; TestFlight works with this
+    )
+    upload_to_testflight(
+      distribute_external: true,
+      groups: ["Group_ext_001", "Public group"],
+      changelog: "Bug fixes and improvements",
+      beta_app_review_info: {
+        contact_email: "huzaifajawad01@gmail.com",
+        contact_first_name: "Huzaifa",
+        contact_last_name: "Jawad",
+        contact_phone: "+923310143258",
+        demo_account_required: true,
+        demo_account_name: "huzaifajawad01@gmail.com",
+        demo_account_password: "12345678",
+        notes: "Login required. Use the demo account above."
+      }
+      # skip_waiting_for_build_processing: true  # optional
+    )
+  end
+end
