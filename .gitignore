@@ -60,4 +60,8 @@ fastlane/screenshots
 .env
 .env.*
 
+# Ignore Bundler-managed dependencies
+vendor/bundle/
+.bundle/
 
+Auths
