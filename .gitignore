@@ -60,8 +60,21 @@ fastlane/screenshots
 .env
 .env.*
 
+# App Store Connect API keys
+Auths/
+Auths/*.p8
+Auths/*.json
+
+# dSYM archives
+*.dSYM.zip
+
+# fastlane outputs
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
 # Ignore Bundler-managed dependencies
 vendor/bundle/
 .bundle/
 
-Auths
