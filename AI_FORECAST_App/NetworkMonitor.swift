@@ -46,14 +46,16 @@ class NetworkMonitor: ObservableObject {
     }
     
     deinit {
-        stopMonitoring()
+        Task { @MainActor in
+            stopMonitoring()
+        }
     }
     
     // MARK: - Network Monitoring
     
     private func startMonitoring() {
         monitor.pathUpdateHandler = { [weak self] path in
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 self?.updateConnectionStatus(path)
             }
         }

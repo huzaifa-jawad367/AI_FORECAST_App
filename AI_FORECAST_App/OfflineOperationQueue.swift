@@ -111,11 +111,9 @@ class OfflineOperationQueue: ObservableObject {
             } catch {
                 print("❌ Failed to execute \(operation.type.description): \(error.localizedDescription)")
                 
-                // Increment retry count
-                if let index = queuedOperations.firstIndex(where: { $0.id == operation.id }) {
-                    var updatedOperation = operation
-                    // Note: We can't modify the struct directly, so we'll handle retry logic differently
-                }
+                // Increment retry count - for now we'll just log the failure
+                // TODO: Implement proper retry logic with exponential backoff
+                print("⚠️ Operation failed, will retry later: \(operation.type.description)")
             }
         }
         
