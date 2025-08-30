@@ -81,12 +81,13 @@ struct ScansListView: View {
             .accessibilityLabel("List of Scans")
             .accessibilityHint("Swipe through the scans to view details")
             .onAppear {
-                // Load scans when the view appears.
+                // ✅ CHANGED: Load scans from offline database instead of Supabase
                 Task {
-                    await viewModel.fetchScans(projectID: projectID)
+                    await viewModel.fetchOfflineScans(projectID: projectID)
                     
+                    // Print scan details for debugging
                     for scan in viewModel.scans {
-                        print("----- Scan Record -----")
+                        print("----- Offline Scan Record -----")
                         print("ID: \(scan.id)")
                         print("Tree Height: \(scan.height)")
                         print("Tree Diameter: \(scan.diameter)")
@@ -95,9 +96,13 @@ struct ScansListView: View {
                         print("Biomass Estimation: \(scan.biomass_estimation.map { String($0) } ?? "Not calculated")")
                         print("Latitude: \(scan.latitude.map { String($0) } ?? "Not present")")
                         print("Longitude: \(scan.longitude.map { String($0) } ?? "Not present")")
-                        print("-----------------------")
+                        print("-------------------------------")
                     }
                 }
+            }
+            .refreshable {
+                // ✅ CHANGED: Refresh from offline database
+                await viewModel.fetchOfflineScans(projectID: projectID)
             }
             .accessibilityElement(children: .contain)
             
@@ -119,6 +124,11 @@ struct ScansListView: View {
         .accessibilityIdentifier("scansListView")
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ScanDeletedSuccessfully"))) { _ in
             showSuccessNotification = true
+            
+            // ✅ CHANGED: Refresh from offline database instead
+            Task {
+                await viewModel.fetchOfflineScans(projectID: projectID)
+            }
             
             // Hide notification after 2 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {

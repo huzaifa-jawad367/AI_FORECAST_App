@@ -104,12 +104,12 @@ struct ProjectListView: View {
             .navigationTitle("Projects")
             .navigationBarTitleDisplayMode(.inline)
             .refreshable {
-                guard let uid = sessionManager.user?.id.uuidString else { return }
-                await viewModel.fetchProjects(for: uid)
+                // ✅ CHANGED: Use offline method instead of Supabase
+                await viewModel.fetchOfflineProjects()
             }
             .task {
-                guard let uid = sessionManager.user?.id.uuidString else { return }
-                await viewModel.fetchProjects(for: uid)
+                // ✅ CHANGED: Use offline method instead of Supabase
+                await viewModel.fetchOfflineProjects()
             }
 //            .refreshable { await viewModel.fetchProjects() }
 //            .task { await viewModel.fetchProjects() }
@@ -133,10 +133,9 @@ struct ProjectListView: View {
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ProjectDeletedSuccessfully"))) { _ in
             showSuccessNotification = true
             
-            // Refresh the projects list
+            // ✅ CHANGED: Refresh from offline database instead
             Task {
-                guard let uid = sessionManager.user?.id.uuidString else { return }
-                await viewModel.fetchProjects(for: uid)
+                await viewModel.fetchOfflineProjects()
             }
             
             // Hide notification after 2 seconds
@@ -155,4 +154,3 @@ struct ProjectListView: View {
 #Preview {
     ProjectListView(authState: .constant(.ProjectsList))
 }
-
