@@ -36,11 +36,17 @@ class SessionManager: ObservableObject {
     private var tokenRefreshTimer: Timer?
     
     // Offline operation queue for failed operations
-    private let offlineQueue: OfflineOperationQueue
+    private var offlineQueue: OfflineOperationQueue?
     
     init() {
-        self.offlineQueue = OfflineOperationQueue.shared
         // setupAuthListener() // Temporarily disabled due to syntax issues
+    }
+    
+    /// Initialize offline queue on MainActor
+    @MainActor private func initializeOfflineQueue() {
+        if offlineQueue == nil {
+            offlineQueue = OfflineOperationQueue.shared
+        }
     }
     
     // MARK: - Session Management
@@ -137,7 +143,10 @@ class SessionManager: ObservableObject {
             print("⚠️ Failed to sign out from Supabase (offline mode): \(error.localizedDescription)")
             
             // Queue remote sign out for later retry
-            await offlineQueue.queueOperation(.remoteSignOut, data: [
+            await MainActor.run {
+                initializeOfflineQueue()
+            }
+            await offlineQueue?.queueOperation(.remoteSignOut, data: [
                 "timestamp": Date().timeIntervalSince1970.description,
                 "reason": "Network failure during sign out"
             ])
@@ -186,7 +195,10 @@ class SessionManager: ObservableObject {
                 print("❌ Failed to refresh tokens from stored refresh token: \(error.localizedDescription)")
                 
                 // Queue token refresh for later retry
-                await offlineQueue.queueOperation(.refreshTokens, data: [
+                await MainActor.run {
+                    initializeOfflineQueue()
+                }
+                await offlineQueue?.queueOperation(.refreshTokens, data: [
                     "timestamp": Date().timeIntervalSince1970.description,
                     "reason": "Network failure during token refresh"
                 ])
@@ -219,7 +231,10 @@ class SessionManager: ObservableObject {
                 print("❌ Failed to refresh tokens: \(error.localizedDescription)")
                 
                 // Queue token refresh for later retry
-                await offlineQueue.queueOperation(.refreshTokens, data: [
+                await MainActor.run {
+                    initializeOfflineQueue()
+                }
+                await offlineQueue?.queueOperation(.refreshTokens, data: [
                     "timestamp": Date().timeIntervalSince1970.description,
                     "reason": "Network failure during token refresh"
                 ])
@@ -267,7 +282,10 @@ class SessionManager: ObservableObject {
     /// Get offline status message
     func getOfflineStatusMessage() async -> String {
         if isOffline {
-            let pendingOperations = await offlineQueue.queuedOperations.count
+            await MainActor.run {
+                initializeOfflineQueue()
+            }
+            let pendingOperations = await offlineQueue?.queuedOperations.count ?? 0
             if pendingOperations > 0 {
                 return "Working offline - \(pendingOperations) pending operations"
             } else {
@@ -300,17 +318,26 @@ class SessionManager: ObservableObject {
     
     /// Manually process queued operations
     func processQueuedOperations() async {
-        await offlineQueue.processQueuedOperations()
+        await MainActor.run {
+            initializeOfflineQueue()
+        }
+        await offlineQueue?.processQueuedOperations()
     }
     
     /// Get queued operations summary
     func getQueuedOperationsSummary() async -> String {
-        return await offlineQueue.operationSummary
+        await MainActor.run {
+            initializeOfflineQueue()
+        }
+        return await offlineQueue?.operationSummary ?? "No operations queued"
     }
     
     /// Check if there are pending operations
     func hasPendingOperations() async -> Bool {
-        return await offlineQueue.hasPendingOperations
+        await MainActor.run {
+            initializeOfflineQueue()
+        }
+        return await offlineQueue?.hasPendingOperations ?? false
     }
     
     // Temporarily disabled due to syntax issues with authStateChanges

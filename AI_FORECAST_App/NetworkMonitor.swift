@@ -46,9 +46,14 @@ class NetworkMonitor: ObservableObject {
     }
     
     deinit {
-        Task { @MainActor in
-            stopMonitoring()
-        }
+        // // Use weak self to avoid capture issues
+        // Task { [weak self] in
+        //     await MainActor.run {
+        //         self?.stopMonitoring()
+        //     }
+        // }
+        // Stop monitoring directly without capturing self
+        monitor.cancel()
     }
     
     // MARK: - Network Monitoring
