@@ -119,8 +119,8 @@ extension ScanEntity {
         return request
     }
     
-    /// Fetch request for scans in a specific project
-    static func scansFetchRequest(for projectId: String) -> NSFetchRequest<ScanEntity> {
+    /// Fetch request for scans in a specific project - ✅ RENAMED
+    static func scansInProjectFetchRequest(projectId: String) -> NSFetchRequest<ScanEntity> {
         let request = activeScansFetchRequest()
         request.predicate = NSPredicate(format: "deletedAt == nil AND projectId == %@", projectId)
         return request
@@ -134,8 +134,8 @@ extension ScanEntity {
         return request
     }
     
-    /// Fetch request for scans by species
-    static func scansFetchRequest(for species: String) -> NSFetchRequest<ScanEntity> {
+    /// Fetch request for scans by species - ✅ RENAMED
+    static func scansBySpeciesFetchRequest(species: String) -> NSFetchRequest<ScanEntity> {
         let request = activeScansFetchRequest()
         request.predicate = NSPredicate(format: "deletedAt == nil AND species CONTAINS[cd] %@", species)
         return request

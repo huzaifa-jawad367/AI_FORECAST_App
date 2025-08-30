@@ -64,8 +64,8 @@ class ScansViewModel: ObservableObject {
                     project_name: nil, // Would need to fetch project name separately if needed
                     user_name: nil, // Would need user lookup if needed
                     biomass_estimation: localScan.biomassEstimation.map { Float($0) },
-                    latitude: localScan.coordinate?.latitude.map { Float($0) },
-                    longitude: localScan.coordinate?.longitude.map { Float($0) }
+                    latitude: localScan.coordinate.map { Float($0.latitude) }, // ✅ FIXED
+                    longitude: localScan.coordinate.map { Float($0.longitude) } // ✅ FIXED
                 )
             }
             
@@ -93,8 +93,8 @@ class ScansViewModel: ObservableObject {
                     project_name: nil,
                     user_name: nil,
                     biomass_estimation: localScan.biomassEstimation.map { Float($0) },
-                    latitude: localScan.coordinate?.latitude.map { Float($0) },
-                    longitude: localScan.coordinate?.longitude.map { Float($0) }
+                    latitude: localScan.coordinate.map { Float($0.latitude) }, // ✅ FIXED
+                    longitude: localScan.coordinate.map { Float($0.longitude) } // ✅ FIXED
                 )
             }
             
@@ -122,8 +122,8 @@ class ScansViewModel: ObservableObject {
                     project_name: nil,
                     user_name: nil,
                     biomass_estimation: localScan.biomassEstimation.map { Float($0) },
-                    latitude: localScan.coordinate?.latitude.map { Float($0) },
-                    longitude: localScan.coordinate?.longitude.map { Float($0) }
+                    latitude: localScan.coordinate.map { Float($0.latitude) }, // ✅ FIXED
+                    longitude: localScan.coordinate.map { Float($0.longitude) } // ✅ FIXED
                 )
             }
             
@@ -151,8 +151,8 @@ class ScansViewModel: ObservableObject {
                     project_name: nil,
                     user_name: nil,
                     biomass_estimation: localScan.biomassEstimation.map { Float($0) },
-                    latitude: localScan.coordinate?.latitude.map { Float($0) },
-                    longitude: localScan.coordinate?.longitude.map { Float($0) }
+                    latitude: localScan.coordinate.map { Float($0.latitude) }, // ✅ FIXED
+                    longitude: localScan.coordinate.map { Float($0.longitude) } // ✅ FIXED
                 )
             }
             
@@ -192,8 +192,8 @@ class ScansViewModel: ObservableObject {
                     project_name: nil,
                     user_name: nil,
                     biomass_estimation: localScan.biomassEstimation.map { Float($0) },
-                    latitude: localScan.coordinate?.latitude.map { Float($0) },
-                    longitude: localScan.coordinate?.longitude.map { Float($0) }
+                    latitude: localScan.coordinate.map { Float($0.latitude) }, // ✅ FIXED
+                    longitude: localScan.coordinate.map { Float($0.longitude) } // ✅ FIXED
                 )
             }
             

@@ -74,7 +74,7 @@ final class ScanRepository: ObservableObject {
         
         do {
             let scanEntities = try await persistenceController.performBackgroundTask { context in
-                let request = ScanEntity.scansFetchRequest(for: projectId)
+                let request = ScanEntity.scansInProjectFetchRequest(projectId: projectId) // ✅ FIXED
                 return try context.fetch(request)
             }
             
@@ -108,7 +108,7 @@ final class ScanRepository: ObservableObject {
         defer { isLoading = false }
         
         do {
-            let updated = try await persistenceController.performBackgroundTask { context in
+            _ = try await persistenceController.performBackgroundTask { context in
                 let request = ScanEntity.fetchRequest()
                 request.predicate = NSPredicate(format: "scanId == %@", scan.id)
                 request.fetchLimit = 1
@@ -191,7 +191,7 @@ final class ScanRepository: ObservableObject {
     func fetchScans(species: String) async throws -> [ScanLocal] {
         do {
             let scanEntities = try await persistenceController.performBackgroundTask { context in
-                let request = ScanEntity.scansFetchRequest(for: species)
+                let request = ScanEntity.scansBySpeciesFetchRequest(species: species) // ✅ FIXED
                 return try context.fetch(request)
             }
             
@@ -243,7 +243,7 @@ final class ScanRepository: ObservableObject {
     /// Search scans by text (species, project name, etc.)
     func searchScans(text: String) async throws -> [ScanLocal] {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            return await fetchAllScans()
+            return try await fetchAllScans()
         }
         
         do {
@@ -269,7 +269,7 @@ final class ScanRepository: ObservableObject {
     func getScanCount(for projectId: String) async throws -> Int {
         do {
             return try await persistenceController.performBackgroundTask { context in
-                let request = ScanEntity.scansFetchRequest(for: projectId)
+                let request = ScanEntity.scansInProjectFetchRequest(projectId: projectId) // ✅ FIXED
                 return try context.count(for: request)
             }
         } catch {
