@@ -111,6 +111,12 @@ struct ProjectListView: View {
                 // ✅ CHANGED: Use offline method instead of Supabase
                 await viewModel.fetchOfflineProjects()
             }
+            .onAppear {
+                // ✅ Refresh when view appears
+                Task {
+                    await viewModel.fetchOfflineProjects()
+                }
+            }
 //            .refreshable { await viewModel.fetchProjects() }
 //            .task { await viewModel.fetchProjects() }
 
@@ -141,6 +147,12 @@ struct ProjectListView: View {
             // Hide notification after 2 seconds
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 showSuccessNotification = false
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ProjectCreatedSuccessfully"))) { _ in
+            // ✅ Refresh from offline database when project is created
+            Task {
+                await viewModel.fetchOfflineProjects()
             }
         }
 //        }

@@ -14,9 +14,8 @@ extension ScanEntity {
     /// Convert ScanEntity to ScanLocal domain model
     func toLocal() -> ScanLocal {
         let coordinate: TreeCoordinate?
-        if let lat = latitude as? Double, let lon = longitude as? Double,
-           lat != 0 || lon != 0 {
-            coordinate = TreeCoordinate(latitude: lat, longitude: lon)
+        if latitude != 0 || longitude != 0 {
+            coordinate = TreeCoordinate(latitude: latitude, longitude: longitude)
         } else {
             coordinate = nil
         }

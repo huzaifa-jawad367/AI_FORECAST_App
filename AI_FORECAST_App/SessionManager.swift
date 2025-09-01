@@ -56,8 +56,10 @@ class SessionManager: ObservableObject {
         do {
             try keychainManager.storeSession(session)
             try keychainManager.storeUserData(session.user)
-            self.session = session
-            self.user = session.user
+            Task { @MainActor in
+                self.session = session
+                self.user = session.user
+            }
             print("✅ Session stored successfully in Keychain")
         } catch {
             print("❌ Failed to store session: \(error.localizedDescription)")

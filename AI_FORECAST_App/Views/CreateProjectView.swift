@@ -17,6 +17,9 @@ struct CreateProjectView: View {
     
     @EnvironmentObject var sessionManager: SessionManager
     
+    // ✅ ADDED: Offline repository
+    @StateObject private var projectRepository = ProjectRepository()
+    
     var body: some View {
         NavigationView {
             
@@ -45,29 +48,9 @@ struct CreateProjectView: View {
                     
                     Button("Save") {
                         Task {
-                            guard let supabaseUser = sessionManager.user else {
-                                viewModel.isSignedIn = false
-                                return
-                            }
-                            print("user is signed in\n\n")
-                            
-                            do {
-                                print("Step 0")
-                                let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
-                                print("Step 1")
-                                viewModel.currentUser = profile
-                                print("Step 2")
-                                viewModel.isSignedIn = true
-                                print("Step 3: Is signed in: \(profile)")
-                                
-                                try await saveProject(creator: profile.id, projectName: projectName, projectDescription: projectDescription)
-                            } catch {
-                                print("Error fetch profile: \(error.localizedDescription)")
-                                viewModel.isSignedIn = false
-                            }
-                             
+                            // ✅ CHANGED: Save to local database first, then sync to Supabase
+                            await saveProjectLocally()
                         }
-                        
                     }
                     .disabled(projectName.isEmpty)
                     .padding(.horizontal)
@@ -98,10 +81,65 @@ struct CreateProjectView: View {
         return String(format: "%@.%06d", baseString, microseconds)
     }
     
-    private func saveProject(creator: String, projectName: String, projectDescription: String) async throws {
+    // ✅ NEW: Save to local database first
+    private func saveProjectLocally() async {
+        guard let supabaseUser = sessionManager.user else {
+            viewModel.isSignedIn = false
+            print("❌ User not signed in")
+            return
+        }
         
-        
-        let project_to_add = ProjectRecord_write(project_name: projectName, creator_name: creator, description: projectDescription, created_at: getCurrentTimestamp())
+        do {
+            // Get user profile for creator name
+            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+
+            print("Step 1: User profile fetched")
+
+            // ✅ Create local project object
+            let localProject = ProjectLocal(
+                name: projectName,
+                description: projectDescription.isEmpty ? nil : projectDescription,
+                creatorName: profile.username
+            )
+
+            print("Step 2: Local project object created")
+            
+            // ✅ Save to local database first
+            try await projectRepository.create(localProject)
+            
+            print("✅ Project saved to local database: \(localProject.name)")
+            
+            // ✅ Then save to Supabase for sync
+            try await saveProjectToSupabase(creator: profile.user_id, projectName: projectName, projectDescription: projectDescription)
+
+            print("Step 3: Project saved to Supabase")
+
+            // ✅ Mark as synced if Supabase save succeeds
+            try await projectRepository.markAsSynced(ids: [localProject.id])
+            print("✅ Project marked as synced: \(localProject.id)")
+            
+            // Navigate back
+            await MainActor.run {
+                // Post notification to refresh project list
+                NotificationCenter.default.post(name: NSNotification.Name("ProjectCreatedSuccessfully"), object: nil)
+                dismiss()
+            }
+            
+        } catch {
+            print("❌ Error saving project: \(error.localizedDescription)")
+            // Even if Supabase fails, we still have the local copy
+            // The sync system will retry later
+        }
+    }
+    
+    // ✅ RENAMED: Keep original Supabase save logic
+    private func saveProjectToSupabase(creator: String, projectName: String, projectDescription: String) async throws {
+        let project_to_add = ProjectRecord_write(
+            project_name: projectName, 
+            creator_name: creator, 
+            description: projectDescription, 
+            created_at: getCurrentTimestamp()
+        )
         
         print("The project instance I am adding: \(project_to_add)")
         
@@ -110,9 +148,8 @@ struct CreateProjectView: View {
             .insert(project_to_add)
             .execute()
         
-        print("Saving project: \(projectName), \(projectDescription)")
+        print("✅ Project saved to Supabase: \(projectName)")
     }
-
 }
 
 struct CreateProjectView_Previews: PreviewProvider {

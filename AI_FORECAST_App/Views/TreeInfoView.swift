@@ -58,6 +58,9 @@ struct ScanResultView: View {
     @StateObject private var locationManager = LocationManager.shared
     @State private var showWarningBanner = true
 
+    // ✅ ADDED: Offline repository
+    @StateObject private var scanRepository = ScanRepository()
+
     init(
         image: UIImage,
         height: Double,
@@ -114,16 +117,16 @@ struct ScanResultView: View {
                                 .padding(6)
                                 .background(RoundedRectangle(cornerRadius: 8).fill(Color.gray.opacity(0.2)))
                                 .onChange(of: diameterInput) {
-                                    // strip out any non-numeric/“.” chars
+                                    // strip out any non-numeric/"." chars
                                     let filtered = diameterInput.filter { "0123456789.".contains($0) }
                                     if filtered != diameterInput {
                                         diameterInput = filtered
                                     }
                                     recalcBiomass()
                                 }
-                                .submitLabel(.done)               // shows “Done” on hardware keyboards
-                                .onSubmit { hideKeyboard() }      // hides for hardware “Enter”
-                                .toolbar {                        // adds “Done” above the decimal pad
+                                .submitLabel(.done)               // shows "Done" on hardware keyboards
+                                .onSubmit { hideKeyboard() }      // hides for hardware "Enter"
+                                .toolbar {                        // adds "Done" above the decimal pad
                                     ToolbarItemGroup(placement: .keyboard) {
                                         Spacer()
                                         Button("Done") {
@@ -206,9 +209,10 @@ struct ScanResultView: View {
                                 }
                                 .pickerStyle(MenuPickerStyle())
                                 .onAppear {
-                                    if let user = sessionManager.user {
+                                    if sessionManager.user != nil {
                                         Task {
-                                            await projectViewModel.fetchProjects(for: user.id.uuidString)
+                                            // ✅ CHANGED: Use offline projects
+                                            await projectViewModel.fetchOfflineProjects()
                                         }
                                     }
                                 }
@@ -228,29 +232,8 @@ struct ScanResultView: View {
                             showAlert = true
                         } else {
                             Task {
-                                guard let supabaseUser = sessionManager.user else {
-                                    viewModel.isSignedIn = false
-                                    return
-                                }
-                                print("user is signed in\n\n")
-                                
-                                do {
-                                    let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
-                                    viewModel.currentUser = profile
-                                    viewModel.isSignedIn = true
-                                    
-                                    let diam = Double(diameterInput) ?? 0
-                                    let finalProjectId = projectId ?? selectedProjectId!
-                                    
-                                    SaveScanedRecordToDatabase(height: height, diameter: diam, species: selectedSpecies, project_id: finalProjectId, user_id: profile.id, biomass_estimation: Bestimation)
-                                    
-                                    // Navigate to dashboard after saving
-                                    authState = .Dashboard
-                                } catch {
-                                    print("Error fetch profile: \(error.localizedDescription)")
-                                    viewModel.isSignedIn = false
-                                }
-                                
+                                // ✅ CHANGED: Save to local database first
+                                await saveScanLocally()
                             }
                         }
                     }) {
@@ -361,10 +344,10 @@ struct ScanResultView: View {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.white)
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Location is off—scans won’t be tagged with coordinates.")
+                            Text("Location is off—scans won't be tagged with coordinates.")
                                 .foregroundColor(.white)
                                 .font(.subheadline)
-                            Text("To include coordinates in your scans, go to Settings > Privacy & Security > Location Services and enable location permission for this app.")
+                            Text("To include coordinates in your scans, go to Settings > Privacy & Security > Location Services and enable location permission for this app.")
                                 .foregroundColor(.white.opacity(0.9))
                                 .font(.caption2)
                                 .lineLimit(3)
@@ -379,7 +362,7 @@ struct ScanResultView: View {
                     .padding(.horizontal, 12)
                     .background(Color.orange)
                     .cornerRadius(8)
-                    // shift down by the device’s top inset so it sits just under (or over) the notch
+                    // shift down by the device's top inset so it sits just under (or over) the notch
                     .padding(.top, geo.safeAreaInsets.top)
                     .padding(.horizontal, 16)
                     .zIndex(1)
@@ -443,6 +426,73 @@ struct ScanResultView: View {
         return biomass
     }
     
+    // ✅ NEW: Save to local database first
+    private func saveScanLocally() async {
+        guard let supabaseUser = sessionManager.user else {
+            viewModel.isSignedIn = false
+            print("❌ User not signed in")
+            return
+        }
+        
+        do {
+            let profile = try await viewModel.fetchUserProfile(userID: supabaseUser.id.uuidString)
+            viewModel.currentUser = profile
+            viewModel.isSignedIn = true
+            
+            let diam = Double(diameterInput) ?? 0
+            let finalProjectId = projectId ?? selectedProjectId!
+            
+            // Get location coordinates
+            let coordinate: TreeCoordinate?
+            if let location = locationManager.currentLocation {
+                coordinate = TreeCoordinate(location.coordinate)
+            } else {
+                coordinate = nil
+            }
+            
+            // ✅ Create local scan object
+            let localScan = ScanLocal(
+                height: height,
+                diameter: diam,
+                species: selectedSpecies,
+                scanTime: timestamp,
+                projectId: finalProjectId,
+                userId: profile.id,
+                coordinate: coordinate,
+                biomassEstimation: Bestimation > 0 ? Bestimation : nil
+            )
+            
+            // ✅ Save to local database first
+            try await scanRepository.create(localScan)
+            print("✅ Scan saved to local database: \(localScan.id)")
+            
+            // ✅ Then save to Supabase for sync
+            SaveScanedRecordToDatabase(
+                height: height,
+                diameter: diam,
+                species: selectedSpecies,
+                project_id: finalProjectId,
+                user_id: profile.id,
+                biomass_estimation: Bestimation
+            )
+            
+            // ✅ Mark as synced if Supabase save succeeds
+            try await scanRepository.markAsSynced(ids: [localScan.id])
+            print("✅ Scan marked as synced: \(localScan.id)")
+            
+            // Navigate to dashboard after saving
+            await MainActor.run {
+                authState = .Dashboard
+            }
+            
+        } catch {
+            print("❌ Error saving scan: \(error.localizedDescription)")
+            // Even if Supabase fails, we still have the local copy
+            // The sync system will retry later
+        }
+    }
+    
+    // ✅ KEPT: Original Supabase save logic for sync
     private func SaveScanedRecordToDatabase(height: Double, diameter: Double, species: String, project_id: String, user_id: String, biomass_estimation: Double) {
         // Get the current timestamp.
         let scanTimestamp = getCurrentTimestamp()
@@ -473,9 +523,9 @@ struct ScanResultView: View {
                     .from("scans")  // Make sure this table name matches your schema
                     .insert(scanRecord)
                     .execute()
-                print("Scan record saved successfully")
+                print("✅ Scan record saved to Supabase")
             } catch {
-                print("Error saving scan record: \(error.localizedDescription)")
+                print("❌ Error saving scan record to Supabase: \(error.localizedDescription)")
             }
         }
     }

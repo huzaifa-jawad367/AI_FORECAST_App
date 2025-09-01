@@ -19,8 +19,13 @@ final class ProjectRepository: ObservableObject {
     @Published var isLoading = false
     @Published var error: PersistenceError?
     
-    init(persistenceController: PersistenceController = .shared) {
-        self.persistenceController = persistenceController
+    init(persistenceController: PersistenceController? = nil) {
+        if let controller = persistenceController {
+            self.persistenceController = controller
+        } else {
+            // Access the shared instance directly; class is @MainActor isolated
+            self.persistenceController = PersistenceController.shared
+        }
     }
     
     // MARK: - CRUD Operations
@@ -31,14 +36,21 @@ final class ProjectRepository: ObservableObject {
         defer { isLoading = false }
         
         do {
+            print("🔄 Creating project in local database: \(project.name)")
+            
             try await persistenceController.performBackgroundTask { context in
-                _ = ProjectEntity.create(from: project, in: context)
+                print("📝 Creating ProjectEntity in background context")
+                let entity = ProjectEntity.create(from: project, in: context)
+                print("💾 Saving context with project: \(entity.projectName ?? "unknown")")
                 try context.save()
+                print("✅ Context saved successfully")
             }
             
+            print("🔄 Refreshing projects list...")
             await refreshProjects()
             print("✅ Project created: \(project.id)")
         } catch {
+            print("❌ Error creating project: \(error.localizedDescription)")
             self.error = .saveFailure(error)
             throw error
         }
@@ -50,18 +62,28 @@ final class ProjectRepository: ObservableObject {
         defer { isLoading = false }
         
         do {
+            print("🔄 Fetching all active projects from Core Data...")
+            
             let projectEntities = try await persistenceController.performBackgroundTask { context in
                 let request = ProjectEntity.activeProjectsFetchRequest()
-                return try context.fetch(request)
+                print("📋 Executing fetch request for active projects")
+                let entities = try context.fetch(request)
+                print("📊 Found \(entities.count) project entities")
+                return entities
             }
             
             let projects = projectEntities.map { $0.toLocal() }
+            print("🔄 Converting \(projectEntities.count) entities to ProjectLocal objects")
+            
             await MainActor.run {
                 self.projects = projects
+                print("📱 Updated @Published projects array with \(projects.count) projects")
             }
             
+            print("✅ Successfully fetched \(projects.count) projects")
             return projects
         } catch {
+            print("❌ Error fetching projects: \(error.localizedDescription)")
             self.error = .fetchFailure(error)
             throw error
         }

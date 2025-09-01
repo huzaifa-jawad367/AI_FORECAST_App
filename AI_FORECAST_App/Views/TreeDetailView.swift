@@ -28,6 +28,9 @@ struct TreeDetailView: View {
     @State private var isDeleting = false
     @State private var alertMessage = ""
 
+    // ✅ ADDED: Offline repository
+    @StateObject private var scanRepository = ScanRepository()
+
     var body: some View {
         ZStack {
             VStack {
@@ -179,7 +182,10 @@ struct TreeDetailView: View {
                     // Do nothing, just dismiss
                 }
                 Button("Delete", role: .destructive) {
-                    deleteScan()
+                    Task {
+                        // ✅ CHANGED: Delete from local database first
+                        await deleteScanLocally()
+                    }
                 }
             } message: {
                 Text("Are you sure you want to delete this scan? This action cannot be undone.")
@@ -200,47 +206,57 @@ struct TreeDetailView: View {
         }
     }
     
-    private func deleteScan() {
+    // ✅ NEW: Delete from local database first
+    private func deleteScanLocally() async {
         isDeleting = true
         
-        Task {
-            do {
-                // Delete the scan from Supabase
-                try await client.database
-                    .from("scans")
-                    .delete()
-                    .eq("id", value: scanId)
-                    .execute()
+        do {
+            // ✅ Delete from local database first (soft delete)
+            try await scanRepository.delete(id: scanId)
+            print("✅ Scan soft deleted from local database: \(scanId)")
+            
+            // ✅ Then delete from Supabase for sync
+            try await deleteScanFromSupabase()
+            
+            // ✅ If Supabase delete succeeds, we could mark it as "synced deleted"
+            // For now, we'll let the sync system handle this
+            
+            // Pop back immediately, then show notification on ScansListView
+            await MainActor.run {
+                isDeleting = false
                 
-                print("Scan deleted successfully: \(scanId)")
+                // Pop back immediately
+                dismiss()
                 
-                // Pop back immediately, then show notification on ScansListView
-                await MainActor.run {
-                    isDeleting = false
-                    
-                    // Pop back immediately
-                    dismiss()
-                    
-                    // Show notification on ScansListView after a brief delay
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        // We'll need to trigger this from ScansListView
-                        NotificationCenter.default.post(
-                            name: NSNotification.Name("ScanDeletedSuccessfully"),
-                            object: nil
-                        )
-                    }
-                }
-                
-            } catch {
-                print("Error deleting scan: \(error.localizedDescription)")
-                
-                await MainActor.run {
-                    isDeleting = false
-                    alertMessage = "Failed to delete scan: \(error.localizedDescription)"
-                    showAlert = true
+                // Show notification on ScansListView after a brief delay
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    NotificationCenter.default.post(
+                        name: NSNotification.Name("ScanDeletedSuccessfully"),
+                        object: nil
+                    )
                 }
             }
+            
+        } catch {
+            print("❌ Error deleting scan: \(error.localizedDescription)")
+            
+            await MainActor.run {
+                isDeleting = false
+                alertMessage = "Failed to delete scan: \(error.localizedDescription)"
+                showAlert = true
+            }
         }
+    }
+    
+    // ✅ RENAMED: Keep original Supabase delete logic
+    private func deleteScanFromSupabase() async throws {
+        try await client.database
+            .from("scans")
+            .delete()
+            .eq("id", value: scanId)
+            .execute()
+        
+        print("✅ Scan deleted from Supabase: \(scanId)")
     }
 }
 

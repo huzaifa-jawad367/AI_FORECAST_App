@@ -62,8 +62,11 @@ class ProjectViewModel: ObservableObject {
     /// Fetch projects from local Core Data database
     func fetchOfflineProjects(for userID: String? = nil) async {
         do {
+            print("🔄 Starting to fetch offline projects...")
+            
             // Fetch all projects from local database
             let localProjects = try await projectRepository.fetchAllProjects()
+            print("📊 Found \(localProjects.count) local projects")
             
             // Convert ProjectLocal to ProjectRecord for UI compatibility
             let projectRecords = localProjects.map { localProject in
@@ -79,8 +82,10 @@ class ProjectViewModel: ObservableObject {
             // Filter by user if provided (optional filtering)
             if let userID = userID {
                 self.projects = projectRecords.filter { $0.creator_name == userID }
+                print("👤 Filtered to \(self.projects.count) projects for user: \(userID)")
             } else {
                 self.projects = projectRecords
+                print("👥 Showing all \(self.projects.count) projects")
             }
             
             print("✅ Fetched \(projects.count) projects from offline database")

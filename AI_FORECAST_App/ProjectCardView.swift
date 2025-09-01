@@ -13,6 +13,9 @@ struct ProjectCardView: View {
     @State private var showDeleteConfirmation = false
     @State private var isDeleting = false
     
+    // ✅ ADDED: Offline repository
+    @StateObject private var projectRepository = ProjectRepository()
+    
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 8) {
@@ -71,43 +74,61 @@ struct ProjectCardView: View {
                 // Do nothing, just dismiss
             }
             Button("Delete", role: .destructive) {
-                deleteProject()
+                Task {
+                    // ✅ CHANGED: Delete from local database first
+                    await deleteProjectLocally()
+                }
             }
         } message: {
             Text("Are you sure you want to delete '\(project.project_name)'? This action cannot be undone and will also delete all associated scans.")
         }
     }
     
-    private func deleteProject() {
+    // ✅ NEW: Delete from local database first
+    private func deleteProjectLocally() async {
         isDeleting = true
         
-        Task {
-            do {
-                // Delete the project from Supabase
-                try await client.database
-                    .from("projects")
-                    .delete()
-                    .eq("id", value: project.project_id)
-                    .execute()
-                
-                print("Project deleted successfully: \(project.project_id)")
-                
-                // Post notification for success
+        do {
+            // ✅ Delete from local database first (soft delete)
+            try await projectRepository.delete(id: project.project_id)
+            print("✅ Project soft deleted from local database: \(project.project_id)")
+            
+            // ✅ Then delete from Supabase for sync
+            try await deleteProjectFromSupabase()
+            
+            // ✅ If Supabase delete succeeds, we could mark it as "synced deleted"
+            // For now, we'll let the sync system handle this
+            
+            // Post notification for success
+            await MainActor.run {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     NotificationCenter.default.post(
                         name: NSNotification.Name("ProjectDeletedSuccessfully"),
                         object: nil
                     )
                 }
-                
-            } catch {
-                print("Error deleting project: \(error.localizedDescription)")
             }
             
-            await MainActor.run {
-                isDeleting = false
-            }
+        } catch {
+            print("❌ Error deleting project: \(error.localizedDescription)")
+            // Even if Supabase fails, we still have the local deletion
+            // The sync system will retry later
         }
+        
+        await MainActor.run {
+            isDeleting = false
+        }
+    }
+    
+    // ✅ RENAMED: Keep original Supabase delete logic
+    private func deleteProjectFromSupabase() async throws {
+        try await client.database
+            .from("projects")
+            .delete()
+            .eq("id", value: project.project_id)
+            .execute()
+        
+        print("✅ Project deleted from Supabase: \(project.project_id)")
     }
 }
 

@@ -8,9 +8,13 @@
 import CoreData
 import Foundation
 
-@MainActor
 final class PersistenceController: ObservableObject {
     static let shared = PersistenceController()
+    
+    // Track store loading completion
+    private var storesLoaded = false
+    private var storeLoadingTask: Task<Void, Never>?
+    private var isLoadingStores = false
     
     /// In-memory container for testing
     static let preview: PersistenceController = {
@@ -63,12 +67,33 @@ final class PersistenceController: ObservableObject {
             storeDescription?.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
         }
         
-        container.loadPersistentStores { [weak self] _, error in
-            if let error = error as NSError? {
-                print("❌ Core Data error: \(error), \(error.userInfo)")
-                fatalError("Unresolved Core Data error \(error), \(error.userInfo)")
-            } else {
-                print("✅ Core Data store loaded successfully")
+        isLoadingStores = true
+        storeLoadingTask = Task { @MainActor in
+            await withCheckedContinuation { continuation in
+                print("[CD] 🔄 Starting to load persistent stores...")
+                print("[CD] 📁 Store description: \(container.persistentStoreDescriptions.first?.url?.absoluteString ?? "nil")")
+                print("[CD] 📦 Model entities: \(container.managedObjectModel.entities.map { $0.name ?? "unnamed" })")
+                print("[CD] 🔧 Container name: \(container.name)")
+                print("[CD] 🔧 Container model: \(container.managedObjectModel)")
+                
+                container.loadPersistentStores { _, error in
+                    Task { @MainActor in
+                        self.isLoadingStores = false
+                        if let error = error as NSError? {
+                            print("[CD] ❌ Core Data error: \(error), \(error.userInfo)")
+                            print("[CD] ❌ Error domain: \(error.domain), code: \(error.code)")
+                            print("[CD] ❌ Error description: \(error.localizedDescription)")
+                            print("[CD] ❌ Error debug description: \(error.debugDescription)")
+                            // Don't fatal error, just log and continue
+                            print("[CD] ⚠️ Core Data store loading failed, will use emergency store")
+                        } else {
+                            print("[CD] ✅ Core Data store loaded successfully")
+                            print("[CD] 📊 Final store count: \(self.container.persistentStoreCoordinator.persistentStores.count)")
+                            self.storesLoaded = true
+                        }
+                    }
+                    continuation.resume()
+                }
             }
         }
         
@@ -93,15 +118,202 @@ final class PersistenceController: ObservableObject {
         }
     }
     
+    /// Ensure stores are loaded before proceeding
+    private func ensureStoresLoaded() async {
+        await MainActor.run {
+            let loaded = !container.persistentStoreCoordinator.persistentStores.isEmpty || storesLoaded
+            if loaded {
+                print("[CD] ✅ Stores already loaded")
+                return
+            }
+            
+            if isLoadingStores {
+                print("[CD] ⏳ Stores are currently loading, waiting for completion...")
+            } else {
+                print("[CD] ⏳ No stores loaded and none loading, waiting for initial load...")
+            }
+        }
+        
+        // Wait up to 5s for storesLoaded to flip true
+        let deadline = Date().addingTimeInterval(5)
+        while true {
+            let done = await MainActor.run { self.storesLoaded || !self.container.persistentStoreCoordinator.persistentStores.isEmpty }
+            if done { break }
+            if Date() >= deadline { break }
+            try? await Task.sleep(nanoseconds: 100_000_000) // 0.1s
+        }
+        
+        await MainActor.run {
+            let finalCount = container.persistentStoreCoordinator.persistentStores.count
+            print("[CD] ✅ ensureStoresLoaded: finished with \(finalCount) stores")
+            if finalCount == 0 && !storesLoaded {
+                print("[CD] ❌ ensureStoresLoaded timeout: persistent stores not loaded after waiting")
+            }
+        }
+    }
+    
     /// Perform a background task with a new context
     func performBackgroundTask<T>(_ block: @escaping (NSManagedObjectContext) throws -> T) async throws -> T {
+        // Ensure stores are loaded first
+        await ensureStoresLoaded()
+        print("Checking is the error is in ensureStoresLoaded")
+        
+        // If still no stores, try to create a minimal working store
+        let isEmpty = await MainActor.run { container.persistentStoreCoordinator.persistentStores.isEmpty }
+        if isEmpty {
+            print("[CD] 🚨 No stores available, attempting emergency store creation...")
+            await createEmergencyStore()
+        }
+        
         return try await withCheckedThrowingContinuation { continuation in
-            container.performBackgroundTask { context in
+            let operationId = UUID().uuidString
+            let queueLabel = String(cString: __dispatch_queue_get_label(nil))
+            let isMain = Thread.isMainThread
+            let startTime = CFAbsoluteTimeGetCurrent()
+            print("[CD] ▶️ performBackgroundTask start id=\(operationId) main=\(isMain) queue=\(queueLabel)")
+
+            // Use a simple flag with proper synchronization
+            var hasResumed = false
+            let resumeLock = NSLock()
+
+            // Timeout detector to surface potential leaks
+            DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+                resumeLock.lock()
+                let shouldLog = !hasResumed
+                resumeLock.unlock()
+                
+                if shouldLog {
+                    let elapsed = String(format: "%.3f", CFAbsoluteTimeGetCurrent() - startTime)
+                    print("[CD] ⚠️ performBackgroundTask id=\(operationId) has not resumed after \(elapsed)s. Possible continuation leak.")
+                    print("[CD] ⚠️ Call stack (might help):\n\(Thread.callStackSymbols.joined(separator: "\n"))")
+                }
+            }
+
+            // Prefer a dedicated background context to avoid potential scheduling issues
+            let context = self.container.newBackgroundContext()
+            let concurrency: String = {
+                switch context.concurrencyType {
+                case .confinementConcurrencyType: return "confinement"
+                case .privateQueueConcurrencyType: return "private"
+                case .mainQueueConcurrencyType: return "main"
+                @unknown default: return "unknown"
+                }
+            }()
+            print("[CD] 🧵 created background context id=\(operationId) ctx=\(Unmanaged.passUnretained(context).toOpaque()) concurrency=\(concurrency)")
+
+            // Check store status after ensuring they're loaded
+            let storeCount = self.container.persistentStoreCoordinator.persistentStores.count
+            print("[CD] 📊 Store count: \(storeCount) at call time id=\(operationId)")
+            if storeCount == 0 {
+                print("[CD] ❗ No persistent stores loaded at call time id=\(operationId). Operations may stall.")
+                // Try to resume with an error instead of hanging
+                resumeLock.lock()
+                if !hasResumed {
+                    hasResumed = true
+                    resumeLock.unlock()
+                    print("[CD] 🔚 resuming continuation (failure) due to no stores id=\(operationId)")
+                    continuation.resume(throwing: PersistenceError.invalidData)
+                    return
+                }
+                resumeLock.unlock()
+            }
+
+            context.perform {
+                print("[CD] 🛠️ executing user block on context queue id=\(operationId)")
                 do {
                     let result = try block(context)
-                    continuation.resume(returning: result)
+                    print("[CD] ✅ user block completed id=\(operationId)")
+                    
+                    resumeLock.lock()
+                    if !hasResumed {
+                        hasResumed = true
+                        resumeLock.unlock()
+                        print("[CD] 🔚 resuming continuation (success) id=\(operationId) elapsed=\(String(format: "%.3f", CFAbsoluteTimeGetCurrent() - startTime))s")
+                        continuation.resume(returning: result)
+                    } else {
+                        resumeLock.unlock()
+                        print("[CD] ❗ attempt to resume after already resumed (success) id=\(operationId)")
+                    }
                 } catch {
-                    continuation.resume(throwing: error)
+                    print("[CD] ❌ user block threw id=\(operationId) error=\(error)")
+                    
+                    resumeLock.lock()
+                    if !hasResumed {
+                        hasResumed = true
+                        resumeLock.unlock()
+                        print("[CD] 🔚 resuming continuation (failure) id=\(operationId) elapsed=\(String(format: "%.3f", CFAbsoluteTimeGetCurrent() - startTime))s")
+                        continuation.resume(throwing: error)
+                    } else {
+                        resumeLock.unlock()
+                        print("[CD] ❗ attempt to resume after already resumed (failure) id=\(operationId)")
+                    }
+                }
+            }
+        }
+    }
+    
+    /// Create an emergency store if none exist
+    private func createEmergencyStore() async {
+        print("[CD] 🚨 Creating emergency in-memory store...")
+        
+        await MainActor.run {
+            // Remove any existing stores
+            for store in container.persistentStoreCoordinator.persistentStores {
+                try? container.persistentStoreCoordinator.remove(store)
+            }
+            
+            // Create an in-memory store as fallback
+            let storeDescription = NSPersistentStoreDescription()
+            storeDescription.type = NSInMemoryStoreType
+            storeDescription.url = URL(fileURLWithPath: "/dev/null")
+            
+            container.persistentStoreDescriptions = [storeDescription]
+        }
+        
+        await withCheckedContinuation { continuation in
+            var hasResumed = false
+            
+            // Add a timeout to prevent hanging
+            DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+                if !hasResumed {
+                    hasResumed = true
+                    print("[CD] ⚠️ Emergency store creation timed out, resuming continuation")
+                    continuation.resume()
+                }
+            }
+            
+            // Try to add the store directly to the coordinator
+            do {
+                let store = try container.persistentStoreCoordinator.addPersistentStore(
+                    ofType: NSInMemoryStoreType,
+                    configurationName: nil,
+                    at: URL(fileURLWithPath: "/dev/null"),
+                    options: nil
+                )
+                print("[CD] ✅ Emergency store added successfully: \(store)")
+                if !hasResumed {
+                    hasResumed = true
+                    Task { @MainActor in
+                        self.storesLoaded = true
+                        continuation.resume()
+                    }
+                }
+            } catch {
+                print("[CD] ❌ Failed to add emergency store directly: \(error)")
+                // Fallback to loadPersistentStores
+                container.loadPersistentStores { _, error in
+                    if !hasResumed {
+                        hasResumed = true
+                        Task { @MainActor in
+                            if let error = error {
+                                print("[CD] ❌ Emergency store creation failed: \(error)")
+                            } else {
+                                print("[CD] ✅ Emergency store created successfully via loadPersistentStores")
+                                self.storesLoaded = true
+                            }
+                            continuation.resume()
+                        }
+                    }
                 }
             }
         }

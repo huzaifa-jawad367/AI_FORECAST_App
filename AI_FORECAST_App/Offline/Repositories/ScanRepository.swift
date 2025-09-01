@@ -19,8 +19,16 @@ final class ScanRepository: ObservableObject {
     @Published var isLoading = false
     @Published var error: PersistenceError?
     
-    init(persistenceController: PersistenceController = .shared) {
-        self.persistenceController = persistenceController
+    init(persistenceController: PersistenceController? = nil) {
+        if let controller = persistenceController {
+            self.persistenceController = controller
+        } else {
+            // Use MainActor.assumeIsolated for initialization since repositories
+            // are typically created on the main thread
+            self.persistenceController = MainActor.assumeIsolated {
+                PersistenceController.shared
+            }
+        }
     }
     
     // MARK: - CRUD Operations
